@@ -1,0 +1,37 @@
+{
+  "run_id": "run_20260308_02",
+  "run_timestamp": "2026-03-08T12:30:00Z",
+  "model_version": "dbx-hierarchy-v1.1.0",
+  "entities": [
+    {
+      "entity_id": "ent_pacific_holdings",
+      "legal_name": "Pacific Holdings Group",
+      "deterministic_key": "PHG_SG_UEN_88997766",
+      "validity_score": 94
+    },
+    {
+      "entity_id": "ent_pacific_capital_sg",
+      "legal_name": "Pacific Capital Singapore",
+      "deterministic_key": "PCS_SG_UEN_11223344",
+      "validity_score": 88
+    },
+    {
+      "entity_id": "ent_pacific_securities",
+      "legal_name": "Pacific Capital Securities",
+      "deterministic_key": "PCS_SG_UEN_55667788",
+      "validity_score": 79
+    }
+  ],
+  "edges": [
+    {
+      "parent_entity_id": "ent_pacific_holdings",
+      "child_entity_id": "ent_pacific_capital_sg",
+      "relationship_type": "SUBSIDIARY_OF"
+    },
+    {
+      "parent_entity_id": "ent_pacific_holdings",
+      "child_entity_id": "ent_pacific_securities",
+      "relationship_type": "SUBSIDIARY_OF"
+    }
+  ]
+}

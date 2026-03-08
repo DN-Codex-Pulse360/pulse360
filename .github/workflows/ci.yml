@@ -21,3 +21,7 @@ jobs:
         run: |
           chmod +x scripts/validate-contracts.sh
           ./scripts/validate-contracts.sh
+      - name: Validate hierarchy and identity artifacts
+        run: |
+          chmod +x scripts/validate-hierarchy-and-identity.sh
+          ./scripts/validate-hierarchy-and-identity.sh
