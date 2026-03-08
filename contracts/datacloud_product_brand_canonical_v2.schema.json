@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/datacloud_product_brand_canonical_v2",
+  "title": "Data Cloud Canonical Product and Brand Export v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "canonical_account_id",
+    "product_id",
+    "master_product_id",
+    "brand_id",
+    "brand_name",
+    "relationship_type",
+    "is_active",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "canonical_account_id": { "type": "string", "minLength": 1 },
+    "product_id": { "type": "string", "minLength": 1 },
+    "master_product_id": { "type": "string", "minLength": 1 },
+    "bundle_product_id": { "type": "string" },
+    "brand_id": { "type": "string", "minLength": 1 },
+    "brand_name": { "type": "string", "minLength": 1 },
+    "relationship_type": {
+      "type": "string",
+      "enum": ["OWNED", "PURCHASED", "INTERESTED", "INSTALLED_BASE"]
+    },
+    "is_active": { "type": "boolean" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}

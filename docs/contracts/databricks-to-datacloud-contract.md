@@ -3,6 +3,10 @@
 ## Purpose
 Define handoff payload required for identity resolution, hierarchy modeling, and insights.
 
+For the full Data Cloud-aligned B2B canonical object model (Account, product, brand, engagement, and related entities), see `docs/contracts/b2b-customer360-canonical-model-v2.md`.
+
+This v1 handoff remains valid for DS-01/02/03 continuity. Canonical v2 exports are required for enterprise model alignment across systems.
+
 ## Required Fields
 | Field | Type | Description |
 | --- | --- | --- |
@@ -21,12 +25,28 @@ Define handoff payload required for identity resolution, hierarchy modeling, and
 - No hardcoded scenario metrics.
 - IDs must be deterministic across reruns.
 - All records must carry run metadata.
+- Canonical v2 exports must be published for:
+  - account core (`account_core_export`)
+  - product and brand relationships (`product_brand_export`)
+  - engagement entities (`engagement_export`)
 
 ## Implemented Artifacts
 - `contracts/databricks_to_datacloud.schema.json`
 - `contracts/databricks_hierarchy_graph.schema.json`
+- `contracts/datacloud_account_core_canonical_v2.schema.json`
+- `contracts/datacloud_product_brand_canonical_v2.schema.json`
+- `contracts/datacloud_engagement_canonical_v2.schema.json`
 - `data/samples/databricks_enrichment_sample.csv`
 - `data/samples/hierarchy/databricks_hierarchy_graph_sample.json`
+- `data/samples/datacloud_account_core_canonical_v2_sample.json`
+- `data/samples/datacloud_product_brand_canonical_v2_sample.json`
+- `data/samples/datacloud_engagement_canonical_v2_sample.json`
+- `data/samples/datacloud_account_core_canonical_v2_export.csv`
+- `data/samples/datacloud_account_core_canonical_v2_export.jsonl`
+- `data/samples/datacloud_product_brand_canonical_v2_export.csv`
+- `data/samples/datacloud_product_brand_canonical_v2_export.jsonl`
+- `data/samples/datacloud_engagement_canonical_v2_export.csv`
+- `data/samples/datacloud_engagement_canonical_v2_export.jsonl`
 - `config/databricks/unity-catalog-governance.yaml`
 - `config/databricks/lineage-targets.env.sample`
 - `scripts/validate-contracts.sh`

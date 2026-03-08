@@ -13,4 +13,7 @@ done
 
 grep -q "crm_accounts_raw" "$cfg" || fail "Missing required source table"
 grep -q "hierarchy_entity_graph" "$cfg" || fail "Missing hierarchy table"
+grep -q "account_core_export" "$cfg" || fail "Missing canonical account export table"
+grep -q "product_brand_export" "$cfg" || fail "Missing canonical product brand export table"
+grep -q "engagement_export" "$cfg" || fail "Missing canonical engagement export table"
 pass "Unity Catalog governance config includes required baseline"

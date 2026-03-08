@@ -1,0 +1,13 @@
+{
+  "canonical_account_id": "acc_canon_001",
+  "product_id": "prd_wm_001",
+  "master_product_id": "mprd_wealth_platform",
+  "bundle_product_id": "bndl_advisory_plus",
+  "brand_id": "brand_pacific",
+  "brand_name": "Pacific Capital",
+  "relationship_type": "OWNED",
+  "is_active": true,
+  "run_id": "run_20260308_03",
+  "run_timestamp": "2026-03-08T12:45:00Z",
+  "model_version": "dc-canonical-v2.0.0"
+}

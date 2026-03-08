@@ -1,0 +1,14 @@
+{
+  "canonical_account_id": "acc_canon_001",
+  "engagement_id": "eng_20260308_091500",
+  "engagement_type": "OPPORTUNITY",
+  "engagement_timestamp": "2026-03-08T09:15:00Z",
+  "channel": "salesforce_crm",
+  "related_product_id": "prd_wm_001",
+  "related_brand_id": "brand_pacific",
+  "related_opportunity_id": "006xx00000OPP001",
+  "engagement_score": 84,
+  "run_id": "run_20260308_03",
+  "run_timestamp": "2026-03-08T12:45:00Z",
+  "model_version": "dc-canonical-v2.0.0"
+}

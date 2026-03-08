@@ -1,0 +1,4 @@
+canonical_account_id,ssot_id,source_account_id,deterministic_key,account_name,parent_account_id,industry,country_code,identity_confidence,validity_score,run_id,run_timestamp,model_version
+acc_canon_001,001xx00000SSOT01,sf_acc_1001,PACIFIC_HOLDINGS_SG_UEN_88997766,Pacific Holdings Group,,Financial Services,SG,96,91,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_002,001xx00000SSOT02,sf_acc_1002,PACIFIC_CAPITAL_SG_UEN_11223344,Pacific Capital Singapore,acc_canon_001,Financial Services,SG,91,88,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_003,001xx00000SSOT03,sf_acc_2001,PACIFIC_SECURITIES_SG_UEN_55667788,Pacific Capital Securities,acc_canon_001,Capital Markets,SG,89,79,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0

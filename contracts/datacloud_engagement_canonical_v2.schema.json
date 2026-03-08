@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/datacloud_engagement_canonical_v2",
+  "title": "Data Cloud Canonical Engagement Export v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "canonical_account_id",
+    "engagement_id",
+    "engagement_type",
+    "engagement_timestamp",
+    "channel",
+    "engagement_score",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "canonical_account_id": { "type": "string", "minLength": 1 },
+    "engagement_id": { "type": "string", "minLength": 1 },
+    "engagement_type": {
+      "type": "string",
+      "enum": [
+        "EMAIL",
+        "DEVICE_APPLICATION",
+        "PRODUCT_BROWSE",
+        "PRODUCT_ORDER",
+        "SHOPPING_CART",
+        "OPPORTUNITY",
+        "CASE"
+      ]
+    },
+    "engagement_timestamp": { "type": "string", "format": "date-time" },
+    "channel": { "type": "string", "minLength": 1 },
+    "related_product_id": { "type": "string" },
+    "related_brand_id": { "type": "string" },
+    "related_opportunity_id": { "type": "string" },
+    "engagement_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}

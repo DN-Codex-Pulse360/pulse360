@@ -17,6 +17,9 @@ governance:
     - hierarchy_entity_graph
     - firmographic_enrichment
     - governance_case_metrics
+    - account_core_export
+    - product_brand_export
+    - engagement_export
 lineage:
   required_table_links:
     - upstream: pulse360_s4.intelligence.crm_accounts_raw
@@ -25,3 +28,9 @@ lineage:
       downstream: pulse360_s4.intelligence.hierarchy_entity_graph
     - upstream: pulse360_s4.intelligence.crm_accounts_raw
       downstream: pulse360_s4.intelligence.firmographic_enrichment
+    - upstream: pulse360_s4.intelligence.hierarchy_entity_graph
+      downstream: pulse360_s4.intelligence.account_core_export
+    - upstream: pulse360_s4.intelligence.firmographic_enrichment
+      downstream: pulse360_s4.intelligence.product_brand_export
+    - upstream: pulse360_s4.intelligence.governance_case_metrics
+      downstream: pulse360_s4.intelligence.engagement_export

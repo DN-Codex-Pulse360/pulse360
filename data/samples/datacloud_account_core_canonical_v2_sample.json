@@ -1,0 +1,15 @@
+{
+  "canonical_account_id": "acc_canon_001",
+  "ssot_id": "001xx00000SSOT01",
+  "source_account_id": "sf_acc_1001",
+  "deterministic_key": "PACIFIC_HOLDINGS_SG_UEN_88997766",
+  "account_name": "Pacific Holdings Group",
+  "parent_account_id": "",
+  "industry": "Financial Services",
+  "country_code": "SG",
+  "identity_confidence": 96,
+  "validity_score": 91,
+  "run_id": "run_20260308_03",
+  "run_timestamp": "2026-03-08T12:45:00Z",
+  "model_version": "dc-canonical-v2.0.0"
+}
