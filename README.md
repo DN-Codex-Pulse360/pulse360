@@ -25,3 +25,6 @@ This repository tracks implementation artifacts for the EPF v3.2.4 prototype bui
 
 ## Working Rule
 Every completed Linear issue must update at least one Notion page and one relevant repo artifact before closure.
+
+## Verification Note
+This line exists only to verify protected-branch review and merge flow.
