@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/databricks_to_datacloud",
+  "title": "Databricks to Data Cloud Handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "entity_id",
+    "source_account_id",
+    "duplicate_confidence",
+    "hierarchy_parent_id",
+    "hierarchy_child_id",
+    "validity_score",
+    "review_flag",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "entity_id": { "type": "string", "minLength": 1 },
+    "source_account_id": { "type": "string", "minLength": 1 },
+    "duplicate_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+    "hierarchy_parent_id": { "type": "string" },
+    "hierarchy_child_id": { "type": "string" },
+    "validity_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "review_flag": { "type": "boolean" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}

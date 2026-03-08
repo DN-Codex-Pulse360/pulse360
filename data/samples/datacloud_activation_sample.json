@@ -1,0 +1,16 @@
+{
+  "unified_profile_id": "ucp_001",
+  "identity_confidence": 96,
+  "hierarchy_payload": {
+    "group_id": "grp_pacific_holdings",
+    "children": [
+      { "entity_id": "ent_001", "name": "Pacific Capital Singapore" },
+      { "entity_id": "ent_002", "name": "Pacific Capital Securities" }
+    ]
+  },
+  "group_revenue_rollup": 4200000,
+  "cross_sell_propensity": 78,
+  "health_score": 61,
+  "coverage_gap_flag": true,
+  "last_synced_timestamp": "2026-03-08T10:10:00Z"
+}

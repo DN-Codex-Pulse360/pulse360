@@ -1,0 +1,3 @@
+entity_id,source_account_id,duplicate_confidence,hierarchy_parent_id,hierarchy_child_id,validity_score,review_flag,run_id,run_timestamp,model_version
+ent_001,sf_acc_1001,96.0,ent_parent_001,ent_001,91.0,false,run_20260308_01,2026-03-08T10:00:00Z,dbx-dup-hier-v1.0.0
+ent_002,sf_acc_1002,88.0,ent_parent_001,ent_002,62.0,true,run_20260308_01,2026-03-08T10:00:00Z,dbx-dup-hier-v1.0.0
