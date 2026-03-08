@@ -7,14 +7,14 @@
 ## Stage and Gate Tracker
 | Stage | Gate Question | Status | Evidence |
 | --- | --- | --- | --- |
-| 1.1 | Explain business problem without technology | Not Started | Notion: 01 - Business Context and Constraints |
-| 1.2 | At least one critical constraint per category | Not Started | Notion: 01 - Business Context and Constraints |
-| 1.3 | Data flow between critical systems is explicit | Not Started | Notion: 02 - Architecture and Integration Contracts |
-| 1.4 | Rejected options and tradeoffs captured | Not Started | Notion: 06 - Decision Log and ADRs |
-| 1.5 | New architect can onboard from docs alone | Not Started | Notion: EPF Control Center |
+| 1.1 | Explain business problem without technology | In Review | docs/epf/stage-1.1-business-context-framing.md |
+| 1.2 | At least one critical constraint per category | In Review | docs/epf/stage-1.2-enterprise-constraint-mapping.md |
+| 1.3 | Data flow between critical systems is explicit | In Review | docs/epf/stage-1.3-1.4-platform-landscape-and-option-assessment.md |
+| 1.4 | Rejected options and tradeoffs captured | In Review | docs/epf/stage-1.3-1.4-platform-landscape-and-option-assessment.md |
+| 1.5 | New architect can onboard from docs alone | In Review | docs/epf/stage-1.5-decision-capture-and-scope-commitment.md |
 | 2.1 | Persona journey with edge cases is clear | Not Started | docs/runbook/s4-ds-runbook.md |
 | 2.2 | Requirements fully trace to architecture | Not Started | docs/contracts/* |
-| 2.3 | Bootstrap and traceability works <= 30 min | Not Started | docs/setup/* |
+| 2.3 | Bootstrap and traceability works <= 30 min | In Review | docs/epf/stage-2.3-observability-checklist.md |
 | 2.4 | DS-01/02/03 run E2E and validate assumptions | Not Started | docs/qa/acceptance-checklist.md |
 | 2.5 | Estimate and resources are evidence-based | Not Started | docs/planning/implementation-estimate-template.md |
 | 2.6 | Formal GO/Conditional GO/No-GO recorded | Not Started | docs/readout/internal-readout-template.md |
