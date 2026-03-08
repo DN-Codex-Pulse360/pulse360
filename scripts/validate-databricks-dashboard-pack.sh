@@ -6,9 +6,13 @@ pass() { echo "[PASS] $1"; }
 
 sql_file="dashboards/databricks/s4_use_case_dashboard.sql"
 doc_file="docs/dashboards/databricks-s4-use-case-dashboard.md"
+demo_sql_file="dashboards/databricks/s4_use_case_dashboard_demo_mode.sql"
+demo_doc_file="docs/dashboards/databricks-s4-dashboard-demo-mode.md"
 
 [[ -f "$sql_file" ]] || fail "Missing SQL dashboard pack"
 [[ -f "$doc_file" ]] || fail "Missing dashboard runbook"
+[[ -f "$demo_sql_file" ]] || fail "Missing demo mode SQL dashboard pack"
+[[ -f "$demo_doc_file" ]] || fail "Missing demo mode dashboard guide"
 
 for token in \
   "DS-01" \
@@ -31,3 +35,18 @@ for token in \
 done
 
 pass "Databricks dashboard pack validated"
+
+for token in \
+  "demo_run_id" \
+  "run_20260308_03" \
+  "pulse360_s4.intelligence.datacloud_export_accounts"; do
+  rg -q "$token" "$demo_sql_file" || fail "Missing token in demo SQL pack: $token"
+done
+
+for token in \
+  "Recommended Defaults" \
+  "Demo Checklist"; do
+  rg -q "$token" "$demo_doc_file" || fail "Missing section in demo dashboard guide: $token"
+done
+
+pass "Databricks demo-mode dashboard pack validated"
