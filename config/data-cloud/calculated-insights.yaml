@@ -1,0 +1,37 @@
+version: 1
+insight_set: pulse360_s4_calculated_insights
+identity:
+  confidence_threshold: 90
+metrics:
+  - name: health_score
+    datatype: number
+    range: [0, 100]
+    formula: >
+      round((identity_confidence * 0.35) + (validity_score_avg * 0.25) +
+      ((100 - duplicate_rate_pct) * 0.20) + (engagement_score * 0.20), 2)
+  - name: cross_sell_propensity
+    datatype: number
+    range: [0, 100]
+    formula: >
+      round((uncovered_subsidiary_count * 12) + (product_fit_score * 0.45) +
+      (relationship_depth_score * 0.43), 2)
+  - name: coverage_gap_flag
+    datatype: boolean
+    formula: uncovered_subsidiary_count > 0
+  - name: competitor_risk_signal
+    datatype: number
+    range: [0, 100]
+    formula: round((competitor_touchpoints * 0.6) + (inactive_days_factor * 0.4), 2)
+activation:
+  target: salesforce_account
+  required_fields:
+    - unified_profile_id
+    - identity_confidence
+    - group_revenue_rollup
+    - health_score
+    - cross_sell_propensity
+    - coverage_gap_flag
+    - last_synced_timestamp
+  recompute_trigger:
+    - opportunity_created
+    - governance_merge_approved

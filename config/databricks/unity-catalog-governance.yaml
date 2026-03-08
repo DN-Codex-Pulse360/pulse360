@@ -1,0 +1,27 @@
+version: 1
+workspace_host: https://dbc-7f0ce7bb-56ca.cloud.databricks.com
+metastore:
+  expected_name: metastore_aws_us_east_2
+  expected_region: us-east-2
+governance:
+  catalog: pulse360_s4
+  schema: intelligence
+  owner_group: pulse360_data_eng
+  required_tags:
+    - domain:s4
+    - pii:none
+    - retention:prototype
+  required_tables:
+    - crm_accounts_raw
+    - duplicate_detection_pairs
+    - hierarchy_entity_graph
+    - firmographic_enrichment
+    - governance_case_metrics
+lineage:
+  required_table_links:
+    - upstream: pulse360_s4.intelligence.crm_accounts_raw
+      downstream: pulse360_s4.intelligence.duplicate_detection_pairs
+    - upstream: pulse360_s4.intelligence.crm_accounts_raw
+      downstream: pulse360_s4.intelligence.hierarchy_entity_graph
+    - upstream: pulse360_s4.intelligence.crm_accounts_raw
+      downstream: pulse360_s4.intelligence.firmographic_enrichment

@@ -22,6 +22,9 @@ Define fields and payload needed by Salesforce UX and Agentforce actions.
 ## Implemented Artifacts
 - `contracts/datacloud_to_salesforce_agentforce.schema.json`
 - `config/data-cloud/identity-resolution-rules.json`
+- `config/data-cloud/calculated-insights.yaml`
+- `config/data-cloud/activation-field-mapping.csv`
 - `data/samples/datacloud_identity_resolution_sample.json`
 - `data/samples/datacloud_activation_sample.json`
 - `scripts/validate-hierarchy-and-identity.sh`
+- `scripts/validate-data-cloud-insights-config.sh`

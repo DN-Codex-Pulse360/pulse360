@@ -25,3 +25,11 @@ jobs:
         run: |
           chmod +x scripts/validate-hierarchy-and-identity.sh
           ./scripts/validate-hierarchy-and-identity.sh
+      - name: Validate Unity Catalog governance config
+        run: |
+          chmod +x scripts/validate-unity-catalog-config.sh
+          ./scripts/validate-unity-catalog-config.sh
+      - name: Validate Data Cloud insights config
+        run: |
+          chmod +x scripts/validate-data-cloud-insights-config.sh
+          ./scripts/validate-data-cloud-insights-config.sh
