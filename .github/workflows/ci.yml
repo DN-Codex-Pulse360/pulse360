@@ -17,3 +17,11 @@ jobs:
           test -f docs/contracts/databricks-to-datacloud-contract.md
           test -f docs/contracts/datacloud-to-salesforce-agentforce-contract.md
           test -f docs/runbook/s4-ds-runbook.md
+      - name: Validate implementation contracts and sample payloads
+        run: |
+          chmod +x scripts/validate-contracts.sh
+          ./scripts/validate-contracts.sh
+      - name: Validate hierarchy and identity artifacts
+        run: |
+          chmod +x scripts/validate-hierarchy-and-identity.sh
+          ./scripts/validate-hierarchy-and-identity.sh

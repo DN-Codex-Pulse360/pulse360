@@ -21,3 +21,11 @@ Define handoff payload required for identity resolution, hierarchy modeling, and
 - No hardcoded scenario metrics.
 - IDs must be deterministic across reruns.
 - All records must carry run metadata.
+
+## Implemented Artifacts
+- `contracts/databricks_to_datacloud.schema.json`
+- `contracts/databricks_hierarchy_graph.schema.json`
+- `data/samples/databricks_enrichment_sample.csv`
+- `data/samples/hierarchy/databricks_hierarchy_graph_sample.json`
+- `scripts/validate-contracts.sh`
+- `scripts/validate-hierarchy-and-identity.sh`

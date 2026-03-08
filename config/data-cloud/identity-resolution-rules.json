@@ -1,0 +1,29 @@
+{
+  "rule_set_name": "pulse360_s4_identity_rules_v1",
+  "target_confidence_threshold": 90,
+  "match_rules": [
+    {
+      "name": "deterministic_legal_entity_key",
+      "fields": ["entity_id", "deterministic_key"],
+      "weight": 0.6,
+      "match_type": "exact"
+    },
+    {
+      "name": "name_and_registry_similarity",
+      "fields": ["legal_name", "registration_number", "country_code"],
+      "weight": 0.3,
+      "match_type": "fuzzy"
+    },
+    {
+      "name": "business_contact_overlap",
+      "fields": ["phone", "domain"],
+      "weight": 0.1,
+      "match_type": "partial"
+    }
+  ],
+  "survivorship_rules": {
+    "master_record_selection": "highest_validity_score",
+    "field_conflict_policy": "human_review_for_flagged_fields",
+    "minimum_confidence_for_auto_merge": 95
+  }
+}

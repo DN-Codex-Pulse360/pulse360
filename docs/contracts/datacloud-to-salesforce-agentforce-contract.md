@@ -18,3 +18,10 @@ Define fields and payload needed by Salesforce UX and Agentforce actions.
 ## Rules
 - Salesforce is execution surface, not source of truth.
 - UI values must originate from Data Cloud or Databricks lineage-backed data.
+
+## Implemented Artifacts
+- `contracts/datacloud_to_salesforce_agentforce.schema.json`
+- `config/data-cloud/identity-resolution-rules.json`
+- `data/samples/datacloud_identity_resolution_sample.json`
+- `data/samples/datacloud_activation_sample.json`
+- `scripts/validate-hierarchy-and-identity.sh`

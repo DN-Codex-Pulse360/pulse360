@@ -1,0 +1,22 @@
+{
+  "rule_set_name": "pulse360_s4_identity_rules_v1",
+  "key_demo_pairs": [
+    {
+      "left_record": "sf_acc_1001",
+      "right_record": "sf_acc_1002",
+      "identity_confidence": 96,
+      "recommended_master": "sf_acc_1001"
+    },
+    {
+      "left_record": "sf_acc_2001",
+      "right_record": "sf_acc_2002",
+      "identity_confidence": 91,
+      "recommended_master": "sf_acc_2001"
+    }
+  ],
+  "hierarchy_rollup": {
+    "unified_profile_id": "ucp_001",
+    "group_revenue_rollup": 4200000,
+    "entities_in_hierarchy": 6
+  }
+}
