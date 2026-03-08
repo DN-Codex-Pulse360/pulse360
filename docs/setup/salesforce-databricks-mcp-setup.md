@@ -40,3 +40,4 @@ Least-privilege requirements:
 - `sf data query --target-org pulse360-dev --query "SELECT Label, DeveloperName, NamespacePrefix FROM AppDefinition WHERE Label IN ('Data Cloud','Agentforce Studio','Sales','Service') ORDER BY Label" --result-format json`
 - `databricks workspace ls /`
 - `databricks unity-catalog metastores list`
+- `./scripts/check-databricks-lineage-runtime.sh` (requires configured lineage table names)

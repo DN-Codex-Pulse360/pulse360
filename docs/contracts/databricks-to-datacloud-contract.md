@@ -27,5 +27,9 @@ Define handoff payload required for identity resolution, hierarchy modeling, and
 - `contracts/databricks_hierarchy_graph.schema.json`
 - `data/samples/databricks_enrichment_sample.csv`
 - `data/samples/hierarchy/databricks_hierarchy_graph_sample.json`
+- `config/databricks/unity-catalog-governance.yaml`
+- `config/databricks/lineage-targets.env.sample`
 - `scripts/validate-contracts.sh`
 - `scripts/validate-hierarchy-and-identity.sh`
+- `scripts/validate-unity-catalog-config.sh`
+- `scripts/check-databricks-lineage-runtime.sh`
