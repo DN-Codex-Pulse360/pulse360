@@ -15,7 +15,7 @@
 | 2.1 | Persona journey with edge cases is clear | Not Started | docs/runbook/s4-ds-runbook.md |
 | 2.2 | Requirements fully trace to architecture | Not Started | docs/contracts/* |
 | 2.3 | Bootstrap and traceability works <= 30 min | In Review | docs/epf/stage-2.3-observability-checklist.md |
-| 2.4 | DS-01/02/03 run E2E and validate assumptions | Not Started | docs/qa/acceptance-checklist.md |
+| 2.4 | DS-01/02/03 run E2E and validate assumptions | In Review | docs/qa/acceptance-checklist.md; docs/security/mcp-security-assessment.md |
 | 2.5 | Estimate and resources are evidence-based | Not Started | docs/planning/implementation-estimate-template.md |
 | 2.6 | Formal GO/Conditional GO/No-GO recorded | Not Started | docs/readout/internal-readout-template.md |
 
@@ -25,3 +25,7 @@
 - C: Data Cloud Identity and Activation
 - D: Salesforce and Agentforce Experience Layer
 - E: End-to-End Demo Hardening
+
+## Security Gate Evidence (DAN-69)
+- Assessment record: `docs/security/mcp-security-assessment.md`
+- Validation command: `./scripts/mcp-security-gate.sh`

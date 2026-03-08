@@ -37,6 +37,8 @@ metrics:
     formula: top_brand_by_revenue
 activation:
   target: salesforce_account
+  mode: near_real_time
+  max_sync_latency_minutes: 5
   required_fields:
     - unified_profile_id
     - identity_confidence
@@ -44,6 +46,7 @@ activation:
     - health_score
     - cross_sell_propensity
     - coverage_gap_flag
+    - competitor_risk_signal
     - primary_brand_name
     - active_product_count
     - engagement_intensity_score

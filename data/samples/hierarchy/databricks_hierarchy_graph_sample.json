@@ -20,6 +20,12 @@
       "legal_name": "Pacific Capital Securities",
       "deterministic_key": "PCS_SG_UEN_55667788",
       "validity_score": 79
+    },
+    {
+      "entity_id": "ent_pacific_advisors",
+      "legal_name": "Pacific Capital Advisors",
+      "deterministic_key": "PCA_SG_UEN_66778899",
+      "validity_score": 86
     }
   ],
   "edges": [
@@ -31,6 +37,11 @@
     {
       "parent_entity_id": "ent_pacific_holdings",
       "child_entity_id": "ent_pacific_securities",
+      "relationship_type": "SUBSIDIARY_OF"
+    },
+    {
+      "parent_entity_id": "ent_pacific_capital_sg",
+      "child_entity_id": "ent_pacific_advisors",
       "relationship_type": "SUBSIDIARY_OF"
     }
   ]

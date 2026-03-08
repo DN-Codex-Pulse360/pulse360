@@ -53,3 +53,14 @@ This v1 handoff remains valid for DS-01/02/03 continuity. Canonical v2 exports a
 - `scripts/validate-hierarchy-and-identity.sh`
 - `scripts/validate-unity-catalog-config.sh`
 - `scripts/check-databricks-lineage-runtime.sh`
+
+## DAN-60 Evidence Snapshot (2026-03-08)
+- Identity rule threshold configured at `>=90` in `config/data-cloud/identity-resolution-rules.json`.
+- Key demo identity pairs meet threshold in `data/samples/datacloud_identity_resolution_sample.json`.
+- Hierarchy sample demonstrates multi-level parent-child graph and supports rollup context in:
+  - `data/samples/hierarchy/databricks_hierarchy_graph_sample.json`
+  - `data/samples/datacloud_identity_resolution_sample.json` (`group_revenue_rollup`, `unified_profile_id`)
+- Downstream Salesforce alignment is represented in:
+  - `contracts/datacloud_to_salesforce_agentforce.schema.json`
+  - `config/data-cloud/activation-field-mapping.csv`
+  - `data/samples/datacloud_activation_sample.json`
