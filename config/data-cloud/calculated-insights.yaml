@@ -22,6 +22,19 @@ metrics:
     datatype: number
     range: [0, 100]
     formula: round((competitor_touchpoints * 0.6) + (inactive_days_factor * 0.4), 2)
+  - name: engagement_intensity_score
+    datatype: number
+    range: [0, 100]
+    formula: round((email_engagement_score * 0.25) + (app_engagement_score * 0.20) + (browse_engagement_score * 0.15) + (order_engagement_score * 0.20) + (opportunity_signal_score * 0.20), 2)
+  - name: active_product_count
+    datatype: number
+    formula: active_product_count
+  - name: open_opportunity_count
+    datatype: number
+    formula: open_opportunity_count
+  - name: primary_brand_name
+    datatype: string
+    formula: top_brand_by_revenue
 activation:
   target: salesforce_account
   required_fields:
@@ -31,6 +44,11 @@ activation:
     - health_score
     - cross_sell_propensity
     - coverage_gap_flag
+    - primary_brand_name
+    - active_product_count
+    - engagement_intensity_score
+    - open_opportunity_count
+    - last_engagement_timestamp
     - last_synced_timestamp
   recompute_trigger:
     - opportunity_created

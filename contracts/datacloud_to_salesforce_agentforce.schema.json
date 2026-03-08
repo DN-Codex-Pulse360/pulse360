@@ -12,6 +12,11 @@
     "cross_sell_propensity",
     "health_score",
     "coverage_gap_flag",
+    "primary_brand_name",
+    "active_product_count",
+    "engagement_intensity_score",
+    "open_opportunity_count",
+    "last_engagement_timestamp",
     "last_synced_timestamp"
   ],
   "properties": {
@@ -22,6 +27,11 @@
     "cross_sell_propensity": { "type": "number", "minimum": 0, "maximum": 100 },
     "health_score": { "type": "number", "minimum": 0, "maximum": 100 },
     "coverage_gap_flag": { "type": "boolean" },
+    "primary_brand_name": { "type": "string", "minLength": 1 },
+    "active_product_count": { "type": "integer", "minimum": 0 },
+    "engagement_intensity_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "open_opportunity_count": { "type": "integer", "minimum": 0 },
+    "last_engagement_timestamp": { "type": "string", "format": "date-time" },
     "last_synced_timestamp": { "type": "string", "format": "date-time" }
   }
 }

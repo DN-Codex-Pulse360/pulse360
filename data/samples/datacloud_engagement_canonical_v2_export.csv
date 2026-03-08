@@ -1,0 +1,5 @@
+canonical_account_id,engagement_id,engagement_type,engagement_timestamp,channel,related_product_id,related_brand_id,related_opportunity_id,engagement_score,run_id,run_timestamp,model_version
+acc_canon_001,eng_20260308_091500,OPPORTUNITY,2026-03-08T09:15:00Z,salesforce_crm,prd_wm_001,brand_pacific,006xx00000OPP001,84,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_001,eng_20260308_093000,EMAIL,2026-03-08T09:30:00Z,marketing_cloud,prd_trd_002,brand_pacific,,71,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_002,eng_20260308_095000,PRODUCT_BROWSE,2026-03-08T09:50:00Z,web_portal,prd_adm_003,brand_pacific,,67,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_003,eng_20260308_101000,PRODUCT_ORDER,2026-03-08T10:10:00Z,commerce_api,prd_rsk_004,brand_pacific,,79,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0

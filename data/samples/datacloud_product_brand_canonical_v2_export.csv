@@ -1,0 +1,5 @@
+canonical_account_id,product_id,master_product_id,bundle_product_id,brand_id,brand_name,relationship_type,is_active,run_id,run_timestamp,model_version
+acc_canon_001,prd_wm_001,mprd_wealth_platform,bndl_advisory_plus,brand_pacific,Pacific Capital,OWNED,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_001,prd_trd_002,mprd_trading_suite,,brand_pacific,Pacific Capital,INSTALLED_BASE,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_002,prd_adm_003,mprd_wealth_platform,,brand_pacific,Pacific Capital,INTERESTED,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_canon_003,prd_rsk_004,mprd_risk_engine,bndl_risk_controls,brand_pacific,Pacific Capital,PURCHASED,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0

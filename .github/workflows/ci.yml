@@ -33,3 +33,7 @@ jobs:
         run: |
           chmod +x scripts/validate-data-cloud-insights-config.sh
           ./scripts/validate-data-cloud-insights-config.sh
+      - name: Validate canonical export integrity
+        run: |
+          chmod +x scripts/validate-canonical-exports.sh
+          ./scripts/validate-canonical-exports.sh
