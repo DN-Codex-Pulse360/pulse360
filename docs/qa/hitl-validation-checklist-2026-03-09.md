@@ -16,6 +16,46 @@ Use this exact pattern in Linear milestone comments:
 3. Confirm one reviewer name is explicitly recorded in the milestone comment.
 4. Confirm no unresolved blocker issues remain in the milestone scope.
 
+## Milestone A Validation Steps (Environment and Data Foundations)
+1. Verify EPF stage artifacts are present and readable:
+- `docs/epf/stage-1.1-business-context-framing.md`
+- `docs/epf/stage-1.2-enterprise-constraint-mapping.md`
+- `docs/epf/stage-1.3-1.4-platform-landscape-and-option-assessment.md`
+- `docs/epf/stage-1.5-decision-capture-and-scope-commitment.md`
+2. Verify baseline setup/security docs are current:
+- `docs/setup/salesforce-databricks-mcp-setup.md`
+- `docs/security/mcp-security-assessment.md`
+- `docs/epf/control-center.md`
+3. Confirm Milestone A issues are `Done` in Linear (`DAN-48`, `DAN-49`, `DAN-50`, `DAN-51`, `DAN-52`, `DAN-53`, `DAN-74`, `DAN-75`, `DAN-76`, `DAN-77`).
+4. Post Linear milestone comment:
+- `HITL-Validated: Milestone A, 2026-03-09, Reviewer Name`
+
+## Milestone B Validation Steps (Databricks Intelligence Layer)
+1. Run and confirm DS-01/DS-02 validator pass:
+- `./scripts/validate-duplicate-detection-runtime.sh`
+- `./scripts/validate-firmographic-enrichment-runtime.sh`
+- `./scripts/validate-governance-ops-metrics-runtime.sh`
+- `./scripts/validate-dan-58-governance-dashboard-pack.sh`
+2. Verify governance dashboard evidence is current:
+- `docs/evidence/dan-58-governance-dashboard-latest.md`
+3. Confirm Milestone B issues are `Done` in Linear (`DAN-54`, `DAN-55`, `DAN-56`, `DAN-57`, `DAN-58`).
+4. Post Linear milestone comment:
+- `HITL-Validated: Milestone B, 2026-03-09, Reviewer Name`
+
+## Milestone C Validation Steps (Data Cloud Identity and Activation)
+1. Run and confirm stream/runtime validators:
+- `./scripts/run-datacloud-prerun-import.sh`
+- `./scripts/validate-data-cloud-stream-runtime.sh`
+- `./scripts/validate-dan-59-stream-pack.sh`
+2. Verify stream evidence and mapping artifacts:
+- `docs/evidence/dan-59-data-cloud-stream-health-latest.md`
+- `docs/evidence/datacloud-prerun-import-latest.md`
+- `config/data-cloud/stream-manifest.yaml`
+- `config/data-cloud/activation-field-mapping.csv`
+3. Confirm Milestone C issues are `Done` in Linear (`DAN-59`, `DAN-60`, `DAN-61`, `DAN-62`).
+4. Post Linear milestone comment:
+- `HITL-Validated: Milestone C, 2026-03-09, Reviewer Name`
+
 ## Milestone D Salesforce UI Proof Checklist
 Required because payload/runtime proofs alone are insufficient for UI placement confirmation.
 
@@ -40,4 +80,3 @@ Required because payload/runtime proofs alone are insufficient for UI placement 
 ## Execution Notes
 - If any Milestone D UI proof item is missing, keep milestone status as HITL pending.
 - If proof reveals placement/configuration mismatch, re-open affected D issues before milestone sign-off.
-
