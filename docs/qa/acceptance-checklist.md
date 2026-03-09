@@ -7,6 +7,8 @@
 
 ## Functional Tests
 - [ ] DS-01 runs end-to-end without hardcoded metrics.
+- [ ] `pulse360_s4.intelligence.duplicate_candidate_pairs` is populated with non-zero rows.
+- [ ] DS-01 duplicate confidence scores are bounded `0-100` and include run metadata (`run_id`, `run_timestamp`, `model_version`).
 - [ ] DS-02 runs end-to-end with governance audit trail.
 - [ ] DS-03 runs end-to-end with live hierarchy and cross-sell flow.
 - [ ] Lineage is visible from source to enriched outputs.

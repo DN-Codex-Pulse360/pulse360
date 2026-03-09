@@ -6,11 +6,16 @@ All scenarios complete in 15 minutes or less.
 ## DS-01 Fragmentation Discovery
 1. Salesforce before-state: fragmented account records.
 2. Databricks: duplicate and enrichment evidence.
-3. Data Cloud: unified profile and hierarchy context.
-4. Agentforce: health scan API response.
+3. Execute duplicate candidate build and runtime validation:
+- `scripts/build-duplicate-candidate-pairs.sh`
+- `scripts/validate-duplicate-detection-runtime.sh`
+4. Data Cloud: unified profile and hierarchy context.
+5. Agentforce: health scan API response.
 
 Expected proof:
 - Duplicate metrics visible.
+- `pulse360_s4.intelligence.duplicate_candidate_pairs` has non-zero rows with `duplicate_confidence_score` in `0-100`.
+- Duplicate rows include run metadata (`run_id`, `run_timestamp`, `model_version`).
 - Validity scores shown.
 - AI impact linkage shown.
 
