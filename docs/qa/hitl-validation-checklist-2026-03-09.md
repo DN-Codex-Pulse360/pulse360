@@ -80,3 +80,10 @@ Required because payload/runtime proofs alone are insufficient for UI placement 
 ## Execution Notes
 - If any Milestone D UI proof item is missing, keep milestone status as HITL pending.
 - If proof reveals placement/configuration mismatch, re-open affected D issues before milestone sign-off.
+
+## HITL Validation Log (Recorded)
+- `HITL-Validated: Milestone A, 2026-03-09, Daniel Nortje` -> PASS
+- `HITL-Validated: Milestone B, 2026-03-09, Daniel Nortje` -> FAIL (open visual-completeness gap)
+- `HITL-Validated: Milestone C, 2026-03-09, Daniel Nortje` -> PASS
+- `HITL-Validated: Milestone D, 2026-03-09, Daniel Nortje` -> FAIL (Salesforce deployment gap)
+- `HITL-Validated: Milestone E, 2026-03-09, Daniel Nortje` -> PASS

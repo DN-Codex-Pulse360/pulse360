@@ -9,7 +9,7 @@ Scope: Pulse360 milestones A-E after adding standardized Linear milestone valida
 - Milestone C: delivery state aligns with expected outputs (DAN-59 now closed with fresh evidence).
 - Milestone D: not aligned; Salesforce UI metadata deployment is absent in the validated org, and D1-D4 are re-opened.
 - Milestone E: delivery state aligns for artifact completion and decision archive.
-- HITL requirement: newly defined on all milestones in Linear, but HITL sign-off comments are not yet recorded.
+- HITL requirement: explicit milestone HITL validation entries have now been recorded for milestones A-E.
 
 ## Expected vs Actual
 | Milestone | Expected outcomes/deliverables | Actual (evidence-backed) | Status |
@@ -26,15 +26,20 @@ Expected for each milestone:
 - Human review of live system behavior and artifact freshness
 
 Actual:
-- Validation requirements are now embedded in milestone descriptions.
-- No milestone-level HITL validation comments have been logged yet.
+- Validation requirements are embedded in milestone descriptions.
+- Milestone HITL entries logged on `2026-03-09` using required format:
+  - `HITL-Validated: Milestone A, 2026-03-09, Daniel Nortje` (PASS)
+  - `HITL-Validated: Milestone B, 2026-03-09, Daniel Nortje` (FAIL, open)
+  - `HITL-Validated: Milestone C, 2026-03-09, Daniel Nortje` (PASS)
+  - `HITL-Validated: Milestone D, 2026-03-09, Daniel Nortje` (FAIL, open)
+  - `HITL-Validated: Milestone E, 2026-03-09, Daniel Nortje` (PASS)
 
 Status by milestone:
-- Milestone A: HITL pending
-- Milestone B: HITL pending + visual completeness gap (DAN-58 reopened)
-- Milestone C: HITL pending
-- Milestone D: HITL pending + UI deployment/placement confirmation needed
-- Milestone E: HITL pending
+- Milestone A: HITL logged (PASS)
+- Milestone B: HITL logged (FAIL, visual completeness gap)
+- Milestone C: HITL logged (PASS)
+- Milestone D: HITL logged (FAIL, Salesforce deployment gap)
+- Milestone E: HITL logged (PASS)
 
 ## Evidence Pointers
 - Control center: `docs/epf/control-center.md`
