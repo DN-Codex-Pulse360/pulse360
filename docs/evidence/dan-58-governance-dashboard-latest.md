@@ -2,6 +2,7 @@
 
 - Issue: `DAN-58`
 - Milestone: `B - Databricks Intelligence Layer`
+- Current status: `In Progress` (re-opened on `2026-03-09` after live UI review showed dashboard builder/skeleton state)
 - Evidence date (UTC): `2026-03-09`
 - Branch: `codex/dan-60-61-dashboard-pack`
 - Commit: `c4d2d36548f42e2c2bf3d4462b3ed113dd8690e8`
