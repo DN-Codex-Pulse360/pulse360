@@ -30,5 +30,6 @@
 - [ ] Fallback path documented and tested for each external dependency.
 - [ ] E2E QA timing evidence is captured and published (`docs/evidence/e2e-qa-latest.md`) from `scripts/run-e2e-qa-timing.sh`.
 - [ ] DAN-70 implementation estimate + resource plan is published (`docs/planning/dan-70-implementation-estimate-and-resource-plan.md`) and validated with `scripts/validate-implementation-estimate-runtime.sh`.
+- [ ] DAN-71 internal solution readout dashboard pack is published (`docs/readout/internal-solution-readout-dashboard-pack.md`) and validated with `scripts/validate-readout-dashboard-pack.sh`.
 - [ ] Walkthrough script published with exact DS-01/02/03 transitions, panel references, and fallback wording (`docs/runbook/ds-01-02-03-walkthrough-script.md`).
 - [ ] Rehearsal checklist and scoring rubric published (`docs/qa/walkthrough-rehearsal-rubric.md`).
