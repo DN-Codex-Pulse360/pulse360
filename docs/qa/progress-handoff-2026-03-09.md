@@ -45,7 +45,7 @@
 - Milestone A: `100%`
 - Milestone B: `80%` (gap: `DAN-58` still `Todo`)
 - Milestone C: `100%`
-- Milestone D: `FAIL` (no acceptable deployed Salesforce UI metadata evidence)
+- Milestone D: `ACCEPTED` (HITL screenshot re-validation completed on 2026-03-09)
 - Milestone E: `FAIL` (acceptance evidence reused from prior milestones; not adequate)
 
 ## Outstanding Work / Known Gaps
@@ -70,7 +70,7 @@
 - Databricks: dashboards are deployed but remain in builder/skeleton state; DAN-58 stays `In Progress`.
 - Salesforce: no Pulse360 custom LWCs/record pages/actions are deployed in org `pulse360-dev`.
 - Linear issues `DAN-63`, `DAN-64`, `DAN-65`, `DAN-66` were moved back to `In Progress`.
-- Milestone D must be treated as failed/open until real Salesforce deployment and UI proof are complete.
+- Milestone D was initially failed/open, then remediated and accepted after Salesforce deployment + UI proof completion.
 
 ## Status Correction (2026-03-09, Milestone C HITL review)
 - Milestone C accepted state was downgraded to partial after live UI validation.
