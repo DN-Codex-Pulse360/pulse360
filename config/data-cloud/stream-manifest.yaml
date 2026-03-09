@@ -1,6 +1,15 @@
 version: 1
 stream_set: pulse360_s4_streams
 description: Data Cloud stream configuration for Salesforce account source and Databricks enrichment source.
+connector_contract:
+  contract_name: databricks_to_datacloud
+  contract_version: 1.1.0
+  metadata_version: 1.0.0
+  owner: pulse360-data-engineering
+  prototype_mode: pre_run_import
+  pre_run_import_script: scripts/run-datacloud-prerun-import.sh
+  evidence_file: docs/evidence/datacloud-prerun-import-latest.md
+  delta_share_migration_notes: docs/contracts/databricks-to-datacloud-contract.md#delta-share-migration-path-production
 
 salesforce_account_stream:
   source_system: salesforce
@@ -48,3 +57,6 @@ databricks_enrichment_stream:
     - last_engagement_timestamp
     - last_synced_timestamp
     - ingestion_metadata_label
+    - run_id
+    - run_timestamp
+    - model_version

@@ -1,0 +1,21 @@
+{
+  "unified_profile_id": "ucp_sf_acc_1001",
+  "source_account_id": "sf_acc_1001",
+  "account_name": "Pacific Capital Singapore",
+  "hierarchy_payload": {
+    "group_id": "grp_pacific_holdings",
+    "children": [
+      { "entity_id": "ent_001", "name": "Pacific Capital Singapore" },
+      { "entity_id": "ent_002", "name": "Pacific Capital Securities" }
+    ]
+  },
+  "group_revenue_rollup": 1250000,
+  "cross_sell_propensity": 87.0,
+  "coverage_gap_flag": false,
+  "last_synced_timestamp": "2026-03-09T04:22:59Z",
+  "data_health_status": "healthy",
+  "degraded_mode_message": "",
+  "run_id": "run_20260309_042146",
+  "run_timestamp": "2026-03-09T04:22:59Z",
+  "model_version": "dbx-dc-export-v1.0.0"
+}

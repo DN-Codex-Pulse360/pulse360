@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/agentforce_account_health_scan_action",
+  "title": "Agentforce Account Health Scan Action Payload",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action_name",
+    "request",
+    "response"
+  ],
+  "properties": {
+    "action_name": {
+      "type": "string",
+      "const": "account_health_scan"
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_request_id",
+        "source_account_id",
+        "correlation_id",
+        "requested_at"
+      ],
+      "properties": {
+        "action_request_id": { "type": "string", "minLength": 1 },
+        "source_account_id": { "type": "string", "minLength": 1 },
+        "correlation_id": { "type": "string", "minLength": 1 },
+        "requested_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "http_status",
+        "api_latency_ms",
+        "data_source",
+        "response_card",
+        "failure_mode"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["success", "degraded", "failed_non_blocking"]
+        },
+        "http_status": { "type": "integer", "minimum": 100, "maximum": 599 },
+        "api_latency_ms": { "type": "integer", "minimum": 0 },
+        "data_source": {
+          "type": "string",
+          "const": "datacloud_calculated_insights_api"
+        },
+        "response_card": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "duplicate_evidence",
+            "cross_sell_estimate",
+            "health_score",
+            "competitor_risk_signal",
+            "ai_impact_summary",
+            "last_synced_timestamp"
+          ],
+          "properties": {
+            "duplicate_evidence": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["pair_count", "max_confidence", "confidence_band"],
+              "properties": {
+                "pair_count": { "type": "integer", "minimum": 0 },
+                "max_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+                "confidence_band": { "type": "string", "minLength": 1 }
+              }
+            },
+            "cross_sell_estimate": { "type": "number", "minimum": 0, "maximum": 100 },
+            "health_score": { "type": "number", "minimum": 0, "maximum": 100 },
+            "competitor_risk_signal": { "type": "number", "minimum": 0, "maximum": 100 },
+            "ai_impact_summary": { "type": "string", "minLength": 1 },
+            "last_synced_timestamp": { "type": "string", "format": "date-time" }
+          }
+        },
+        "failure_mode": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "is_non_blocking",
+            "error_code",
+            "user_message",
+            "retry_disposition"
+          ],
+          "properties": {
+            "is_non_blocking": { "type": "boolean" },
+            "error_code": { "type": "string", "minLength": 1 },
+            "user_message": { "type": "string", "minLength": 1 },
+            "retry_disposition": {
+              "type": "string",
+              "enum": ["not_required", "retry_scheduled", "manual_retry_available"]
+            }
+          }
+        }
+      }
+    }
+  }
+}

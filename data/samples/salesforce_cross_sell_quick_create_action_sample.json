@@ -1,0 +1,31 @@
+{
+  "banner": {
+    "source_account_id": "sf_acc_1001",
+    "unified_profile_id": "ucp_sf_acc_1001",
+    "cross_sell_propensity": 87.0,
+    "coverage_gap_flag": false,
+    "open_opportunity_count": 1,
+    "last_synced_timestamp": "2026-03-09T04:22:59Z",
+    "banner_state": "show_recommendation"
+  },
+  "quick_create": {
+    "context_account_id": "sf_acc_1001",
+    "contact_association": {
+      "linkage_type": "datacloud_group_profile_link",
+      "unified_profile_id": "ucp_sf_acc_1001",
+      "contact_record_id": "003xx00000CNT001"
+    },
+    "opportunity_payload": {
+      "name": "Pacific Capital Singapore - Cross Sell Expansion",
+      "stage_name": "Prospecting",
+      "close_date": "2026-04-15",
+      "expected_value": 350000
+    }
+  },
+  "refresh_trigger": {
+    "event_name": "opportunity_created",
+    "is_enabled": true,
+    "trigger_source": "salesforce_crm_event_bus",
+    "expected_recompute_window_minutes": 5
+  }
+}

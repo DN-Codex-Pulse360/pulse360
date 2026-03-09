@@ -21,8 +21,11 @@ for token in \
   "databricks_enrichment_stream:" \
   "source_table: pulse360_s4.intelligence.datacloud_export_accounts" \
   "ingestion_metadata_label_field: ingestion_metadata_label" \
+  "- run_id" \
+  "- run_timestamp" \
+  "- model_version" \
   "expected_latency_minutes: 15"; do
-  rg -q "$token" "$manifest" || fail "Missing stream-manifest token: $token"
+  rg -q -- "$token" "$manifest" || fail "Missing stream-manifest token: $token"
 done
 pass "Stream manifest contains required stream definitions"
 
@@ -116,7 +119,10 @@ SELECT
   SUM(CASE WHEN unified_profile_id IS NULL OR unified_profile_id = '' THEN 1 ELSE 0 END) AS missing_unified_profile_id,
   SUM(CASE WHEN identity_confidence < 0 OR identity_confidence > 100 THEN 1 ELSE 0 END) AS bad_identity_confidence,
   SUM(CASE WHEN last_synced_timestamp IS NULL THEN 1 ELSE 0 END) AS missing_last_synced,
-  SUM(CASE WHEN ingestion_metadata_label IS NULL OR ingestion_metadata_label = '' THEN 1 ELSE 0 END) AS missing_ingestion_label
+  SUM(CASE WHEN ingestion_metadata_label IS NULL OR ingestion_metadata_label = '' THEN 1 ELSE 0 END) AS missing_ingestion_label,
+  SUM(CASE WHEN run_id IS NULL OR run_id = '' THEN 1 ELSE 0 END) AS missing_run_id,
+  SUM(CASE WHEN run_timestamp IS NULL THEN 1 ELSE 0 END) AS missing_run_timestamp,
+  SUM(CASE WHEN model_version IS NULL OR model_version = '' THEN 1 ELSE 0 END) AS missing_model_version
 FROM pulse360_s4.intelligence.datacloud_export_accounts
 "
 
@@ -142,11 +148,17 @@ missing_profile="$(jq -r '.result.data_array[0][0] // "0"' <<<"$mapping_resp")"
 bad_identity="$(jq -r '.result.data_array[0][1] // "0"' <<<"$mapping_resp")"
 missing_synced="$(jq -r '.result.data_array[0][2] // "0"' <<<"$mapping_resp")"
 missing_label="$(jq -r '.result.data_array[0][3] // "0"' <<<"$mapping_resp")"
+missing_run_id="$(jq -r '.result.data_array[0][4] // "0"' <<<"$mapping_resp")"
+missing_run_ts="$(jq -r '.result.data_array[0][5] // "0"' <<<"$mapping_resp")"
+missing_model_version="$(jq -r '.result.data_array[0][6] // "0"' <<<"$mapping_resp")"
 
 [[ "$missing_profile" == "0" ]] || fail "Missing unified_profile_id rows found in export"
 [[ "$bad_identity" == "0" ]] || fail "Identity confidence outside 0-100 found in export"
 [[ "$missing_synced" == "0" ]] || fail "Missing last_synced_timestamp rows found in export"
 [[ "$missing_label" == "0" ]] || fail "Missing ingestion metadata label rows found in export"
+[[ "$missing_run_id" == "0" ]] || fail "Missing run_id rows found in export"
+[[ "$missing_run_ts" == "0" ]] || fail "Missing run_timestamp rows found in export"
+[[ "$missing_model_version" == "0" ]] || fail "Missing model_version rows found in export"
 pass "Stream-to-contract field checks passed"
 
 echo "$health_resp" | jq -c '.result.data_array // []'

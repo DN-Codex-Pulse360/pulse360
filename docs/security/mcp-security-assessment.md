@@ -44,3 +44,15 @@ Current decision: **PASS (baseline integrations only)** as of 2026-03-08.
 ## Evidence Links
 - Setup and least-privilege baseline: `docs/setup/salesforce-databricks-mcp-setup.md`
 - Gate script: `scripts/mcp-security-gate.sh`
+
+## Databricks -> Data Cloud Connector Compliance (DAN-62)
+| Control | Result | Evidence |
+| --- | --- | --- |
+| Prototype pre-run import is deterministic and repeatable | PASS | `scripts/run-datacloud-prerun-import.sh` |
+| Connector contract and metadata fields are versioned | PASS | `config/data-cloud/stream-manifest.yaml` (`connector_contract`, `run_id`, `run_timestamp`, `model_version`) |
+| Production Delta Share migration path is documented | PASS | `docs/contracts/databricks-to-datacloud-contract.md` |
+| Ingestion audit evidence artifact is captured | PASS | `docs/evidence/datacloud-prerun-import-latest.md` |
+
+Notion security/compliance update target:
+- Pulse360 Notion parent: https://www.notion.so/Pulse360-31dfe2e19eed80678c2fde2bd0b4ac40
+- Attach latest `docs/evidence/datacloud-prerun-import-latest.md` snapshot and link this section.

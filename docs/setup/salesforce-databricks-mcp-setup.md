@@ -54,3 +54,14 @@ Least-privilege requirements:
   - non-zero rows in duplicate/enrichment/governance/export source tables
   - export `last_synced_timestamp` populated
   - ingestion label prefix `Databricks Enrichment — Last ingested:`
+
+## Connector Pre-run Import Baseline (DAN-62)
+- Connector contract metadata and versioning: `config/data-cloud/stream-manifest.yaml` (`connector_contract`)
+- Prototype pre-run workflow:
+  - `RUN_ID=run_YYYYMMDD_HHMMSS ./scripts/run-datacloud-prerun-import.sh`
+- Connector hardening validator:
+  - `./scripts/validate-datacloud-connector-contract.sh`
+- Evidence artifact written by pre-run workflow:
+  - `docs/evidence/datacloud-prerun-import-latest.md`
+- Production migration reference:
+  - `docs/contracts/databricks-to-datacloud-contract.md` -> `Delta Share Migration Path (Production)`

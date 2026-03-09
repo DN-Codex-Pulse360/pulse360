@@ -77,3 +77,44 @@ This v1 handoff remains valid for DS-01/02/03 continuity. Canonical v2 exports a
   - `contracts/datacloud_to_salesforce_agentforce.schema.json`
   - `config/data-cloud/activation-field-mapping.csv`
   - `data/samples/datacloud_activation_sample.json`
+
+## Connector Contract Versioning (DAN-62)
+The connector contract is versioned in `config/data-cloud/stream-manifest.yaml` under `connector_contract`.
+
+| Key | Value |
+| --- | --- |
+| `contract_name` | `databricks_to_datacloud` |
+| `contract_version` | `1.1.0` |
+| `metadata_version` | `1.0.0` |
+| `prototype_mode` | `pre_run_import` |
+| `pre_run_import_script` | `scripts/run-datacloud-prerun-import.sh` |
+| `evidence_file` | `docs/evidence/datacloud-prerun-import-latest.md` |
+
+Metadata fields that must be present in Databricks export rows:
+- `run_id`
+- `run_timestamp`
+- `model_version`
+- `ingestion_metadata_label`
+
+## Prototype Pre-run Import Process (DAN-62)
+For deterministic prototype repeatability, run the connector workflow before Data Cloud ingest:
+
+```bash
+RUN_ID=run_YYYYMMDD_HHMMSS ./scripts/run-datacloud-prerun-import.sh
+```
+
+What this executes:
+1. Build/refresh Databricks runtime tables (`duplicate_candidate_pairs`, `firmographic_enrichment`, `governance_ops_metrics`, `datacloud_export_accounts`).
+2. Validate stream health and activation mapping integrity.
+3. Validate contract files and canonical export consistency.
+4. Write latest audit evidence to `docs/evidence/datacloud-prerun-import-latest.md`.
+
+## Delta Share Migration Path (Production)
+Prototype mode uses `batch_pre_run` import. Production migration target is live Delta Sharing.
+
+Migration notes:
+1. Replace batch pre-run source with Delta Share provider and share objects for account core/product-brand/engagement exports.
+2. Keep contract/metadata versions in `connector_contract` synchronized with published Delta Share schemas.
+3. Preserve metadata fields (`run_id`, `run_timestamp`, `model_version`, `ingestion_metadata_label`) in shared tables.
+4. Replace pre-run workflow evidence with scheduled ingestion audit artifacts from Delta Share jobs.
+5. Re-run `./scripts/validate-datacloud-connector-contract.sh` and `./scripts/validate-data-cloud-stream-runtime.sh` after cutover.

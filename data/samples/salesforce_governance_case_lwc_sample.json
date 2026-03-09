@@ -1,0 +1,49 @@
+{
+  "governance_case_id": "gov_case_20260309_001",
+  "run_id": "run_20260309_042146",
+  "run_timestamp": "2026-03-09T04:22:59Z",
+  "pair_confidence": 92.0,
+  "candidate_left": {
+    "source_account_id": "sf_acc_1001",
+    "account_name": "Pacific Capital Singapore",
+    "validity_score": 94.0,
+    "review_flag": false,
+    "identity_confidence": 95.2,
+    "industry": "Financial Services",
+    "country_code": "SG"
+  },
+  "candidate_right": {
+    "source_account_id": "sf_acc_2001",
+    "account_name": "Pacific Capital Securities",
+    "validity_score": 86.8,
+    "review_flag": true,
+    "identity_confidence": 88.9,
+    "industry": "Financial Services",
+    "country_code": "SG"
+  },
+  "conflict_fields": [
+    {
+      "field_name": "legal_name",
+      "left_value": "Pacific Capital Singapore Pte Ltd",
+      "right_value": "Pacific Capital Securities Pte Ltd",
+      "resolution_rule": "prefer_highest_validity_score"
+    },
+    {
+      "field_name": "billing_country",
+      "left_value": "Singapore",
+      "right_value": "SG",
+      "resolution_rule": "normalize_iso_country"
+    }
+  ],
+  "recommendation": {
+    "recommended_action": "needs_manual_review",
+    "confidence_reason": "high_pair_confidence_with_low_validity_on_right_record"
+  },
+  "audit": {
+    "decision_status": "pending_review",
+    "decision_timestamp": "2026-03-09T04:23:10Z",
+    "decision_actor": "governance.analyst@pulse360.demo",
+    "decision_notes": "Awaiting manual validation of low-validity candidate fields.",
+    "audit_event_id": "audit_gov_case_20260309_001"
+  }
+}

@@ -27,6 +27,9 @@ grep -q -- "- opportunity_created" "$cfg" || fail "Missing opportunity_created r
 grep -q -- "- governance_merge_approved" "$cfg" || fail "Missing governance_merge_approved recompute trigger"
 
 for token in \
+  "connector_contract:" \
+  "contract_name: databricks_to_datacloud" \
+  "contract_version: 1.1.0" \
   "salesforce_account_stream:" \
   "databricks_enrichment_stream:" \
   "source_table: pulse360_s4.intelligence.datacloud_export_accounts" \

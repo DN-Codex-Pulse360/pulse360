@@ -33,7 +33,35 @@ jobs:
         run: |
           chmod +x scripts/validate-data-cloud-insights-config.sh
           ./scripts/validate-data-cloud-insights-config.sh
+      - name: Validate Data Cloud connector contract hardening
+        run: |
+          chmod +x scripts/validate-datacloud-connector-contract.sh
+          ./scripts/validate-datacloud-connector-contract.sh
       - name: Validate canonical export integrity
         run: |
           chmod +x scripts/validate-canonical-exports.sh
           ./scripts/validate-canonical-exports.sh
+      - name: Validate governance side-by-side config
+        run: |
+          chmod +x scripts/validate-governance-case-config.sh
+          ./scripts/validate-governance-case-config.sh
+      - name: Validate Account 360 hierarchy config
+        run: |
+          chmod +x scripts/validate-account360-lwc-config.sh
+          ./scripts/validate-account360-lwc-config.sh
+      - name: Validate Agentforce health scan config
+        run: |
+          chmod +x scripts/validate-agentforce-health-scan-config.sh
+          ./scripts/validate-agentforce-health-scan-config.sh
+      - name: Validate cross-sell quick-create config
+        run: |
+          chmod +x scripts/validate-cross-sell-quick-create-config.sh
+          ./scripts/validate-cross-sell-quick-create-config.sh
+      - name: Validate walkthrough pack
+        run: |
+          chmod +x scripts/validate-walkthrough-pack.sh
+          ./scripts/validate-walkthrough-pack.sh
+      - name: Validate E2E QA pack
+        run: |
+          chmod +x scripts/validate-e2e-qa-pack.sh
+          ./scripts/validate-e2e-qa-pack.sh
