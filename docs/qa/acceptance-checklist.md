@@ -16,6 +16,7 @@
 - [ ] Candidate comparison evidence is queryable for governance (`firmographic_candidate_comparisons`).
 - [ ] Governance case side-by-side payload is contract-backed (`contracts/salesforce_governance_case_lwc.schema.json`) and includes pair confidence, both validity scores, and audit metadata.
 - [ ] `pulse360_s4.intelligence.governance_ops_metrics` is populated with DS-02 metrics (`cases_resolved`, `avg_resolution_minutes`, `backlog_open`, `quality_score`).
+- [ ] DAN-58 governance dashboard evidence is published (`docs/evidence/dan-58-governance-dashboard-latest.md`) and validated with `scripts/validate-dan-58-governance-dashboard-pack.sh`.
 - [ ] Data Cloud stream source table `pulse360_s4.intelligence.datacloud_export_accounts` is populated with required activation fields.
 - [ ] Databricks stream ingestion metadata label and `last_synced_timestamp` are populated for Data Cloud visibility.
 - [ ] DAN-59 stream configuration and health evidence is published (`docs/evidence/dan-59-data-cloud-stream-health-latest.md`) and validated with `scripts/validate-dan-59-stream-pack.sh`.
@@ -36,3 +37,4 @@
 - [ ] DAN-73 GO/Conditional GO/No-GO decision and release backlog conversion is published (`docs/readout/dan-73-go-decision-and-release-backlog.md`) and validated with `scripts/validate-go-no-go-decision-pack.sh`.
 - [ ] Walkthrough script published with exact DS-01/02/03 transitions, panel references, and fallback wording (`docs/runbook/ds-01-02-03-walkthrough-script.md`).
 - [ ] Rehearsal checklist and scoring rubric published (`docs/qa/walkthrough-rehearsal-rubric.md`).
+- [ ] HITL milestone checklist and comment drafts are published (`docs/qa/hitl-validation-checklist-2026-03-09.md`).

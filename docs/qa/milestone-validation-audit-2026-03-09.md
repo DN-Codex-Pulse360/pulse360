@@ -5,9 +5,9 @@ Scope: Pulse360 milestones A-E after adding standardized Linear milestone valida
 
 ## Summary
 - Milestone A: delivery state aligns with expected outputs.
-- Milestone B: not fully aligned; `DAN-58` is still `Todo`.
+- Milestone B: aligned after DAN-58 governance dashboard evidence and validator pack completion.
 - Milestone C: delivery state aligns with expected outputs (DAN-59 now closed with fresh evidence).
-- Milestone D: partial alignment; issues are `Done`, but UI-level Salesforce deployment/placement proof remains a HITL gap.
+- Milestone D: partial alignment; issues are `Done`, but UI-level Salesforce deployment/placement proof is still pending explicit capture.
 - Milestone E: delivery state aligns for artifact completion and decision archive.
 - HITL requirement: newly defined on all milestones in Linear, but HITL sign-off comments are not yet recorded.
 
@@ -15,7 +15,7 @@ Scope: Pulse360 milestones A-E after adding standardized Linear milestone valida
 | Milestone | Expected outcomes/deliverables | Actual (evidence-backed) | Status |
 | --- | --- | --- | --- |
 | A - Environment and Data Foundations | Stage 1.1-1.5 artifacts complete; setup/governance/security/observability baseline complete; all A issues Done | `DAN-48/49/50/51/52/53/74/75/76/77` are Done; stage artifacts and control center links exist | Aligned |
-| B - Databricks Intelligence Layer | `DAN-54/55/56/57/58` Done; governance dashboard depth complete | `DAN-54/55/56/57` Done; `DAN-58` still Todo; milestone progress 80% in Linear | Gap |
+| B - Databricks Intelligence Layer | `DAN-54/55/56/57/58` Done; governance dashboard depth complete | DAN-58 governance analytics evidence published and validator chain added (`scripts/validate-dan-58-governance-dashboard-pack.sh`) | Aligned |
 | C - Data Cloud Identity and Activation | `DAN-59/60/61/62` Done; stream config, health, metadata, contract mapping validated | All C issues Done; fresh run `run_20260309_064746`; DAN-59 evidence and validator pass | Aligned |
 | D - Salesforce and Agentforce Experience Layer | `DAN-63/64/65/66/67` Done; runtime payload + UI behavior validated | All D issues marked Done; runtime/sample validators pass; no direct in-repo Salesforce metadata deployment evidence for Account 360 LWC placement | Partial |
 | E - End-to-End Demo Hardening | `DAN-68/69/70/71/72/73` Done; readout packs + decision archive complete | All E issues Done; decision/readout/planning artifacts and PR evidence comments present; Notion archive linked | Aligned |
@@ -31,7 +31,7 @@ Actual:
 
 Status by milestone:
 - Milestone A: HITL pending
-- Milestone B: HITL pending + deliverable gap (`DAN-58`)
+- Milestone B: HITL pending (deliverable gap removed)
 - Milestone C: HITL pending
 - Milestone D: HITL pending + UI deployment/placement confirmation needed
 - Milestone E: HITL pending
@@ -40,6 +40,8 @@ Status by milestone:
 - Control center: `docs/epf/control-center.md`
 - E2E runtime evidence: `docs/evidence/e2e-qa-latest.md`
 - DAN-59 stream evidence: `docs/evidence/dan-59-data-cloud-stream-health-latest.md`
+- DAN-58 governance dashboard evidence: `docs/evidence/dan-58-governance-dashboard-latest.md`
+- HITL checklist + milestone comment drafts: `docs/qa/hitl-validation-checklist-2026-03-09.md`
 - Decision/readout artifacts:
   - `docs/planning/dan-70-implementation-estimate-and-resource-plan.md`
   - `docs/readout/internal-solution-readout-dashboard-pack.md`
@@ -47,6 +49,6 @@ Status by milestone:
   - `docs/readout/dan-73-go-decision-and-release-backlog.md`
 
 ## Required Follow-up
-1. Complete `DAN-58` to satisfy Milestone B DoD.
+1. Move `DAN-58` to `Done` in Linear after posting this evidence set and validator results.
 2. Execute and record HITL validation comments for milestones A-E in Linear.
 3. For Milestone D, add explicit Salesforce UI placement/deployment proof (or re-open affected issues if not deployed).
