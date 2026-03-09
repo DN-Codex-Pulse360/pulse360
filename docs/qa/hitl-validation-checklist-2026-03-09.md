@@ -87,3 +87,14 @@ Required because payload/runtime proofs alone are insufficient for UI placement 
 - `HITL-Validated: Milestone C, 2026-03-09, Daniel Nortje` -> PARTIALLY ACCEPTED (no Salesforce Data Cloud streams in UI)
 - `HITL-Validated: Milestone D, 2026-03-09, Daniel Nortje` -> FAIL (no acceptable deployed Salesforce evidence)
 - `HITL-Validated: Milestone E, 2026-03-09, Daniel Nortje` -> FAIL (reused prior-milestone evidence is not acceptable)
+
+## Milestone D Re-validation Update (2026-03-09)
+- Deployment/runtime remediation is complete and validator-backed:
+  - `./scripts/validate-salesforce-deployment-runtime.sh` -> PASS
+  - `./scripts/validate-governance-case-runtime.sh` -> PASS
+  - `./scripts/validate-account360-lwc-runtime.sh` -> PASS
+  - `./scripts/validate-agentforce-health-scan-runtime.sh` -> PASS
+  - `./scripts/validate-cross-sell-quick-create-runtime.sh` -> PASS
+- Evidence pack and direct org links:
+  - `docs/evidence/dan-106-milestone-d-acceptance-ready-2026-03-09.md`
+- Milestone D status is now `READY FOR HITL RE-VALIDATION` (final acceptance decision still human-gated).
