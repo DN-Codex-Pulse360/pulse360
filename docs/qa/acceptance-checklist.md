@@ -10,6 +10,9 @@
 - [ ] `pulse360_s4.intelligence.duplicate_candidate_pairs` is populated with non-zero rows.
 - [ ] DS-01 duplicate confidence scores are bounded `0-100` and include run metadata (`run_id`, `run_timestamp`, `model_version`).
 - [ ] DS-02 runs end-to-end with governance audit trail.
+- [ ] `pulse360_s4.intelligence.firmographic_enrichment` is populated with legal/profile attributes and `validity_score`.
+- [ ] Low-confidence enrichment rows are flagged for review (`review_flag = true` when `validity_score < 90`).
+- [ ] Candidate comparison evidence is queryable for governance (`firmographic_candidate_comparisons`).
 - [ ] DS-03 runs end-to-end with live hierarchy and cross-sell flow.
 - [ ] Lineage is visible from source to enriched outputs.
 - [ ] Data Cloud insights recompute within session where required.

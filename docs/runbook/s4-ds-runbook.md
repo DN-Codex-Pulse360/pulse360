@@ -21,13 +21,19 @@ Expected proof:
 
 ## DS-02 Governance Case Resolution
 1. Databricks duplicate candidate evidence.
-2. Salesforce governance case pre-enriched.
-3. Data Cloud identity confidence panel.
-4. Human-approved merge with audit trail.
-5. Databricks governance trend panel.
+2. Build and validate firmographic enrichment evidence:
+- `scripts/build-firmographic-enrichment.sh`
+- `scripts/validate-firmographic-enrichment-runtime.sh`
+3. Salesforce governance case pre-enriched.
+4. Data Cloud identity confidence panel.
+5. Human-approved merge with audit trail.
+6. Databricks governance trend panel.
 
 Expected proof:
 - Merge decision backed by confidence/validity.
+- `pulse360_s4.intelligence.firmographic_enrichment` includes legal/profile attributes and `validity_score`.
+- Low-confidence enrichment rows (`validity_score < 90`) are flagged with `review_flag = true`.
+- Governance comparison dataset (`firmographic_candidate_comparisons`) is queryable for side-by-side candidate review.
 - Audit metadata captured.
 
 ## DS-03 Account 360 Moment
