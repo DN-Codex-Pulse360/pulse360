@@ -41,3 +41,16 @@ Least-privilege requirements:
 - `databricks workspace ls /`
 - `databricks unity-catalog metastores list`
 - `./scripts/check-databricks-lineage-runtime.sh` (requires configured lineage table names)
+- `./scripts/build-datacloud-export-accounts.sh`
+- `./scripts/validate-data-cloud-stream-runtime.sh`
+- `./scripts/validate-data-cloud-insights-config.sh`
+
+## Data Cloud Stream Baseline (DAN-59)
+- Stream manifest: `config/data-cloud/stream-manifest.yaml`
+- Salesforce stream: `salesforce_account_stream` (Account source, near-real-time)
+- Databricks stream: `databricks_enrichment_stream` (source table `pulse360_s4.intelligence.datacloud_export_accounts`)
+- Last-ingested label field: `ingestion_metadata_label`
+- Runtime verification:
+  - non-zero rows in duplicate/enrichment/governance/export source tables
+  - export `last_synced_timestamp` populated
+  - ingestion label prefix `Databricks Enrichment — Last ingested:`

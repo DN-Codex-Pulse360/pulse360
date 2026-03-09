@@ -6,9 +6,11 @@ pass() { echo "[PASS] $1"; }
 
 cfg="config/data-cloud/calculated-insights.yaml"
 mapping="config/data-cloud/activation-field-mapping.csv"
+stream_manifest="config/data-cloud/stream-manifest.yaml"
 
 [[ -f "$cfg" ]] || fail "Missing calculated insights config"
 [[ -f "$mapping" ]] || fail "Missing activation field mapping"
+[[ -f "$stream_manifest" ]] || fail "Missing stream manifest"
 
 for metric in health_score cross_sell_propensity coverage_gap_flag competitor_risk_signal; do
   grep -q "name: $metric" "$cfg" || fail "Missing metric in calculated insights config: $metric"
@@ -23,4 +25,13 @@ grep -q "max_sync_latency_minutes: 5" "$cfg" || fail "Missing max sync latency g
 grep -q "recompute_trigger:" "$cfg" || fail "Missing recompute trigger section"
 grep -q -- "- opportunity_created" "$cfg" || fail "Missing opportunity_created recompute trigger"
 grep -q -- "- governance_merge_approved" "$cfg" || fail "Missing governance_merge_approved recompute trigger"
+
+for token in \
+  "salesforce_account_stream:" \
+  "databricks_enrichment_stream:" \
+  "source_table: pulse360_s4.intelligence.datacloud_export_accounts" \
+  "ingestion_metadata_label_field: ingestion_metadata_label"; do
+  grep -q "$token" "$stream_manifest" || fail "Missing stream manifest token: $token"
+done
+
 pass "Data Cloud calculated insights and activation mapping config validated"

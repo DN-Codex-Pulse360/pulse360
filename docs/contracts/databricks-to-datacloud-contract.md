@@ -33,6 +33,7 @@ This v1 handoff remains valid for DS-01/02/03 continuity. Canonical v2 exports a
 ## Implemented Artifacts
 - `contracts/databricks_to_datacloud.schema.json`
 - `contracts/databricks_hierarchy_graph.schema.json`
+- `config/data-cloud/stream-manifest.yaml`
 - `contracts/datacloud_account_core_canonical_v2.schema.json`
 - `contracts/datacloud_product_brand_canonical_v2.schema.json`
 - `contracts/datacloud_engagement_canonical_v2.schema.json`
@@ -51,8 +52,20 @@ This v1 handoff remains valid for DS-01/02/03 continuity. Canonical v2 exports a
 - `config/databricks/lineage-targets.env.sample`
 - `scripts/validate-contracts.sh`
 - `scripts/validate-hierarchy-and-identity.sh`
+- `scripts/build-datacloud-export-accounts.sh`
+- `scripts/validate-data-cloud-stream-runtime.sh`
+- `scripts/validate-data-cloud-insights-config.sh`
 - `scripts/validate-unity-catalog-config.sh`
 - `scripts/check-databricks-lineage-runtime.sh`
+
+## Stream Health and Ingestion Metadata (DAN-59)
+- Salesforce account stream and Databricks enrichment stream are defined in `config/data-cloud/stream-manifest.yaml`.
+- Databricks enrichment stream source table: `pulse360_s4.intelligence.datacloud_export_accounts`.
+- Stream ingestion metadata label field: `ingestion_metadata_label`.
+- Required runtime verification:
+  - source tables are populated (`duplicate_candidate_pairs`, `firmographic_enrichment`, `governance_ops_metrics`, `datacloud_export_accounts`)
+  - `last_synced_timestamp` is populated in export rows
+  - ingestion metadata label follows `Databricks Enrichment — Last ingested: [UTC timestamp]`
 
 ## DAN-60 Evidence Snapshot (2026-03-08)
 - Identity rule threshold configured at `>=90` in `config/data-cloud/identity-resolution-rules.json`.
