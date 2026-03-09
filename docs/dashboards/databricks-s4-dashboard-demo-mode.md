@@ -21,7 +21,7 @@ Run a stable, presentation-safe Lakeview dashboard for one fixed hierarchy run w
 
 ## Demo Checklist
 - Confirm all seven datasets return rows before presentation.
-- Confirm DS-02 transition states (`candidate_identified`, `hierarchy_linked`, `review_ready`) are present.
+- Confirm DS-02 governance metrics (`cases_resolved`, `backlog_open`, `avg_resolution_minutes`, `quality_score`) are populated.
 - Confirm transition minutes (`ingest_to_hierarchy_start_minutes`, `ingest_to_hierarchy_complete_minutes`) are populated.
 - Confirm freshness values (`crm_data_age_minutes`, `hierarchy_data_age_minutes`, `end_to_end_freshness_minutes`) are populated.
 - Export one screenshot per DS panel as backup evidence.

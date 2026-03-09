@@ -13,6 +13,7 @@
 - [ ] `pulse360_s4.intelligence.firmographic_enrichment` is populated with legal/profile attributes and `validity_score`.
 - [ ] Low-confidence enrichment rows are flagged for review (`review_flag = true` when `validity_score < 90`).
 - [ ] Candidate comparison evidence is queryable for governance (`firmographic_candidate_comparisons`).
+- [ ] `pulse360_s4.intelligence.governance_ops_metrics` is populated with DS-02 metrics (`cases_resolved`, `avg_resolution_minutes`, `backlog_open`, `quality_score`).
 - [ ] DS-03 runs end-to-end with live hierarchy and cross-sell flow.
 - [ ] Lineage is visible from source to enriched outputs.
 - [ ] Data Cloud insights recompute within session where required.

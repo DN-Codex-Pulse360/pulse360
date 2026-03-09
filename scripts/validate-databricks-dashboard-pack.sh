@@ -19,9 +19,11 @@ for token in \
   "DS-02" \
   "DS-03" \
   "pulse360_s4.intelligence.crm_accounts_raw" \
+  "pulse360_s4.intelligence.governance_ops_metrics" \
   "pulse360_s4.intelligence.hierarchy_entity_graph" \
   "fragmentation_signal" \
-  "transition_state" \
+  "cases_resolved" \
+  "quality_score" \
   "end_to_end_freshness_minutes" \
   "ingest_to_hierarchy_complete_minutes"; do
   rg -q "$token" "$sql_file" || fail "Missing token in SQL pack: $token"
@@ -41,6 +43,7 @@ for token in \
   "demo_run_id" \
   "run_20260308_03" \
   "pulse360_s4.intelligence.crm_accounts_raw" \
+  "pulse360_s4.intelligence.governance_ops_metrics" \
   "pulse360_s4.intelligence.hierarchy_entity_graph" \
   "end_to_end_freshness_minutes"; do
   rg -q "$token" "$demo_sql_file" || fail "Missing token in demo SQL pack: $token"

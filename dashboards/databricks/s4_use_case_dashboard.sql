@@ -4,9 +4,9 @@
 -- Available base tables:
 --   1) pulse360_s4.intelligence.crm_accounts_raw
 --   2) pulse360_s4.intelligence.hierarchy_entity_graph
---
--- NOTE: DS-01 and DS-02 datasets are derived from the available tables until
--- dedicated duplicate/governance tables are populated.
+--   3) pulse360_s4.intelligence.duplicate_candidate_pairs
+--   4) pulse360_s4.intelligence.firmographic_enrichment
+--   5) pulse360_s4.intelligence.governance_ops_metrics
 
 -- 1) DS-01: fragmentation trend from CRM ingest (high-signal duplicate proxy)
 WITH account_keys AS (
@@ -83,49 +83,20 @@ FROM pair_candidates
 GROUP BY 1, 2, 3
 ORDER BY run_hour DESC, confidence_band;
 
--- 3) DS-02: governance transition states (derived from hierarchy pipeline stages)
-WITH transitions AS (
-  SELECT
-    run_id,
-    run_timestamp AS transition_ts,
-    'candidate_identified' AS transition_state,
-    COUNT(*) AS transition_volume
-  FROM pulse360_s4.intelligence.hierarchy_entity_graph
-  GROUP BY 1, 2
-
-  UNION ALL
-
-  SELECT
-    run_id,
-    run_timestamp AS transition_ts,
-    'hierarchy_linked' AS transition_state,
-    COUNT(DISTINCT hierarchy_child_id) AS transition_volume
-  FROM pulse360_s4.intelligence.hierarchy_entity_graph
-  GROUP BY 1, 2
-
-  UNION ALL
-
-  SELECT
-    run_id,
-    run_timestamp AS transition_ts,
-    'review_ready' AS transition_state,
-    COUNT(DISTINCT entity_id) AS transition_volume
-  FROM pulse360_s4.intelligence.hierarchy_entity_graph
-  GROUP BY 1, 2
-)
+-- 3) DS-02: governance ops metrics (native table)
 SELECT
   'DS-02' AS use_case,
   run_id,
-  transition_ts,
-  transition_state,
-  transition_volume,
-  SUM(transition_volume) OVER (
-    PARTITION BY run_id
-    ORDER BY transition_ts, transition_state
-    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-  ) AS cumulative_volume
-FROM transitions
-ORDER BY transition_ts DESC, run_id, transition_state;
+  date_trunc('day', metric_ts) AS metric_day,
+  SUM(cases_opened) AS cases_opened,
+  SUM(cases_resolved) AS cases_resolved,
+  SUM(backlog_open) AS backlog_open,
+  AVG(avg_resolution_minutes) AS avg_resolution_minutes,
+  AVG(quality_score) AS quality_score,
+  AVG(merge_approval_rate) AS merge_approval_rate
+FROM pulse360_s4.intelligence.governance_ops_metrics
+GROUP BY 1, 2, 3
+ORDER BY metric_day DESC, run_id;
 
 -- 4) DS-03: hierarchy depth/readiness proxy and rollup shape
 WITH edges AS (
@@ -251,14 +222,10 @@ ds01 AS (
 ds02 AS (
   SELECT
     COUNT(DISTINCT run_id) AS governance_runs,
-    COUNT(*) AS governance_transition_events
-  FROM (
-    SELECT run_id, run_timestamp, 'candidate_identified' AS transition_state FROM pulse360_s4.intelligence.hierarchy_entity_graph
-    UNION ALL
-    SELECT run_id, run_timestamp, 'hierarchy_linked' AS transition_state FROM pulse360_s4.intelligence.hierarchy_entity_graph
-    UNION ALL
-    SELECT run_id, run_timestamp, 'review_ready' AS transition_state FROM pulse360_s4.intelligence.hierarchy_entity_graph
-  ) t
+    SUM(cases_resolved) AS total_cases_resolved,
+    SUM(backlog_open) AS total_backlog_open,
+    AVG(quality_score) AS avg_governance_quality
+  FROM pulse360_s4.intelligence.governance_ops_metrics
 ),
 ds03 AS (
   SELECT
@@ -273,7 +240,9 @@ SELECT
   ds01.fragment_families,
   dup_pairs.estimated_duplicate_pairs,
   ds02.governance_runs,
-  ds02.governance_transition_events,
+  ds02.total_cases_resolved,
+  ds02.total_backlog_open,
+  ds02.avg_governance_quality,
   ds03.hierarchy_entities,
   ds03.hierarchy_parents,
   ds03.hierarchy_children,

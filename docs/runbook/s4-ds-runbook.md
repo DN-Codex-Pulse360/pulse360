@@ -24,16 +24,20 @@ Expected proof:
 2. Build and validate firmographic enrichment evidence:
 - `scripts/build-firmographic-enrichment.sh`
 - `scripts/validate-firmographic-enrichment-runtime.sh`
-3. Salesforce governance case pre-enriched.
-4. Data Cloud identity confidence panel.
-5. Human-approved merge with audit trail.
-6. Databricks governance trend panel.
+3. Build and validate native governance metrics:
+- `scripts/build-governance-ops-metrics.sh`
+- `scripts/validate-governance-ops-metrics-runtime.sh`
+4. Salesforce governance case pre-enriched.
+5. Data Cloud identity confidence panel.
+6. Human-approved merge with audit trail.
+7. Databricks governance trend panel.
 
 Expected proof:
 - Merge decision backed by confidence/validity.
 - `pulse360_s4.intelligence.firmographic_enrichment` includes legal/profile attributes and `validity_score`.
 - Low-confidence enrichment rows (`validity_score < 90`) are flagged with `review_flag = true`.
 - Governance comparison dataset (`firmographic_candidate_comparisons`) is queryable for side-by-side candidate review.
+- `pulse360_s4.intelligence.governance_ops_metrics` includes native DS-02 metrics (`cases_resolved`, `avg_resolution_minutes`, `backlog_open`, `quality_score`).
 - Audit metadata captured.
 
 ## DS-03 Account 360 Moment

@@ -94,52 +94,21 @@ ORDER BY run_hour DESC, confidence_band;
 
 WITH run_scope AS (
   SELECT 'run_20260308_03' AS demo_run_id
-),
-transitions AS (
-  SELECT
-    h.run_id,
-    h.run_timestamp AS transition_ts,
-    'candidate_identified' AS transition_state,
-    COUNT(*) AS transition_volume
-  FROM pulse360_s4.intelligence.hierarchy_entity_graph h
-  JOIN run_scope r ON h.run_id = r.demo_run_id
-  GROUP BY 1, 2
-
-  UNION ALL
-
-  SELECT
-    h.run_id,
-    h.run_timestamp AS transition_ts,
-    'hierarchy_linked' AS transition_state,
-    COUNT(DISTINCT h.hierarchy_child_id) AS transition_volume
-  FROM pulse360_s4.intelligence.hierarchy_entity_graph h
-  JOIN run_scope r ON h.run_id = r.demo_run_id
-  GROUP BY 1, 2
-
-  UNION ALL
-
-  SELECT
-    h.run_id,
-    h.run_timestamp AS transition_ts,
-    'review_ready' AS transition_state,
-    COUNT(DISTINCT h.entity_id) AS transition_volume
-  FROM pulse360_s4.intelligence.hierarchy_entity_graph h
-  JOIN run_scope r ON h.run_id = r.demo_run_id
-  GROUP BY 1, 2
 )
 SELECT
   'DS-02' AS use_case,
-  run_id,
-  transition_ts,
-  transition_state,
-  transition_volume,
-  SUM(transition_volume) OVER (
-    PARTITION BY run_id
-    ORDER BY transition_ts, transition_state
-    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-  ) AS cumulative_volume
-FROM transitions
-ORDER BY transition_ts DESC, run_id, transition_state;
+  g.run_id,
+  date_trunc('day', g.metric_ts) AS metric_day,
+  SUM(g.cases_opened) AS cases_opened,
+  SUM(g.cases_resolved) AS cases_resolved,
+  SUM(g.backlog_open) AS backlog_open,
+  AVG(g.avg_resolution_minutes) AS avg_resolution_minutes,
+  AVG(g.quality_score) AS quality_score,
+  AVG(g.merge_approval_rate) AS merge_approval_rate
+FROM pulse360_s4.intelligence.governance_ops_metrics g
+JOIN run_scope r ON g.run_id = r.demo_run_id
+GROUP BY 1, 2, 3
+ORDER BY metric_day DESC, g.run_id;
 
 WITH run_scope AS (
   SELECT 'run_20260308_03' AS demo_run_id
@@ -284,20 +253,11 @@ ds01 AS (
 ds02 AS (
   SELECT
     COUNT(DISTINCT run_id) AS governance_runs,
-    COUNT(*) AS governance_transition_events
-  FROM (
-    SELECT h.run_id, h.run_timestamp, 'candidate_identified' AS transition_state
-    FROM pulse360_s4.intelligence.hierarchy_entity_graph h
-    JOIN run_scope r ON h.run_id = r.demo_run_id
-    UNION ALL
-    SELECT h.run_id, h.run_timestamp, 'hierarchy_linked' AS transition_state
-    FROM pulse360_s4.intelligence.hierarchy_entity_graph h
-    JOIN run_scope r ON h.run_id = r.demo_run_id
-    UNION ALL
-    SELECT h.run_id, h.run_timestamp, 'review_ready' AS transition_state
-    FROM pulse360_s4.intelligence.hierarchy_entity_graph h
-    JOIN run_scope r ON h.run_id = r.demo_run_id
-  ) t
+    SUM(cases_resolved) AS total_cases_resolved,
+    SUM(backlog_open) AS total_backlog_open,
+    AVG(quality_score) AS avg_governance_quality
+  FROM pulse360_s4.intelligence.governance_ops_metrics g
+  JOIN run_scope r ON g.run_id = r.demo_run_id
 ),
 ds03 AS (
   SELECT
@@ -313,7 +273,9 @@ SELECT
   ds01.fragment_families,
   dup_pairs.estimated_duplicate_pairs,
   ds02.governance_runs,
-  ds02.governance_transition_events,
+  ds02.total_cases_resolved,
+  ds02.total_backlog_open,
+  ds02.avg_governance_quality,
   ds03.hierarchy_entities,
   ds03.hierarchy_parents,
   ds03.hierarchy_children,

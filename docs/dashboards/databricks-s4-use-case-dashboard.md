@@ -9,11 +9,12 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions from the currently availa
 ## Verified Source Tables (2026-03-09)
 - `pulse360_s4.intelligence.crm_accounts_raw`
 - `pulse360_s4.intelligence.hierarchy_entity_graph`
+- `pulse360_s4.intelligence.governance_ops_metrics`
 
 ## Dataset-to-Table Mapping
 - DS-01 fragmentation trend: derived from `crm_accounts_raw` (family-key collisions by ingest hour).
 - DS-01 duplicate confidence bands: derived heuristic pair candidates from `crm_accounts_raw`.
-- DS-02 governance transitions: derived transition states from `hierarchy_entity_graph` run events.
+- DS-02 governance metrics: native `governance_ops_metrics` (`cases_opened`, `cases_resolved`, `backlog_open`, `avg_resolution_minutes`, `quality_score`).
 - DS-03 hierarchy readiness: direct from `hierarchy_entity_graph` (entities, roots, child spread, model version).
 - Transition timing: `crm_accounts_raw` ingest timestamps aligned to `hierarchy_entity_graph` run timestamps.
 - Freshness + KPI cards: combined rollups from both tables.
@@ -24,7 +25,7 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions from the currently availa
 - DS-01 confidence band trend (`confidence_band`, `pair_count`).
 
 2. Transition widgets
-- DS-02 transition state volume and cumulative volume by run (`candidate_identified`, `hierarchy_linked`, `review_ready`).
+- DS-02 governance trend by run/day (`cases_resolved`, `backlog_open`, `avg_resolution_minutes`, `quality_score`).
 - Ingest-to-hierarchy transition minutes (`ingest_to_hierarchy_start_minutes`, `ingest_to_hierarchy_complete_minutes`).
 
 3. Freshness widgets
@@ -37,7 +38,7 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions from the currently availa
 
 5. KPI card widgets
 - Estimated duplicate pairs.
-- Governance transition events.
+- Governance resolved/open backlog + quality.
 - Hierarchy entities/parents/children.
 - Latest hierarchy timestamp.
 
@@ -53,7 +54,7 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions from the currently availa
 
 ## Acceptance Mapping
 - DS-01 evidence: fragmentation trend + heuristic duplicate confidence bands from CRM ingest records.
-- DS-02 evidence: transition-state progression volume from hierarchy run events.
+- DS-02 evidence: native governance metrics from `governance_ops_metrics`.
 - DS-03 evidence: hierarchy readiness metrics for rollup shape (entities, roots, parent-child spread).
 - Transition evidence: measured ingest-to-hierarchy latency per run.
 - Freshness evidence: current age (minutes) for CRM, hierarchy, and end-to-end path.
