@@ -1,59 +1,59 @@
 # Databricks Dashboard: S4 Use Cases and Transitions
 
 ## Purpose
-Visualize DS-01, DS-02, DS-03 evidence and transitions as executed in Databricks, including activation freshness and cross-use-case timing.
+Visualize DS-01, DS-02, DS-03 evidence and transitions from the currently available post-load intelligence tables, including pipeline freshness and ingest-to-hierarchy timing.
 
 ## Source Query Pack
 - `dashboards/databricks/s4_use_case_dashboard.sql`
 
-## Recommended Lakeview Layout
-1. KPI cards
-- duplicate pairs
-- avg duplicate confidence
-- total governance cases resolved
-- avg governance quality
-- hierarchy entities + max depth
-- latest activation timestamp
+## Verified Source Tables (2026-03-09)
+- `pulse360_s4.intelligence.crm_accounts_raw`
+- `pulse360_s4.intelligence.hierarchy_entity_graph`
 
-2. DS-01 panel
-- confidence band distribution over run hour
-- chart: stacked bar by `confidence_band`
+## Dataset-to-Table Mapping
+- DS-01 fragmentation trend: derived from `crm_accounts_raw` (family-key collisions by ingest hour).
+- DS-01 duplicate confidence bands: derived heuristic pair candidates from `crm_accounts_raw`.
+- DS-02 governance transitions: derived transition states from `hierarchy_entity_graph` run events.
+- DS-03 hierarchy readiness: direct from `hierarchy_entity_graph` (entities, roots, child spread, model version).
+- Transition timing: `crm_accounts_raw` ingest timestamps aligned to `hierarchy_entity_graph` run timestamps.
+- Freshness + KPI cards: combined rollups from both tables.
 
-3. DS-02 panel
-- resolved/backlog/quality trend by day
-- chart: line + bar combo
+## High-Signal Widget Layout
+1. Trend widgets
+- DS-01 fragmentation trend by ingest hour (`fragmentation_signal`, `family_account_count`).
+- DS-01 confidence band trend (`confidence_band`, `pair_count`).
 
-4. DS-03 panel
-- hierarchy depth and entity counts by run
-- chart: bar + line combo
+2. Transition widgets
+- DS-02 transition state volume and cumulative volume by run (`candidate_identified`, `hierarchy_linked`, `review_ready`).
+- Ingest-to-hierarchy transition minutes (`ingest_to_hierarchy_start_minutes`, `ingest_to_hierarchy_complete_minutes`).
 
-5. Transition panel
-- DS-01 -> activation and DS-03 -> activation minutes by run
-- chart: line by run_id
+3. Freshness widgets
+- CRM data age (`crm_data_age_minutes`).
+- Hierarchy data age (`hierarchy_data_age_minutes`).
+- End-to-end freshness (`end_to_end_freshness_minutes`).
 
-6. Activation freshness panel
-- last synced timestamp and activated account count by run
-- chart: table + time series
+4. DS-03 structure widget
+- Hierarchy edges/entities/roots and max children per parent by run.
+
+5. KPI card widgets
+- Estimated duplicate pairs.
+- Governance transition events.
+- Hierarchy entities/parents/children.
+- Latest hierarchy timestamp.
 
 ## Deployment Steps (Databricks SQL)
 1. Create a new Lakeview dashboard.
-2. Add datasets by pasting each query block from `s4_use_case_dashboard.sql`.
-3. Build visuals per layout above.
+2. Add datasets by pasting each query block from `s4_use_case_dashboard.sql` in order.
+3. Build visuals using the layout above.
 4. Add filters:
-- `run_id`
-- date range (`run_ts`/`metric_ts`)
+- `run_id` (for DS-02/DS-03/transition datasets)
+- date range (`ingest_hour` / `transition_ts` / `run_timestamp`)
 5. Save as `Pulse360 S4 - Use Case & Transition Dashboard`.
 6. Keep dataset references fully qualified to `pulse360_s4.intelligence.*`.
 
-## Table Dependencies
-- `pulse360_s4.intelligence.duplicate_candidate_pairs`
-- `pulse360_s4.intelligence.governance_ops_metrics`
-- `pulse360_s4.intelligence.entity_hierarchy_graph`
-- `pulse360_s4.intelligence.datacloud_export_accounts`
-
 ## Acceptance Mapping
-- DS-01 evidence: duplicate confidence distribution.
-- DS-02 evidence: governance resolved/backlog/quality trends.
-- DS-03 evidence: hierarchy depth and rollup readiness.
-- Transition evidence: run-level timing from use case outputs to activation.
-- Last synced evidence: activation freshness dataset for Account 360.
+- DS-01 evidence: fragmentation trend + heuristic duplicate confidence bands from CRM ingest records.
+- DS-02 evidence: transition-state progression volume from hierarchy run events.
+- DS-03 evidence: hierarchy readiness metrics for rollup shape (entities, roots, parent-child spread).
+- Transition evidence: measured ingest-to-hierarchy latency per run.
+- Freshness evidence: current age (minutes) for CRM, hierarchy, and end-to-end path.

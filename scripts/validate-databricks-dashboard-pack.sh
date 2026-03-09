@@ -18,18 +18,19 @@ for token in \
   "DS-01" \
   "DS-02" \
   "DS-03" \
-  "pulse360_s4.intelligence.duplicate_candidate_pairs" \
-  "pulse360_s4.intelligence.governance_ops_metrics" \
-  "pulse360_s4.intelligence.entity_hierarchy_graph" \
-  "pulse360_s4.intelligence.datacloud_export_accounts" \
-  "last_synced_timestamp" \
-  "ds01_to_activation_minutes"; do
+  "pulse360_s4.intelligence.crm_accounts_raw" \
+  "pulse360_s4.intelligence.hierarchy_entity_graph" \
+  "fragmentation_signal" \
+  "transition_state" \
+  "end_to_end_freshness_minutes" \
+  "ingest_to_hierarchy_complete_minutes"; do
   rg -q "$token" "$sql_file" || fail "Missing token in SQL pack: $token"
 done
 
 for token in \
-  "Recommended Lakeview Layout" \
-  "Deployment Steps" \
+  "Verified Source Tables" \
+  "Dataset-to-Table Mapping" \
+  "High-Signal Widget Layout" \
   "Acceptance Mapping"; do
   rg -q "$token" "$doc_file" || fail "Missing section in dashboard runbook: $token"
 done
@@ -39,7 +40,9 @@ pass "Databricks dashboard pack validated"
 for token in \
   "demo_run_id" \
   "run_20260308_03" \
-  "pulse360_s4.intelligence.datacloud_export_accounts"; do
+  "pulse360_s4.intelligence.crm_accounts_raw" \
+  "pulse360_s4.intelligence.hierarchy_entity_graph" \
+  "end_to_end_freshness_minutes"; do
   rg -q "$token" "$demo_sql_file" || fail "Missing token in demo SQL pack: $token"
 done
 
