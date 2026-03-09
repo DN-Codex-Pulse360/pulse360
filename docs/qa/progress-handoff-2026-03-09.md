@@ -66,6 +66,12 @@
   - `./scripts/validate-dan-58-governance-dashboard-pack.sh`
 - Milestone B technical gap is resolved in-repo; remaining actions are Linear/Notion comment synchronization and Milestone D Salesforce UI screenshot capture.
 
+## Status Correction (2026-03-09, post live UI audit)
+- Databricks: dashboards are deployed but remain in builder/skeleton state; DAN-58 stays `In Progress`.
+- Salesforce: no Pulse360 custom LWCs/record pages/actions are deployed in org `pulse360-dev`.
+- Linear issues `DAN-63`, `DAN-64`, `DAN-65`, `DAN-66` were moved back to `In Progress`.
+- Milestone D must be treated as open until real Salesforce deployment and UI proof are complete.
+
 ## Prompt for New Chat Session
 Use this prompt in a new chat:
 

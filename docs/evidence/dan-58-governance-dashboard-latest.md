@@ -53,10 +53,11 @@ Runtime output snapshot:
   - checks evidence/HITL artifacts and executes both validators above.
 
 ## Acceptance Mapping (DAN-58 / Milestone B)
-- Databricks governance analytics dashboard depth completed: `Implemented + validated`.
+- Databricks governance analytics dashboard depth status: `Partially complete` (runtime/data layer validated, visual dashboard composition still incomplete).
 - DS-02 governance metrics queryable and quality bounded: `Validated by runtime script`.
 - Dashboard runbook and demo-mode guidance documented: `Validated by dashboard-pack script`.
 - Evidence and script-based proof published in repo: `This document + validator outputs`.
+- Open closure gate: finalize visual widgets/panels and attach screenshot proof from Databricks UI.
 
 ## External Proof Links
 - Linear issue: `https://linear.app/danielnortje/issue/DAN-58`
