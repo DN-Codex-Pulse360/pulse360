@@ -32,5 +32,6 @@
 - [ ] DAN-70 implementation estimate + resource plan is published (`docs/planning/dan-70-implementation-estimate-and-resource-plan.md`) and validated with `scripts/validate-implementation-estimate-runtime.sh`.
 - [ ] DAN-71 internal solution readout dashboard pack is published (`docs/readout/internal-solution-readout-dashboard-pack.md`) and validated with `scripts/validate-readout-dashboard-pack.sh`.
 - [ ] DAN-72 customer-facing sanitized readout page is published (`docs/readout/customer-sanitized-readout-page.md`) and validated with `scripts/validate-customer-readout-sanitized.sh`.
+- [ ] DAN-73 GO/Conditional GO/No-GO decision and release backlog conversion is published (`docs/readout/dan-73-go-decision-and-release-backlog.md`) and validated with `scripts/validate-go-no-go-decision-pack.sh`.
 - [ ] Walkthrough script published with exact DS-01/02/03 transitions, panel references, and fallback wording (`docs/runbook/ds-01-02-03-walkthrough-script.md`).
 - [ ] Rehearsal checklist and scoring rubric published (`docs/qa/walkthrough-rehearsal-rubric.md`).
