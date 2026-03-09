@@ -65,3 +65,7 @@ jobs:
         run: |
           chmod +x scripts/validate-e2e-qa-pack.sh
           ./scripts/validate-e2e-qa-pack.sh
+      - name: Validate deployment gate assets
+        run: |
+          chmod +x scripts/validate-deployment-gate-assets.sh
+          ./scripts/validate-deployment-gate-assets.sh
