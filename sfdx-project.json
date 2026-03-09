@@ -1,0 +1,11 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "pulse360-salesforce",
+  "namespace": "",
+  "sourceApiVersion": "64.0"
+}

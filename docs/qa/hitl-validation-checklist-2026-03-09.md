@@ -83,7 +83,7 @@ Required because payload/runtime proofs alone are insufficient for UI placement 
 
 ## HITL Validation Log (Recorded)
 - `HITL-Validated: Milestone A, 2026-03-09, Daniel Nortje` -> PASS
-- `HITL-Validated: Milestone B, 2026-03-09, Daniel Nortje` -> FAIL (open visual-completeness gap)
-- `HITL-Validated: Milestone C, 2026-03-09, Daniel Nortje` -> PASS
-- `HITL-Validated: Milestone D, 2026-03-09, Daniel Nortje` -> FAIL (Salesforce deployment gap)
-- `HITL-Validated: Milestone E, 2026-03-09, Daniel Nortje` -> PASS
+- `HITL-Validated: Milestone B, 2026-03-09, Daniel Nortje` -> PARTIALLY ACCEPTED (main/demo dashboards incomplete)
+- `HITL-Validated: Milestone C, 2026-03-09, Daniel Nortje` -> PARTIALLY ACCEPTED (no Salesforce Data Cloud streams in UI)
+- `HITL-Validated: Milestone D, 2026-03-09, Daniel Nortje` -> FAIL (no acceptable deployed Salesforce evidence)
+- `HITL-Validated: Milestone E, 2026-03-09, Daniel Nortje` -> FAIL (reused prior-milestone evidence is not acceptable)

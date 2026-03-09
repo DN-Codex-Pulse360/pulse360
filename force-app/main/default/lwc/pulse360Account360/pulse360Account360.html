@@ -1,0 +1,36 @@
+<template>
+  <lightning-card title="Pulse360 Account 360" icon-name="standard:account">
+    <div class="slds-p-horizontal_small slds-p-vertical_x-small">
+      <p class="slds-text-body_small slds-m-bottom_x-small">
+        Hierarchy and revenue rollup view with data freshness context.
+      </p>
+      <lightning-layout multiple-rows>
+        <lightning-layout-item size="6" class="slds-p-right_x-small">
+          <div class="slds-box slds-theme_default">
+            <h3 class="slds-text-title_caps">Profile</h3>
+            <p>{accountName}</p>
+            <p class="slds-text-color_weak">Unified ID: {unifiedProfileId}</p>
+            <p class="slds-text-color_weak">Source ID: {sourceAccountId}</p>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" class="slds-p-left_x-small">
+          <div class="slds-box slds-theme_default">
+            <h3 class="slds-text-title_caps">Insights</h3>
+            <p>Revenue Rollup: ${groupRevenueRollup}</p>
+            <p>Cross-sell Propensity: {crossSellPropensity}%</p>
+            <p>Coverage Gap: {coverageGapText}</p>
+          </div>
+        </lightning-layout-item>
+      </lightning-layout>
+      <div class="slds-m-top_small">
+        <lightning-badge label={healthBadge}></lightning-badge>
+        <span class="slds-m-left_small slds-text-color_weak">
+          Last Synced: {lastSyncedTimestamp}
+        </span>
+      </div>
+      <template lwc:if={isDegraded}>
+        <p class="slds-text-color_error slds-m-top_x-small">{degradedModeMessage}</p>
+      </template>
+    </div>
+  </lightning-card>
+</template>

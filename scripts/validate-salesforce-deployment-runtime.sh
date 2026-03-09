@@ -35,6 +35,8 @@ record_page_names="$(jq -r '.result.records[]?.DeveloperName // empty' <<<"$reco
 
 actions_resp="$(query_core "SELECT ApiName FROM PlatformAction WHERE ActionListContext IN ('Record','RecordDetail') AND SourceEntity='Account'")"
 action_names="$(jq -r '.result.records[]?.ApiName // empty' <<<"$actions_resp")"
+weblink_resp="$(query_tooling "SELECT Name FROM WebLink WHERE Name LIKE 'Pulse360_%'")"
+weblink_names="$(jq -r '.result.records[]?.Name // empty' <<<"$weblink_resp")"
 
 missing=0
 
@@ -56,7 +58,13 @@ IFS=',' read -r -a required_actions <<<"$REQUIRED_ACCOUNT_ACTIONS"
 for name in "${required_actions[@]}"; do
   name="$(echo "$name" | xargs)"
   [[ -n "$name" ]] || continue
-  grep -Fxq "$name" <<<"$action_names" || { echo "[MISSING] Account action: $name"; missing=1; }
+  # PlatformAction API names may be org/global-prefixed (e.g., Global.Name).
+  if ! grep -Fxq "$name" <<<"$action_names" \
+    && ! grep -Fxq "Global.$name" <<<"$action_names" \
+    && ! grep -Fxq "$name" <<<"$weblink_names"; then
+    echo "[MISSING] Account action: $name"
+    missing=1
+  fi
 done
 
 [[ "$missing" -eq 0 ]] || fail "Salesforce deployment runtime validation failed (missing required metadata)"

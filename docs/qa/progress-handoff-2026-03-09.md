@@ -45,8 +45,8 @@
 - Milestone A: `100%`
 - Milestone B: `80%` (gap: `DAN-58` still `Todo`)
 - Milestone C: `100%`
-- Milestone D: `100%` (runtime evidence complete; UI deployment/placement HITL proof still needed)
-- Milestone E: `100%`
+- Milestone D: `FAIL` (no acceptable deployed Salesforce UI metadata evidence)
+- Milestone E: `FAIL` (acceptance evidence reused from prior milestones; not adequate)
 
 ## Outstanding Work / Known Gaps
 1. `DAN-58` remains open and blocks full Milestone B completion.
@@ -70,7 +70,17 @@
 - Databricks: dashboards are deployed but remain in builder/skeleton state; DAN-58 stays `In Progress`.
 - Salesforce: no Pulse360 custom LWCs/record pages/actions are deployed in org `pulse360-dev`.
 - Linear issues `DAN-63`, `DAN-64`, `DAN-65`, `DAN-66` were moved back to `In Progress`.
-- Milestone D must be treated as open until real Salesforce deployment and UI proof are complete.
+- Milestone D must be treated as failed/open until real Salesforce deployment and UI proof are complete.
+
+## Status Correction (2026-03-09, Milestone C HITL review)
+- Milestone C accepted state was downgraded to partial after live UI validation.
+- Salesforce Data Cloud `All Data Streams` list shows `0 items` in the validated org.
+- `DAN-103` set to `In Progress` and `DAN-59` re-opened to restore deployed stream proof before re-acceptance.
+
+## Status Correction (2026-03-09, Milestone E HITL review)
+- Milestone E acceptance was failed in `DAN-104`.
+- Rejection reason: evidence set was repeated from prior milestones and did not satisfy E-specific acceptance criteria.
+- `DAN-104` moved to `In Progress` pending a unique Milestone E acceptance pack.
 
 ## Prompt for New Chat Session
 Use this prompt in a new chat:
