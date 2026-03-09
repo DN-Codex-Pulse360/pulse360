@@ -18,6 +18,7 @@
 - [ ] `pulse360_s4.intelligence.governance_ops_metrics` is populated with DS-02 metrics (`cases_resolved`, `avg_resolution_minutes`, `backlog_open`, `quality_score`).
 - [ ] Data Cloud stream source table `pulse360_s4.intelligence.datacloud_export_accounts` is populated with required activation fields.
 - [ ] Databricks stream ingestion metadata label and `last_synced_timestamp` are populated for Data Cloud visibility.
+- [ ] DAN-59 stream configuration and health evidence is published (`docs/evidence/dan-59-data-cloud-stream-health-latest.md`) and validated with `scripts/validate-dan-59-stream-pack.sh`.
 - [ ] DS-03 runs end-to-end with live hierarchy and cross-sell flow.
 - [ ] Account 360 hierarchy payload is contract-backed (`contracts/salesforce_account360_hierarchy_lwc.schema.json`) and includes rollup, propensity, coverage gap, last sync, and degraded-mode message behavior.
 - [ ] Cross-sell banner quick-create payload is contract-backed (`contracts/salesforce_cross_sell_quick_create_action.schema.json`) with account-context opportunity create, Data Cloud linkage, and `opportunity_created` refresh trigger semantics.

@@ -5,6 +5,7 @@ All scenarios complete in 15 minutes or less.
 Primary presenter script: `docs/runbook/ds-01-02-03-walkthrough-script.md`
 E2E QA timing runner: `scripts/run-e2e-qa-timing.sh`
 DAN-70 implementation-plan validator: `scripts/validate-implementation-estimate-runtime.sh`
+DAN-59 stream-configuration validator: `scripts/validate-dan-59-stream-pack.sh`
 
 ## DS-01 Fragmentation Discovery
 1. Salesforce before-state: fragmented account records.
