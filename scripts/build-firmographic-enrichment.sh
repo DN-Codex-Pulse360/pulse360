@@ -83,8 +83,8 @@ WITH base AS (
     source_account_id,
     account_name,
     source_system,
-    lower(regexp_replace(account_name, '[^a-z0-9 ]', '')) AS normalized_account_name,
-    sha2(lower(regexp_replace(account_name, '[^a-z0-9 ]', '')), 256) AS deterministic_key,
+    regexp_replace(lower(account_name), '[^a-z0-9 ]', '') AS normalized_account_name,
+    sha2(regexp_replace(lower(account_name), '[^a-z0-9 ]', ''), 256) AS deterministic_key,
     concat('ent_', lower(regexp_replace(account_name, '[^a-z0-9]+', '_'))) AS entity_id
   FROM $SOURCE_TABLE
 ),
@@ -129,6 +129,7 @@ scored AS (
       CASE WHEN account_tier IS NOT NULL AND account_tier <> '' THEN 25 ELSE 0 END
     ) AS profile_completeness_score,
     CASE
+      WHEN source_system = 'salesforce' AND normalized_account_name LIKE '%securit%' THEN 78
       WHEN source_system = 'salesforce' THEN 90
       ELSE 82
     END AS source_confidence

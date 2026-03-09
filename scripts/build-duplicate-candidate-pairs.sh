@@ -77,7 +77,7 @@ WITH account_features AS (
     account_name,
     source_system,
     ingest_ts,
-    lower(regexp_replace(account_name, '[^a-z0-9 ]', '')) AS account_name_key,
+    regexp_replace(lower(account_name), '[^a-z0-9 ]', '') AS account_name_key,
     lower(regexp_extract(account_name, '^([A-Za-z0-9]+)', 1)) AS family_key
   FROM $SOURCE_TABLE
 ),
