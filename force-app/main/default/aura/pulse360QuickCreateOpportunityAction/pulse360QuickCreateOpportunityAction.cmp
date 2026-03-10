@@ -1,0 +1,8 @@
+<aura:component implements="force:lightningQuickAction,force:hasRecordId" access="global">
+    <lightning:card title="Pulse360 Quick Create Opportunity">
+        <div class="slds-p-around_small">
+            <p>Quick-create opportunity action placeholder for DAN-66 deployment validation.</p>
+            <p class="slds-text-color_weak">Record Id: {!v.recordId}</p>
+        </div>
+    </lightning:card>
+</aura:component>

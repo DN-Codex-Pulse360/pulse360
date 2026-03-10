@@ -1,0 +1,21 @@
+<template>
+  <lightning-card title="Pulse360 Cross-Sell Banner" icon-name="standard:opportunity">
+    <div class="slds-p-horizontal_small slds-p-vertical_x-small">
+      <p class="slds-text-body_small">
+        Cross-sell context for quick opportunity creation from Account 360.
+      </p>
+      <div class="slds-m-top_small slds-box slds-theme_default">
+        <p>Propensity: {crossSellPropensity}%</p>
+        <p>Coverage Gap: {coverageGapText}</p>
+        <p>Open Opportunities: {openOpportunityCount}</p>
+      </div>
+      <div class="slds-m-top_small">
+        <lightning-button
+          label="Quick Create Opportunity"
+          variant="brand"
+          onclick={handleQuickCreate}
+        ></lightning-button>
+      </div>
+    </div>
+  </lightning-card>
+</template>

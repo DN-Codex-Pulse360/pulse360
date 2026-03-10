@@ -1,0 +1,4 @@
+interface:
+  display_name: "Databricks S4 Builder"
+  short_description: "Build Databricks layer for S4 demos"
+  default_prompt: "Use $databricks-s4-solution-builder to design and implement the Databricks layer for S4, including dedupe, hierarchy stitching, enrichment, governance, and Data Cloud handoff."

@@ -1,0 +1,28 @@
+<template>
+  <lightning-card title="Pulse360 Health Scan" icon-name="standard:scan_card">
+    <div class="slds-p-horizontal_small slds-p-vertical_x-small">
+      <p class="slds-text-body_small">
+        Agentforce health scan summary with duplicate evidence and AI impact.
+      </p>
+      <div class="slds-m-top_small slds-grid slds-gutters">
+        <div class="slds-col">
+          <div class="slds-box slds-theme_default">
+            <h3 class="slds-text-title_caps">Signals</h3>
+            <p>Health Score: {healthScore}%</p>
+            <p>Cross-sell Estimate: {crossSellEstimate}%</p>
+            <p>Max Duplicate Confidence: {maxDuplicateConfidence}%</p>
+          </div>
+        </div>
+        <div class="slds-col">
+          <div class="slds-box slds-theme_default">
+            <h3 class="slds-text-title_caps">Response</h3>
+            <p>Status: {status}</p>
+            <p>Retry: {retryDisposition}</p>
+            <p class="slds-text-color_weak">Run: {runId}</p>
+          </div>
+        </div>
+      </div>
+      <p class="slds-m-top_small">{aiImpactSummary}</p>
+    </div>
+  </lightning-card>
+</template>

@@ -7,8 +7,23 @@
 
 ## Functional Tests
 - [ ] DS-01 runs end-to-end without hardcoded metrics.
+- [ ] `pulse360_s4.intelligence.duplicate_candidate_pairs` is populated with non-zero rows.
+- [ ] DS-01 duplicate confidence scores are bounded `0-100` and include run metadata (`run_id`, `run_timestamp`, `model_version`).
+- [ ] Agentforce Account Health Scan action payload is contract-backed (`contracts/agentforce_account_health_scan_action.schema.json`) with response-card evidence and non-blocking failure mode fields.
 - [ ] DS-02 runs end-to-end with governance audit trail.
+- [ ] `pulse360_s4.intelligence.firmographic_enrichment` is populated with legal/profile attributes and `validity_score`.
+- [ ] Low-confidence enrichment rows are flagged for review (`review_flag = true` when `validity_score < 90`).
+- [ ] Candidate comparison evidence is queryable for governance (`firmographic_candidate_comparisons`).
+- [ ] Governance case side-by-side payload is contract-backed (`contracts/salesforce_governance_case_lwc.schema.json`) and includes pair confidence, both validity scores, and audit metadata.
+- [ ] `pulse360_s4.intelligence.governance_ops_metrics` is populated with DS-02 metrics (`cases_resolved`, `avg_resolution_minutes`, `backlog_open`, `quality_score`).
+- [ ] DAN-58 governance dashboard evidence is published (`docs/evidence/dan-58-governance-dashboard-latest.md`) and validated with `scripts/validate-dan-58-governance-dashboard-pack.sh`.
+- [ ] Databricks dashboard visual deployment is validated with `scripts/validate-databricks-dashboard-visuals.sh` (not only runtime/data checks).
+- [ ] Data Cloud stream source table `pulse360_s4.intelligence.datacloud_export_accounts` is populated with required activation fields.
+- [ ] Databricks stream ingestion metadata label and `last_synced_timestamp` are populated for Data Cloud visibility.
+- [ ] DAN-59 stream configuration and health evidence is published (`docs/evidence/dan-59-data-cloud-stream-health-latest.md`) and validated with `scripts/validate-dan-59-stream-pack.sh`.
 - [ ] DS-03 runs end-to-end with live hierarchy and cross-sell flow.
+- [ ] Account 360 hierarchy payload is contract-backed (`contracts/salesforce_account360_hierarchy_lwc.schema.json`) and includes rollup, propensity, coverage gap, last sync, and degraded-mode message behavior.
+- [ ] Cross-sell banner quick-create payload is contract-backed (`contracts/salesforce_cross_sell_quick_create_action.schema.json`) with account-context opportunity create, Data Cloud linkage, and `opportunity_created` refresh trigger semantics.
 - [ ] Lineage is visible from source to enriched outputs.
 - [ ] Data Cloud insights recompute within session where required.
 
@@ -16,3 +31,13 @@
 - [ ] Full demo runtime <= 15 minutes.
 - [ ] Cold-run rehearsal passes with non-builder presenter.
 - [ ] Fallback path documented and tested for each external dependency.
+- [ ] E2E QA timing evidence is captured and published (`docs/evidence/e2e-qa-latest.md`) from `scripts/run-e2e-qa-timing.sh`.
+- [ ] DAN-70 implementation estimate + resource plan is published (`docs/planning/dan-70-implementation-estimate-and-resource-plan.md`) and validated with `scripts/validate-implementation-estimate-runtime.sh`.
+- [ ] DAN-71 internal solution readout dashboard pack is published (`docs/readout/internal-solution-readout-dashboard-pack.md`) and validated with `scripts/validate-readout-dashboard-pack.sh`.
+- [ ] DAN-72 customer-facing sanitized readout page is published (`docs/readout/customer-sanitized-readout-page.md`) and validated with `scripts/validate-customer-readout-sanitized.sh`.
+- [ ] DAN-73 GO/Conditional GO/No-GO decision and release backlog conversion is published (`docs/readout/dan-73-go-decision-and-release-backlog.md`) and validated with `scripts/validate-go-no-go-decision-pack.sh`.
+- [ ] Walkthrough script published with exact DS-01/02/03 transitions, panel references, and fallback wording (`docs/runbook/ds-01-02-03-walkthrough-script.md`).
+- [ ] Rehearsal checklist and scoring rubric published (`docs/qa/walkthrough-rehearsal-rubric.md`).
+- [ ] HITL milestone checklist and comment drafts are published (`docs/qa/hitl-validation-checklist-2026-03-09.md`).
+- [ ] Salesforce deployment metadata is validated in target org with `scripts/validate-salesforce-deployment-runtime.sh`.
+- [ ] Full `Build -> Deploy -> Verify -> Evidence -> Close` gate is validated with `scripts/validate-build-deploy-verify-close-gate.sh`.

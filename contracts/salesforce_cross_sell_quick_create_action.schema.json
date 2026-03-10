@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/salesforce_cross_sell_quick_create_action",
+  "title": "Salesforce Cross-Sell Banner and Quick Create Payload",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "banner",
+    "quick_create",
+    "refresh_trigger"
+  ],
+  "properties": {
+    "banner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_account_id",
+        "unified_profile_id",
+        "cross_sell_propensity",
+        "coverage_gap_flag",
+        "open_opportunity_count",
+        "last_synced_timestamp",
+        "banner_state"
+      ],
+      "properties": {
+        "source_account_id": { "type": "string", "minLength": 1 },
+        "unified_profile_id": { "type": "string", "minLength": 1 },
+        "cross_sell_propensity": { "type": "number", "minimum": 0, "maximum": 100 },
+        "coverage_gap_flag": { "type": "boolean" },
+        "open_opportunity_count": { "type": "integer", "minimum": 0 },
+        "last_synced_timestamp": { "type": "string", "format": "date-time" },
+        "banner_state": {
+          "type": "string",
+          "enum": ["show_recommendation", "show_info_only", "hide"]
+        }
+      }
+    },
+    "quick_create": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_account_id",
+        "contact_association",
+        "opportunity_payload"
+      ],
+      "properties": {
+        "context_account_id": { "type": "string", "minLength": 1 },
+        "contact_association": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "linkage_type",
+            "unified_profile_id",
+            "contact_record_id"
+          ],
+          "properties": {
+            "linkage_type": {
+              "type": "string",
+              "enum": ["datacloud_group_profile_link"]
+            },
+            "unified_profile_id": { "type": "string", "minLength": 1 },
+            "contact_record_id": { "type": "string", "minLength": 1 }
+          }
+        },
+        "opportunity_payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "stage_name",
+            "close_date",
+            "expected_value"
+          ],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "stage_name": { "type": "string", "minLength": 1 },
+            "close_date": { "type": "string", "format": "date" },
+            "expected_value": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "refresh_trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_name",
+        "is_enabled",
+        "trigger_source",
+        "expected_recompute_window_minutes"
+      ],
+      "properties": {
+        "event_name": {
+          "type": "string",
+          "const": "opportunity_created"
+        },
+        "is_enabled": { "type": "boolean" },
+        "trigger_source": { "type": "string", "minLength": 1 },
+        "expected_recompute_window_minutes": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+# Progress Handoff (2026-03-09)
+
+## Branch and Commit
+- Branch: `codex/dan-60-61-dashboard-pack`
+- Latest commit at handoff creation: `c4837bc`
+
+## Completed Since Resume Point (`77a3e45`)
+### Linear issues closed
+- `DAN-70` Done
+- `DAN-71` Done
+- `DAN-72` Done
+- `DAN-73` Done
+- `DAN-59` Done
+
+### Repo artifacts added/updated
+- Planning and readout:
+  - `docs/planning/dan-70-implementation-estimate-and-resource-plan.md`
+  - `docs/readout/internal-solution-readout-dashboard-pack.md`
+  - `docs/readout/customer-sanitized-readout-page.md`
+  - `docs/readout/dan-73-go-decision-and-release-backlog.md`
+- Evidence and audit:
+  - `docs/evidence/dan-59-data-cloud-stream-health-latest.md`
+  - `docs/evidence/datacloud-prerun-import-latest.md` (refreshed with `run_20260309_064746`)
+  - `docs/qa/milestone-validation-audit-2026-03-09.md`
+- Validation scripts:
+  - `scripts/validate-implementation-estimate-runtime.sh`
+  - `scripts/validate-readout-dashboard-pack.sh`
+  - `scripts/validate-customer-readout-sanitized.sh`
+  - `scripts/validate-go-no-go-decision-pack.sh`
+  - `scripts/validate-dan-59-stream-pack.sh`
+- Governance/checklist updates:
+  - `docs/epf/control-center.md`
+  - `docs/qa/acceptance-checklist.md`
+  - `docs/runbook/s4-ds-runbook.md`
+
+### External system updates
+- PR #8 evidence comments posted for DAN-70/71/72/73/59.
+- Notion control center + decision log + DAN-59 evidence pages updated and linked.
+- Linear milestones A-E updated with:
+  - Definition of Done
+  - Codex proof links
+  - HITL validation requirement
+
+## Current Milestone State (Linear)
+- Milestone A: `100%`
+- Milestone B: `80%` (gap: `DAN-58` still `Todo`)
+- Milestone C: `100%`
+- Milestone D: `ACCEPTED` (HITL screenshot re-validation completed on 2026-03-09)
+- Milestone E: `FAIL` (acceptance evidence reused from prior milestones; not adequate)
+
+## Outstanding Work / Known Gaps
+1. `DAN-58` remains open and blocks full Milestone B completion.
+2. HITL validation comments are required on all milestones A-E and are not yet recorded.
+3. Salesforce UI deployment/placement proof for milestone D capabilities should be explicitly captured in HITL review.
+
+## Continuation Update (2026-03-09, same branch)
+- DAN-58 repo delivery finalized with runtime-backed evidence:
+  - `docs/evidence/dan-58-governance-dashboard-latest.md`
+  - `scripts/validate-dan-58-governance-dashboard-pack.sh`
+- HITL artifact pack added:
+  - `docs/qa/hitl-validation-checklist-2026-03-09.md`
+- Script validations executed:
+  - `./scripts/build-governance-ops-metrics.sh`
+  - `./scripts/validate-governance-ops-metrics-runtime.sh`
+  - `./scripts/validate-databricks-dashboard-pack.sh`
+  - `./scripts/validate-dan-58-governance-dashboard-pack.sh`
+- Milestone B technical gap is resolved in-repo; remaining actions are Linear/Notion comment synchronization and Milestone D Salesforce UI screenshot capture.
+
+## Status Correction (2026-03-09, post live UI audit)
+- Databricks: dashboards are deployed but remain in builder/skeleton state; DAN-58 stays `In Progress`.
+- Salesforce: no Pulse360 custom LWCs/record pages/actions are deployed in org `pulse360-dev`.
+- Linear issues `DAN-63`, `DAN-64`, `DAN-65`, `DAN-66` were moved back to `In Progress`.
+- Milestone D was initially failed/open, then remediated and accepted after Salesforce deployment + UI proof completion.
+
+## Status Correction (2026-03-09, Milestone C HITL review)
+- Milestone C accepted state was downgraded to partial after live UI validation.
+- Salesforce Data Cloud `All Data Streams` list shows `0 items` in the validated org.
+- `DAN-103` set to `In Progress` and `DAN-59` re-opened to restore deployed stream proof before re-acceptance.
+
+## DAN-59 Continuation Update (2026-03-10)
+- Refreshed Databricks stream/export runtime on `run_20260310_01` using `./scripts/run-datacloud-prerun-import.sh`.
+- `./scripts/validate-dan-59-stream-pack.sh` now validates against the latest run dynamically (removed stale hardcoded run-id check).
+- Added Salesforce runtime validator: `./scripts/validate-salesforce-data-cloud-stream-runtime.sh`.
+- Blocker cleared after HITL stream creation in Salesforce UI: `DataStream` record count is now `6`, and `./scripts/validate-salesforce-data-cloud-stream-runtime.sh` passes.
+
+## Status Correction (2026-03-09, Milestone E HITL review)
+- Milestone E acceptance was failed in `DAN-104`.
+- Rejection reason: evidence set was repeated from prior milestones and did not satisfy E-specific acceptance criteria.
+- `DAN-104` moved to `In Progress` pending a unique Milestone E acceptance pack.
+
+## Prompt for New Chat Session
+Use this prompt in a new chat:
+
+```text
+Continue Pulse360 from branch codex/dan-60-61-dashboard-pack at commit c4837bc.
+
+Context:
+- DAN-59, DAN-70, DAN-71, DAN-72, DAN-73 are Done with repo/Linear/Notion/PR evidence.
+- Milestones A/C/D/E are at 100%; Milestone B is 80% because DAN-58 is still Todo.
+- Milestone validation sections (DoD + Codex proof links + HITL requirement) are now set in Linear.
+- Expected-vs-actual audit exists at docs/qa/milestone-validation-audit-2026-03-09.md.
+
+Next priorities:
+1) Complete DAN-58 (Databricks governance analytics dashboard) with concrete runtime evidence and validator coverage.
+2) Generate explicit HITL validation checklist and draft milestone comments for A-E:
+   `HITL-Validated: Milestone X, YYYY-MM-DD, Reviewer Name`
+3) For Milestone D, capture explicit Salesforce UI proof (not only payload/runtime sample proofs).
+4) Update Linear + PR #8 with evidence and close DAN-58 if acceptance is satisfied.
+
+Constraints:
+- Keep all outputs evidence-backed and script-validated.
+- Update repo, Linear, and Notion in lockstep.
+```

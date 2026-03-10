@@ -41,3 +41,28 @@ Least-privilege requirements:
 - `databricks workspace ls /`
 - `databricks unity-catalog metastores list`
 - `./scripts/check-databricks-lineage-runtime.sh` (requires configured lineage table names)
+- `./scripts/build-datacloud-export-accounts.sh`
+- `./scripts/validate-data-cloud-stream-runtime.sh`
+- `./scripts/validate-salesforce-data-cloud-stream-runtime.sh`
+- `./scripts/validate-data-cloud-insights-config.sh`
+
+## Data Cloud Stream Baseline (DAN-59)
+- Stream manifest: `config/data-cloud/stream-manifest.yaml`
+- Salesforce stream: `salesforce_account_stream` (Account source, near-real-time)
+- Databricks stream: `databricks_enrichment_stream` (source table `pulse360_s4.intelligence.datacloud_export_accounts`)
+- Last-ingested label field: `ingestion_metadata_label`
+- Runtime verification:
+  - non-zero rows in duplicate/enrichment/governance/export source tables
+  - export `last_synced_timestamp` populated
+  - ingestion label prefix `Databricks Enrichment — Last ingested:`
+
+## Connector Pre-run Import Baseline (DAN-62)
+- Connector contract metadata and versioning: `config/data-cloud/stream-manifest.yaml` (`connector_contract`)
+- Prototype pre-run workflow:
+  - `RUN_ID=run_YYYYMMDD_HHMMSS ./scripts/run-datacloud-prerun-import.sh`
+- Connector hardening validator:
+  - `./scripts/validate-datacloud-connector-contract.sh`
+- Evidence artifact written by pre-run workflow:
+  - `docs/evidence/datacloud-prerun-import-latest.md`
+- Production migration reference:
+  - `docs/contracts/databricks-to-datacloud-contract.md` -> `Delta Share Migration Path (Production)`

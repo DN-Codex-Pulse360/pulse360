@@ -12,6 +12,7 @@
   "cross_sell_propensity": 78,
   "health_score": 61,
   "coverage_gap_flag": true,
+  "competitor_risk_signal": 42,
   "primary_brand_name": "Pacific Capital",
   "active_product_count": 6,
   "engagement_intensity_score": 73,

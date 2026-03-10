@@ -1,0 +1,62 @@
+version: 1
+stream_set: pulse360_s4_streams
+description: Data Cloud stream configuration for Salesforce account source and Databricks enrichment source.
+connector_contract:
+  contract_name: databricks_to_datacloud
+  contract_version: 1.1.0
+  metadata_version: 1.0.0
+  owner: pulse360-data-engineering
+  prototype_mode: pre_run_import
+  pre_run_import_script: scripts/run-datacloud-prerun-import.sh
+  evidence_file: docs/evidence/datacloud-prerun-import-latest.md
+  delta_share_migration_notes: docs/contracts/databricks-to-datacloud-contract.md#delta-share-migration-path-production
+
+salesforce_account_stream:
+  source_system: salesforce
+  source_object: Account
+  target_data_cloud_object: Account
+  mode: near_real_time
+  expected_latency_minutes: 5
+  health_sla:
+    max_consecutive_failures: 2
+    freshness_threshold_minutes: 30
+  key_fields:
+    - source_account_id
+    - account_name
+    - source_system
+  verification:
+    - oauth_connection_valid
+    - stream_status_active
+    - recent_rows_detected
+
+databricks_enrichment_stream:
+  source_system: databricks
+  source_table: pulse360_s4.intelligence.datacloud_export_accounts
+  target_data_cloud_object: Account
+  mode: batch_pre_run
+  expected_latency_minutes: 15
+  ingestion_metadata_label_field: ingestion_metadata_label
+  required_source_tables:
+    - pulse360_s4.intelligence.duplicate_candidate_pairs
+    - pulse360_s4.intelligence.firmographic_enrichment
+    - pulse360_s4.intelligence.governance_ops_metrics
+    - pulse360_s4.intelligence.datacloud_export_accounts
+  contract_field_mapping_file: config/data-cloud/activation-field-mapping.csv
+  required_fields:
+    - unified_profile_id
+    - identity_confidence
+    - group_revenue_rollup
+    - health_score
+    - cross_sell_propensity
+    - coverage_gap_flag
+    - competitor_risk_signal
+    - primary_brand_name
+    - active_product_count
+    - engagement_intensity_score
+    - open_opportunity_count
+    - last_engagement_timestamp
+    - last_synced_timestamp
+    - ingestion_metadata_label
+    - run_id
+    - run_timestamp
+    - model_version

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/salesforce_governance_case_lwc",
+  "title": "Salesforce Governance Case Side-by-Side LWC Payload",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "governance_case_id",
+    "run_id",
+    "run_timestamp",
+    "candidate_left",
+    "candidate_right",
+    "pair_confidence",
+    "conflict_fields",
+    "recommendation",
+    "audit"
+  ],
+  "properties": {
+    "governance_case_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "pair_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+    "candidate_left": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_account_id",
+        "account_name",
+        "validity_score",
+        "review_flag",
+        "identity_confidence",
+        "industry",
+        "country_code"
+      ],
+      "properties": {
+        "source_account_id": { "type": "string", "minLength": 1 },
+        "account_name": { "type": "string", "minLength": 1 },
+        "validity_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "review_flag": { "type": "boolean" },
+        "identity_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+        "industry": { "type": "string", "minLength": 1 },
+        "country_code": { "type": "string", "minLength": 1 }
+      }
+    },
+    "candidate_right": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_account_id",
+        "account_name",
+        "validity_score",
+        "review_flag",
+        "identity_confidence",
+        "industry",
+        "country_code"
+      ],
+      "properties": {
+        "source_account_id": { "type": "string", "minLength": 1 },
+        "account_name": { "type": "string", "minLength": 1 },
+        "validity_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "review_flag": { "type": "boolean" },
+        "identity_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+        "industry": { "type": "string", "minLength": 1 },
+        "country_code": { "type": "string", "minLength": 1 }
+      }
+    },
+    "conflict_fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field_name", "left_value", "right_value", "resolution_rule"],
+        "properties": {
+          "field_name": { "type": "string", "minLength": 1 },
+          "left_value": { "type": "string" },
+          "right_value": { "type": "string" },
+          "resolution_rule": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommended_action", "confidence_reason"],
+      "properties": {
+        "recommended_action": {
+          "type": "string",
+          "enum": ["merge", "keep_separate", "needs_manual_review"]
+        },
+        "confidence_reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_status",
+        "decision_timestamp",
+        "decision_actor",
+        "decision_notes",
+        "audit_event_id"
+      ],
+      "properties": {
+        "decision_status": {
+          "type": "string",
+          "enum": ["approved_merge", "rejected_merge", "pending_review"]
+        },
+        "decision_timestamp": { "type": "string", "format": "date-time" },
+        "decision_actor": { "type": "string", "minLength": 1 },
+        "decision_notes": { "type": "string" },
+        "audit_event_id": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

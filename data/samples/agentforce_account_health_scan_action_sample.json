@@ -1,0 +1,33 @@
+{
+  "action_name": "account_health_scan",
+  "request": {
+    "action_request_id": "ahs_20260309_001",
+    "source_account_id": "sf_acc_1001",
+    "correlation_id": "corr_20260309_001",
+    "requested_at": "2026-03-09T05:00:00Z"
+  },
+  "response": {
+    "status": "degraded",
+    "http_status": 200,
+    "api_latency_ms": 842,
+    "data_source": "datacloud_calculated_insights_api",
+    "response_card": {
+      "duplicate_evidence": {
+        "pair_count": 2,
+        "max_confidence": 92.0,
+        "confidence_band": "90-94"
+      },
+      "cross_sell_estimate": 87.0,
+      "health_score": 92.8,
+      "competitor_risk_signal": 25.0,
+      "ai_impact_summary": "High merge confidence with strong cross-sell potential; review stale-sync banner before final action.",
+      "last_synced_timestamp": "2026-03-09T04:22:59Z"
+    },
+    "failure_mode": {
+      "is_non_blocking": true,
+      "error_code": "STALE_DATA_WINDOW_EXCEEDED",
+      "user_message": "Live insights are delayed. Showing latest available snapshot.",
+      "retry_disposition": "manual_retry_available"
+    }
+  }
+}

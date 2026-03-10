@@ -17,6 +17,7 @@
   "hierarchy_rollup": {
     "unified_profile_id": "ucp_001",
     "group_revenue_rollup": 4200000,
-    "entities_in_hierarchy": 6
+    "entities_in_hierarchy": 7,
+    "max_hierarchy_depth": 3
   }
 }
