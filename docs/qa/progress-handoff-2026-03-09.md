@@ -77,6 +77,12 @@
 - Salesforce Data Cloud `All Data Streams` list shows `0 items` in the validated org.
 - `DAN-103` set to `In Progress` and `DAN-59` re-opened to restore deployed stream proof before re-acceptance.
 
+## DAN-59 Continuation Update (2026-03-10)
+- Refreshed Databricks stream/export runtime on `run_20260310_01` using `./scripts/run-datacloud-prerun-import.sh`.
+- `./scripts/validate-dan-59-stream-pack.sh` now validates against the latest run dynamically (removed stale hardcoded run-id check).
+- Added Salesforce runtime validator: `./scripts/validate-salesforce-data-cloud-stream-runtime.sh`.
+- Current blocker remains unchanged: Salesforce `DataStream` record count is `0` (UI and query aligned), and direct CLI create attempts return platform `UNKNOWN_EXCEPTION`.
+
 ## Status Correction (2026-03-09, Milestone E HITL review)
 - Milestone E acceptance was failed in `DAN-104`.
 - Rejection reason: evidence set was repeated from prior milestones and did not satisfy E-specific acceptance criteria.

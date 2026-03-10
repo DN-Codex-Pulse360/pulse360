@@ -43,6 +43,7 @@ Least-privilege requirements:
 - `./scripts/check-databricks-lineage-runtime.sh` (requires configured lineage table names)
 - `./scripts/build-datacloud-export-accounts.sh`
 - `./scripts/validate-data-cloud-stream-runtime.sh`
+- `./scripts/validate-salesforce-data-cloud-stream-runtime.sh`
 - `./scripts/validate-data-cloud-insights-config.sh`
 
 ## Data Cloud Stream Baseline (DAN-59)

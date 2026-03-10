@@ -51,16 +51,17 @@ pass "Activation field mapping includes required contract fields"
 
 for token in \
   'Issue: `DAN-59`' \
-  "run_20260309_064746" \
   "Databricks Enrichment — Last ingested:" \
   "## Acceptance Mapping (DAN-59)"; do
   rg -Fq -- "$token" "$evidence_doc" || fail "DAN-59 evidence doc missing token: $token"
 done
 pass "DAN-59 evidence doc captures run evidence and acceptance mapping"
 
-rg -Fq -- "run_id: run_20260309_064746" "$prerun_evidence" \
-  || fail "Pre-run evidence missing expected run_id"
-pass "Pre-run import evidence contains the expected run_id"
+run_id="$(rg -o 'run_id: run_[0-9]{8}_[0-9]+' -m1 "$prerun_evidence" | awk '{print $2}')"
+[[ -n "${run_id:-}" ]] || fail "Pre-run evidence is missing a parseable run_id"
+rg -Fq -- "$run_id" "$evidence_doc" \
+  || fail "DAN-59 evidence doc is not aligned with latest pre-run run_id: $run_id"
+pass "Pre-run import evidence contains run_id and DAN-59 evidence is aligned to latest run"
 
 rg -Fq -- "validate-dan-59-stream-pack.sh" "$runbook_doc" \
   || fail "Runbook missing DAN-59 validator reference"

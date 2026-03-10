@@ -46,6 +46,7 @@ Use this exact pattern in Linear milestone comments:
 1. Run and confirm stream/runtime validators:
 - `./scripts/run-datacloud-prerun-import.sh`
 - `./scripts/validate-data-cloud-stream-runtime.sh`
+- `./scripts/validate-salesforce-data-cloud-stream-runtime.sh`
 - `./scripts/validate-dan-59-stream-pack.sh`
 2. Verify stream evidence and mapping artifacts:
 - `docs/evidence/dan-59-data-cloud-stream-health-latest.md`
