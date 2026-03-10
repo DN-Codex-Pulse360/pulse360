@@ -1,0 +1,4 @@
+interface:
+  display_name: "EPF Framework"
+  short_description: "Run EPF discovery-to-implementation gates"
+  default_prompt: "Use $epf to determine the current EPF stage, validate gate readiness, and define the next required outputs."

@@ -58,3 +58,32 @@ Status by milestone:
 2. Execute and record HITL validation comments for milestones A-E in Linear.
 3. Milestone D complete; keep screenshots and validator references linked for audit traceability.
 4. Rebuild Milestone E acceptance package with unique E-gate evidence (not reused from A-D) before re-closing `DAN-104`.
+
+## 2026-03-10 Critical Revalidation Addendum
+Audit refresh timestamp (UTC): `2026-03-10T06:22:00Z`
+
+What is now confirmed:
+- Data Cloud Databricks connector exists and is active (`Pulse360_Databricks_Source`).
+- Salesforce `DataStream` now has `7` records, including Databricks stream `datacloud_export_accounts Pulse360_Datab` (`Id=1dsdM000000QD9hQAG`) with `DataStreamStatus=ACTIVE`, `ImportRunStatus=SUCCESS`, `TotalRowsProcessed=3`.
+- Databricks stream runtime validator passes with current host/token/warehouse context.
+
+Critical gaps still open:
+1. Salesforce Account activation target fields required by `config/data-cloud/activation-field-mapping.csv` are not present in org metadata:
+   - `Unified_Profile_Id__c`
+   - `Identity_Confidence__c`
+   - `Group_Revenue_Rollup__c`
+   - `Health_Score__c`
+   - `Cross_Sell_Propensity__c`
+   - `Coverage_Gap_Flag__c`
+   - `Competitor_Risk_Signal__c`
+   - `DataCloud_Last_Synced__c`
+2. Data Cloud mapping publish is not complete (`MktDataLakeMapping` query returned `total=0`), consistent with mapping UI not yet at a completed published state.
+
+Linear alignment changes applied in this revalidation:
+- `DAN-59` description updated with explicit connector + stream implementation steps and validator gates.
+- `DAN-103` acceptance updated with explicit Account-field and mapping-publish checks.
+- `DAN-103` blocked by `DAN-61` and `DAN-114`.
+- `DAN-61` blocked by `DAN-114`.
+
+Revised milestone implication:
+- Milestone C remains **not acceptable** until `DAN-114` and `DAN-61` close activation-field + mapping-publish gaps.
