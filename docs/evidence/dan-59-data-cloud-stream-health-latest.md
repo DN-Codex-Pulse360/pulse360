@@ -55,20 +55,25 @@ Validation sources:
 - runtime validator: `scripts/validate-salesforce-data-cloud-stream-runtime.sh`
 - direct query: `sf data query --target-org pulse360-dev --query "SELECT Id, Name FROM DataStream LIMIT 10"`
 
-Observed status (2026-03-10):
-- `DataStream` records in org: `0`
-- `All Data Streams` list in Salesforce UI: `No items to display`
-
-API create attempts (CLI) were rejected with platform `UNKNOWN_EXCEPTION` errors:
-- ErrorId: `984362996-13826 (2081726263)`
-- ErrorId: `1659890987-17426 (2081726263)`
+Observed status (2026-03-10, post HITL screenshot confirmation):
+- `DataStream` records in org: `6`
+- UI view `Recently Viewed` shows active ingest streams:
+  - `Account_Home`
+  - `Contact_Home`
+  - `Lead_Home`
+  - `Opportunity_Home`
+  - `OpportunityContactRole_Home`
+  - `User_Home`
+- Runtime validator result:
+  - `./scripts/validate-salesforce-data-cloud-stream-runtime.sh` -> PASS
+  - Stream count snapshot confirms `DataStreamStatus=ACTIVE` and `ImportRunStatus=SUCCESS` across listed streams.
 
 Interpretation:
 - Databricks-side stream contract and export health are passing.
-- Salesforce Data Cloud stream deployment is still missing in the org and remains the open acceptance blocker for DAN-59.
+- Salesforce stream deployment proof is now present (non-zero active streams visible in UI and runtime query).
 
 ## Acceptance Mapping (DAN-59)
-- Salesforce account stream and Databricks enrichment stream configured: **partial** (manifest complete; Salesforce deployed stream missing).
+- Salesforce account stream and Databricks enrichment stream configured: **satisfied** (manifest + active Salesforce streams + Databricks export contract checks).
 - Databricks stream labelled with last-ingested metadata: **satisfied**.
-- Stream health and ingestion verification documented: **Databricks satisfied**; Salesforce stream runtime not satisfied.
+- Stream health and ingestion verification documented: **satisfied** (Databricks + Salesforce runtime checks).
 - Mapping to contract fields validated: **satisfied**.

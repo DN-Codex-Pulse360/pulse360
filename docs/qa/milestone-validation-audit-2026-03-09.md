@@ -6,7 +6,7 @@ Scope: Pulse360 milestones A-E after adding standardized Linear milestone valida
 ## Summary
 - Milestone A: delivery state aligns with expected outputs.
 - Milestone B: partially accepted; Databricks intelligence tables are validated, but both main and demo dashboards remain incomplete (builder/skeleton state).
-- Milestone C: partially accepted; Databricks-side artifacts are present, but Salesforce Data Cloud Streams UI shows no deployed streams.
+- Milestone C: stream deployment blocker cleared; Salesforce Data Cloud now shows active streams and runtime validation passes.
 - Milestone D: accepted after HITL screenshot validation confirmed deployed Salesforce UI elements and passing runtime gates.
 - Milestone E: failed acceptance; submitted evidence is reused from prior milestones and is not milestone-specific.
 - HITL requirement: explicit milestone HITL validation entries have now been recorded for milestones A-E.
@@ -16,7 +16,7 @@ Scope: Pulse360 milestones A-E after adding standardized Linear milestone valida
 | --- | --- | --- | --- |
 | A - Environment and Data Foundations | Stage 1.1-1.5 artifacts complete; setup/governance/security/observability baseline complete; all A issues Done | `DAN-48/49/50/51/52/53/74/75/76/77` are Done; stage artifacts and control center links exist | Aligned |
 | B - Databricks Intelligence Layer | `DAN-54/55/56/57/58` Done; governance dashboard depth complete | DAN-58 runtime evidence and validators complete, but dashboard UI visuals are not finalized; issue moved back to `In Progress` on 2026-03-09 | Partial |
-| C - Data Cloud Identity and Activation | `DAN-59/60/61/62` Done; stream config, health, metadata, contract mapping validated | Databricks runtime contract checks are green on latest run (`run_20260310_01`), but Salesforce `DataStream` records remain `0`; CLI stream-create attempts return platform `UNKNOWN_EXCEPTION`, so deployed stream proof is still missing | Partial |
+| C - Data Cloud Identity and Activation | `DAN-59/60/61/62` Done; stream config, health, metadata, contract mapping validated | Databricks runtime contract checks are green on latest run (`run_20260310_01`), and Salesforce Data Cloud now shows 6 active streams with successful import status (`validate-salesforce-data-cloud-stream-runtime.sh` PASS) | Ready for HITL |
 | D - Salesforce and Agentforce Experience Layer | `DAN-63/64/65/66/67` Done; runtime payload + UI behavior validated | Pulse360 LWCs, record page, and account actions verified in Salesforce UI screenshots; validators green; `DAN-106` closed accepted | Aligned |
 | E - End-to-End Demo Hardening | `DAN-68/69/70/71/72/73` Done; readout packs + decision archive complete | Acceptance evidence judged inadequate: repeated prior-milestone artifacts, no E-specific acceptance proof pack; `DAN-104` re-opened | Fail |
 
