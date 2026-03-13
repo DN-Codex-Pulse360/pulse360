@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Identity_Confidence__c</fullName>
+    <description>Identity confidence score activated from Data Cloud for Pulse360.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Identity resolution confidence score from Data Cloud.</inlineHelpText>
+    <label>Identity Confidence</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

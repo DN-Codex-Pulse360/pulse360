@@ -11,6 +11,8 @@
 2. Enable Unity Catalog and create dev catalog/schema.
 3. Configure compute policy for deterministic demo runs.
 4. Preload outputs for duplicate detection, hierarchy stitching, enrichment, and lineage.
+5. Ingest Salesforce CRM `Account` source records into Databricks before enrichment when downstream activation writes back to CRM `Account`.
+6. Preserve native `Account.Id` or an approved Salesforce External ID through Databricks staging and export contracts.
 
 ## MCP Baseline
 Official-first preference:

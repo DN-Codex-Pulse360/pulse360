@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Engagement_Intensity_Score__c</fullName>
+    <description>Engagement intensity score activated from Data Cloud.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Activated engagement intensity score for account intelligence surfaces.</inlineHelpText>
+    <label>Engagement Intensity Score</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

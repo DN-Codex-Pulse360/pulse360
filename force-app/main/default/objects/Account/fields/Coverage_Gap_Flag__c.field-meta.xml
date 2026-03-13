@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Coverage_Gap_Flag__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Coverage gap flag activated from Data Cloud.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Activated flag indicating a coverage gap in the account hierarchy.</inlineHelpText>
+    <label>Coverage Gap Flag</label>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>
