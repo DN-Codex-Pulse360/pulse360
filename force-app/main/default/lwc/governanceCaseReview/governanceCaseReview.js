@@ -6,7 +6,6 @@ import {
     updateRecord
 } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import USER_ID from '@salesforce/user/Id';
 
 import STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Status__c';
 import PRIORITY_FIELD from '@salesforce/schema/Governance_Case__c.Priority__c';
@@ -30,8 +29,6 @@ import DECISION_REASON_TEXT_FIELD from '@salesforce/schema/Governance_Case__c.De
 import REVIEW_FOLLOWUP_REQUIRED_FIELD from '@salesforce/schema/Governance_Case__c.Review_Followup_Required__c';
 import SURVIVING_ACCOUNT_FIELD from '@salesforce/schema/Governance_Case__c.Surviving_Account__c';
 import DECISION_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Decision_Status__c';
-import DECIDED_BY_FIELD from '@salesforce/schema/Governance_Case__c.Decided_By__c';
-import DECIDED_AT_FIELD from '@salesforce/schema/Governance_Case__c.Decided_At__c';
 import DOWNSTREAM_UPDATE_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Downstream_Update_Status__c';
 import EVIDENCE_RUN_TIMESTAMP_FIELD from '@salesforce/schema/Governance_Case__c.Evidence_Run_Timestamp__c';
 import MERGE_EXECUTION_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Merge_Execution_Status__c';
@@ -63,8 +60,6 @@ const CASE_FIELDS = [
     REVIEW_FOLLOWUP_REQUIRED_FIELD,
     SURVIVING_ACCOUNT_FIELD,
     DECISION_STATUS_FIELD,
-    DECIDED_BY_FIELD,
-    DECIDED_AT_FIELD,
     DOWNSTREAM_UPDATE_STATUS_FIELD,
     EVIDENCE_RUN_TIMESTAMP_FIELD,
     MERGE_EXECUTION_STATUS_FIELD,
@@ -295,7 +290,7 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get decidedById() {
-        return this.fieldValue(DECIDED_BY_FIELD);
+        return null;
     }
 
     get decidedByName() {
@@ -307,7 +302,7 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get decidedAt() {
-        return this.displayValue(DECIDED_AT_FIELD) || 'Not decided';
+        return 'Recorded by automation';
     }
 
     get downstreamUpdateStatus() {
@@ -315,7 +310,7 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get mergeExecutionStatus() {
-        return this.displayValue(MERGE_EXECUTION_STATUS_FIELD) || 'Not Started';
+        return this.displayValue(MERGE_EXECUTION_STATUS_FIELD) || 'Pending automation';
     }
 
     get mergeExecutedById() {
@@ -399,7 +394,30 @@ export default class GovernanceCaseReview extends LightningElement {
             this.showToast('Merged account required', 'Select the losing Account before approving.', 'error');
             return false;
         }
+        if (!this.isCasePairAccount(this.survivingAccountId)) {
+            this.showToast(
+                'Invalid surviving account',
+                'The surviving Account must be one of the two Accounts already attached to this governance case.',
+                'error'
+            );
+            return false;
+        }
+        if (!this.isCasePairAccount(this.mergedAccountId)) {
+            this.showToast(
+                'Invalid merged account',
+                'The merged Account must be one of the two Accounts already attached to this governance case.',
+                'error'
+            );
+            return false;
+        }
         return true;
+    }
+
+    isCasePairAccount(accountId) {
+        if (!accountId) {
+            return true;
+        }
+        return [this.leftAccountId, this.rightAccountId].filter(Boolean).includes(accountId);
     }
 
     async persistDecision(decisionStatus) {
@@ -416,13 +434,7 @@ export default class GovernanceCaseReview extends LightningElement {
             Review_Followup_Required__c: this.reviewFollowupRequired,
             Surviving_Account__c: this.survivingAccountId || null,
             Merged_Account__c: this.mergedAccountId || null,
-            Decided_By__c: USER_ID,
-            Decided_At__c: new Date().toISOString(),
-            Status__c: decisionStatus,
-            Merge_Execution_Status__c:
-                decisionStatus === 'Approved'
-                    ? 'Ready for Merge'
-                    : this.fieldValue(MERGE_EXECUTION_STATUS_FIELD) || 'Not Started'
+            Status__c: decisionStatus
         };
 
         try {

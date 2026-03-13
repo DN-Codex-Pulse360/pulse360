@@ -5,8 +5,8 @@
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Audit_Event_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Candidate_Pair_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Confidence_Band__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Governance_Case__c.Decided_At__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Governance_Case__c.Decided_By__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Decided_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Decided_By__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Decision_Owner__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Decision_Reason_Code__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Decision_Reason_Text__c</field><readable>true</readable></fieldPermissions>
@@ -19,9 +19,9 @@
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Hierarchy_Conflict_Flag__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Hierarchy_Impact_Summary__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Left_Account__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Governance_Case__c.Merge_Executed_At__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Governance_Case__c.Merge_Executed_By__c</field><readable>true</readable></fieldPermissions>
-    <fieldPermissions><editable>true</editable><field>Governance_Case__c.Merge_Execution_Status__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Merge_Executed_At__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Merge_Executed_By__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Merge_Execution_Status__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Merged_Account__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Model_Version__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Priority__c</field><readable>true</readable></fieldPermissions>

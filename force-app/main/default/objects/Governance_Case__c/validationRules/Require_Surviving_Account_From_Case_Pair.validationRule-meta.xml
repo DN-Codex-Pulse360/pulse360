@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Surviving_Account_From_Case_Pair</fullName>
+    <active>true</active>
+    <description>Prevents approving a governance case with a surviving account that is not one of the two reviewed case accounts.</description>
+    <errorConditionFormula>
+        ISPICKVAL(Decision_Status__c, "Approved")
+        &amp;&amp;
+        NOT(
+            OR(
+                Surviving_Account__c = Left_Account__c,
+                Surviving_Account__c = Right_Account__c
+            )
+        )
+    </errorConditionFormula>
+    <errorDisplayField>Surviving_Account__c</errorDisplayField>
+    <errorMessage>Select one of the two reviewed Accounts as the surviving Account.</errorMessage>
+</ValidationRule>

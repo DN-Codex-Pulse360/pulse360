@@ -65,6 +65,8 @@ required_validation_rules=(
   "Require_Reason_On_Final_Decision"
   "Require_Surviving_Account_On_Approval"
   "Require_Merged_Account_On_Approval"
+  "Require_Surviving_Account_From_Case_Pair"
+  "Require_Merged_Account_From_Case_Pair"
   "Prevent_Same_Merge_Accounts"
 )
 
@@ -125,7 +127,8 @@ for token in \
   "Governance_Case__c" \
   "decisionaction" \
   "updateRecord" \
-  "ShowToastEvent"; do
+  "ShowToastEvent" \
+  "isCasePairAccount"; do
   rg -Fq "$token" "$lwc_dir/governanceCaseReview.js-meta.xml" "$lwc_dir/governanceCaseReview.js" \
     || fail "Missing LWC token: $token"
 done
@@ -151,6 +154,15 @@ for token in \
   "Governance_Case__c.Recommended_Action__c" \
   "<tab>Governance_Case__c</tab>"; do
   rg -Fq "$token" "$permset_meta" || fail "Missing permission set token: $token"
+done
+
+for token in \
+  "<editable>false</editable><field>Governance_Case__c.Decided_At__c</field>" \
+  "<editable>false</editable><field>Governance_Case__c.Decided_By__c</field>" \
+  "<editable>false</editable><field>Governance_Case__c.Merge_Executed_At__c</field>" \
+  "<editable>false</editable><field>Governance_Case__c.Merge_Executed_By__c</field>" \
+  "<editable>false</editable><field>Governance_Case__c.Merge_Execution_Status__c</field>"; do
+  rg -Fq "$token" "$permset_meta" || fail "Missing system-managed field protection token: $token"
 done
 pass "Governance Case steward permission set metadata exists"
 
