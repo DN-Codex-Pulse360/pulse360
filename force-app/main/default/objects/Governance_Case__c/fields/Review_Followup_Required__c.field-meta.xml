@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Review_Followup_Required__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether follow-up work is required after the decision.</description>
+    <inlineHelpText>True when additional follow-up remains after the current decision.</inlineHelpText>
+    <label>Review Followup Required</label>
+    <trackHistory>true</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

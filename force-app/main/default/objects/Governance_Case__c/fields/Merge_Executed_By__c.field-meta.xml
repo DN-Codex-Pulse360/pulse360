@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Merge_Executed_By__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>User who executed or attempted the Salesforce account merge transaction.</description>
+    <inlineHelpText>Used for merge audit and operational troubleshooting.</inlineHelpText>
+    <label>Merge Executed By</label>
+    <referenceTo>User</referenceTo>
+    <relationshipLabel>Merge Executed Governance Cases</relationshipLabel>
+    <relationshipName>MergeExecutedGovernanceCases</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <type>Lookup</type>
+</CustomField>

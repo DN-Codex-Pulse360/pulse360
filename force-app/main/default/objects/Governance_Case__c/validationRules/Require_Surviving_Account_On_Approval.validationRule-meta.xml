@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Surviving_Account_On_Approval</fullName>
+    <active>true</active>
+    <description>Requires the steward to select the surviving account before approving a merge case.</description>
+    <errorConditionFormula>
+        OR(
+            ISPICKVAL(Decision_Status__c, "Approved"),
+            ISPICKVAL(Status__c, "Approved")
+        )
+        &amp;&amp;
+        ISBLANK(Surviving_Account__c)
+    </errorConditionFormula>
+    <errorDisplayField>Surviving_Account__c</errorDisplayField>
+    <errorMessage>Select the surviving account before approving this governance case.</errorMessage>
+</ValidationRule>

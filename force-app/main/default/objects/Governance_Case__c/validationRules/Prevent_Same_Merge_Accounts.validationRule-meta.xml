@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Same_Merge_Accounts</fullName>
+    <active>true</active>
+    <description>Prevents a governance case from identifying the same Account as both the surviving and merged record.</description>
+    <errorConditionFormula>
+        NOT(ISBLANK(Surviving_Account__c))
+        &amp;&amp;
+        NOT(ISBLANK(Merged_Account__c))
+        &amp;&amp;
+        Surviving_Account__c = Merged_Account__c
+    </errorConditionFormula>
+    <errorDisplayField>Merged_Account__c</errorDisplayField>
+    <errorMessage>The surviving account and merged account must be different records.</errorMessage>
+</ValidationRule>
