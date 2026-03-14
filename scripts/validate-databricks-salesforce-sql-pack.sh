@@ -4,6 +4,17 @@ set -euo pipefail
 fail() { echo "[FAIL] $1" >&2; exit 1; }
 pass() { echo "[PASS] $1"; }
 
+search_fixed() {
+  local needle="$1"
+  shift
+
+  if command -v rg >/dev/null 2>&1; then
+    rg -Fq "$needle" "$@"
+  else
+    grep -Fq -- "$needle" "$@"
+  fi
+}
+
 required_files=(
   "sql/databricks/silver_salesforce/00_create_schema.sql"
   "sql/databricks/silver_salesforce/10_crm_account.sql"
@@ -41,7 +52,7 @@ for token in \
   "00_create_schema.sql" \
   "80_crm_account_hierarchy_edge.sql" \
   "crm_account_id"; do
-  rg -Fq "$token" "$silver_readme" || fail "Missing token in silver README: $token"
+  search_fixed "$token" "$silver_readme" || fail "Missing token in silver README: $token"
 done
 
 for token in \
@@ -49,7 +60,7 @@ for token in \
   "30_datacloud_export_accounts.sql" \
   "source_account_id" \
   "crm_account_id"; do
-  rg -Fq "$token" "$gold_readme" || fail "Missing token in gold README: $token"
+  search_fixed "$token" "$gold_readme" || fail "Missing token in gold README: $token"
 done
 pass "SQL package READMEs document execution order and key rules"
 
@@ -57,14 +68,14 @@ for token in \
   "pulse360_s4.bronze_salesforce.account" \
   "Id AS crm_account_id" \
   "'salesforce' AS source_system"; do
-  rg -Fq "$token" "$silver_account_sql" || fail "Missing token in crm_account SQL: $token"
+  search_fixed "$token" "$silver_account_sql" || fail "Missing token in crm_account SQL: $token"
 done
 
 for token in \
   "a.crm_account_id AS source_account_id" \
   "concat('ucp_', a.crm_account_id) AS unified_profile_id" \
   "current_timestamp() AS last_synced_timestamp"; do
-  rg -Fq "$token" "$gold_export_base_sql" || fail "Missing token in account_export_base SQL: $token"
+  search_fixed "$token" "$gold_export_base_sql" || fail "Missing token in account_export_base SQL: $token"
 done
 
 for token in \
@@ -83,7 +94,7 @@ for token in \
   "open_opportunity_count" \
   "last_engagement_timestamp" \
   "last_synced_timestamp"; do
-  rg -Fq "$token" "$gold_export_sql" || fail "Missing token in datacloud export SQL: $token"
+  search_fixed "$token" "$gold_export_sql" || fail "Missing token in datacloud export SQL: $token"
 done
 pass "SQL definitions preserve CRM-key-safe export fields"
 
@@ -91,14 +102,14 @@ for token in \
   "crm_account_id" \
   "pulse360_s4.silver_salesforce.crm_account_hierarchy_edge" \
   "The pipeline is ready for gold export refactoring"; do
-  rg -Fq "$token" "$silver_runbook" || fail "Missing token in silver runbook: $token"
+  search_fixed "$token" "$silver_runbook" || fail "Missing token in silver runbook: $token"
 done
 
 for token in \
   "pulse360_s4.intelligence.datacloud_export_accounts" \
   "source_account_id" \
   "activation fields required by"; do
-  rg -Fq "$token" "$gold_runbook" || fail "Missing token in gold runbook: $token"
+  search_fixed "$token" "$gold_runbook" || fail "Missing token in gold runbook: $token"
 done
 pass "Runbooks describe validation and expected outcomes"
 
