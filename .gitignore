@@ -1,0 +1,5 @@
+.DS_Store
+*/.DS_Store
+.venv-pptx/
+__pycache__/
+*.pyc

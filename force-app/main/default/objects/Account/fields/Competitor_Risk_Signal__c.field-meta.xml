@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Competitor_Risk_Signal__c</fullName>
+    <description>Competitor risk signal activated from Data Cloud.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Activated competitive risk score for Pulse360 account intelligence.</inlineHelpText>
+    <label>Competitor Risk Signal</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

@@ -17,10 +17,17 @@ Primary platforms in scope:
 5. Data Cloud activates account-centric outputs back to Salesforce for Account 360 and Agentforce actions.
 6. User actions in Salesforce (for example opportunity creation) trigger downstream insight refresh logic.
 
+### Keying Requirement for CRM Writeback
+- Activation back to Salesforce CRM `Account` requires that Databricks preserve a CRM-matchable key through the enrichment flow.
+- Accepted key strategies:
+  - carry native Salesforce `Account.Id` from upstream CRM ingestion, or
+  - carry a Salesforce External ID that is available for deterministic upsert/match in CRM.
+- Databricks-origin account records without CRM key association are acceptable for analytical modeling, but not for deterministic CRM writeback acceptance.
+
 ### Integration Boundary Summary
 | From | To | Contract Anchor |
 | --- | --- | --- |
-| Salesforce CRM | Databricks | Source snapshots and deterministic source keys |
+| Salesforce CRM | Databricks | `docs/contracts/salesforce-crm-to-databricks-account-ingestion-contract.md` |
 | Databricks | Data Cloud | `docs/contracts/databricks-to-datacloud-contract.md` |
 | Data Cloud | Salesforce CRM/Agentforce | `docs/contracts/datacloud-to-salesforce-agentforce-contract.md` |
 
@@ -39,10 +46,12 @@ Primary platforms in scope:
 Use Option A: Databricks for intelligence products and governance evidence, Data Cloud for canonical identity and activation, Salesforce for execution UX.  
 This aligns to existing repository contracts and the canonical B2B model.
 
+### Added Design Item
+Add an explicit upstream design item to ingest Salesforce CRM Account records into Databricks before enrichment so cleaned/enriched account outputs retain a valid CRM writeback key.
+
 ## Gate Self-Checks
 Stage 1.3 gate: can data flow between critical systems be explained without guessing?  
 Status: **Pass candidate**
 
 Stage 1.4 gate: are rejected options and tradeoffs explicit?  
 Status: **Pass candidate**
-

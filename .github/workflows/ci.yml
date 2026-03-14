@@ -7,6 +7,7 @@ on:
 
 jobs:
   docs-lint:
+    name: pulse360-ci / docs-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,3 +38,15 @@ jobs:
         run: |
           chmod +x scripts/validate-canonical-exports.sh
           ./scripts/validate-canonical-exports.sh
+      - name: Validate Salesforce Account activation field metadata
+        run: |
+          chmod +x scripts/validate-salesforce-account-activation-fields.sh
+          ./scripts/validate-salesforce-account-activation-fields.sh
+      - name: Validate Governance Case Salesforce metadata
+        run: |
+          chmod +x scripts/validate-governance-case-metadata.sh
+          ./scripts/validate-governance-case-metadata.sh
+      - name: Validate Databricks Salesforce SQL package
+        run: |
+          chmod +x scripts/validate-databricks-salesforce-sql-pack.sh
+          ./scripts/validate-databricks-salesforce-sql-pack.sh

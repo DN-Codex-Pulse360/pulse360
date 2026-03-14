@@ -1,0 +1,37 @@
+CREATE OR REPLACE TABLE pulse360_s4.intelligence.datacloud_export_accounts AS
+SELECT
+  canonical_account_id,
+  canonical_account_id AS entity_id,
+  source_account_id,
+  deterministic_key,
+  account_name,
+  CAST(identity_confidence AS DOUBLE) AS duplicate_confidence,
+  parent_account_id AS hierarchy_parent_id,
+  canonical_account_id AS hierarchy_child_id,
+  CAST(validity_score AS DOUBLE) AS validity_score,
+  CASE WHEN validity_score < 85 THEN true ELSE false END AS review_flag,
+  unified_profile_id,
+  CAST(identity_confidence AS DOUBLE) AS identity_confidence,
+  named_struct(
+    'group_id', COALESCE(parent_account_id, canonical_account_id),
+    'parent_account_id', parent_account_id,
+    'canonical_account_id', canonical_account_id,
+    'account_name', account_name
+  ) AS hierarchy_payload,
+  group_revenue_rollup,
+  cross_sell_propensity,
+  health_score,
+  coverage_gap_flag,
+  competitor_risk_signal,
+  primary_brand_name,
+  active_product_count,
+  engagement_intensity_score,
+  open_opportunity_count,
+  last_engagement_timestamp,
+  last_synced_timestamp,
+  ingestion_metadata_label,
+  run_id,
+  run_ts,
+  run_timestamp,
+  model_version
+FROM pulse360_s4.gold.account_export_base;

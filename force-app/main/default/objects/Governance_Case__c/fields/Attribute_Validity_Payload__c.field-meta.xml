@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Attribute_Validity_Payload__c</fullName>
+    <description>Serialized side-by-side field trust payload used for stewardship review.</description>
+    <inlineHelpText>Payload containing compared attribute values, validity scores, and explanations.</inlineHelpText>
+    <label>Attribute Validity Payload</label>
+    <length>32768</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>8</visibleLines>
+</CustomField>

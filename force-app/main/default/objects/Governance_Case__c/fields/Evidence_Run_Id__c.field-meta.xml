@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Evidence_Run_Id__c</fullName>
+    <description>Databricks evidence run identifier for the stewardship package.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Evidence run used to populate the current governance case.</inlineHelpText>
+    <label>Evidence Run Id</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

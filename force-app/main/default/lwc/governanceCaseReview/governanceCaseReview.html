@@ -1,0 +1,229 @@
+<template>
+    <lightning-card title="Governance Case Review" icon-name="standard:case">
+        <div class="slds-p-around_medium">
+            <template if:true={recordId}>
+                <template if:true={hasError}>
+                    <div class="slds-text-color_error slds-m-bottom_medium">{errorMessage}</div>
+                </template>
+                <template if:true={isLoaded}>
+                    <div class="review-shell">
+                        <div class="summary-band">
+                            <div class="summary-card summary-card_emphasis">
+                                <div class="eyebrow">Stewardship Recommendation</div>
+                                <div class="summary-value">{recommendedAction}</div>
+                                <p class="summary-copy">{recommendationSummary}</p>
+                            </div>
+                            <div class="summary-card">
+                                <div class="eyebrow">Case State</div>
+                                <div class="summary-grid">
+                                    <div>
+                                        <div class="summary-label">Status</div>
+                                        <div class="summary-value_small">{status}</div>
+                                    </div>
+                                    <div>
+                                        <div class="summary-label">Priority</div>
+                                        <div class="summary-value_small">{priority}</div>
+                                    </div>
+                                    <div>
+                                        <div class="summary-label">Decision Owner</div>
+                                        <div class="summary-value_small">
+                                            <template if:true={decisionOwnerUrl}>
+                                                <lightning-formatted-url value={decisionOwnerUrl} label={decisionOwnerName} target="_blank"></lightning-formatted-url>
+                                            </template>
+                                            <template if:false={decisionOwnerUrl}>{decisionOwnerName}</template>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="summary-label">Evidence Timestamp</div>
+                                        <div class="summary-value_small">{evidenceRunTimestamp}</div>
+                                    </div>
+                                </div>
+                                <p class="summary-copy">{caseHealthSummary}</p>
+                            </div>
+                        </div>
+
+                        <div class="review-grid">
+                            <div class="primary-column">
+                                <section class="panel panel_accounts">
+                                    <div class="panel-header">
+                                        <h3 class="section-title">Account Pair</h3>
+                                        <p class="section-kicker">Compare the records before taking action.</p>
+                                    </div>
+                                    <div class="account-pair-grid">
+                                        <article class="account-card">
+                                            <div class="eyebrow">Left Account</div>
+                                            <div class="account-name">
+                                                <template if:true={leftAccountUrl}>
+                                                    <lightning-formatted-url value={leftAccountUrl} label={leftAccountName} target="_blank"></lightning-formatted-url>
+                                                </template>
+                                                <template if:false={leftAccountUrl}>{leftAccountName}</template>
+                                            </div>
+                                        </article>
+                                        <article class="account-card">
+                                            <div class="eyebrow">Right Account</div>
+                                            <div class="account-name">
+                                                <template if:true={rightAccountUrl}>
+                                                    <lightning-formatted-url value={rightAccountUrl} label={rightAccountName} target="_blank"></lightning-formatted-url>
+                                                </template>
+                                                <template if:false={rightAccountUrl}>{rightAccountName}</template>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <dl class="slds-list_horizontal slds-wrap detail-list detail-list_compact">
+                                        <dt class="slds-item_label slds-truncate">Confidence</dt>
+                                        <dd class="slds-item_detail">{duplicateConfidence}</dd>
+                                        <dt class="slds-item_label slds-truncate">Confidence Band</dt>
+                                        <dd class="slds-item_detail">{confidenceBand}</dd>
+                                        <dt class="slds-item_label slds-truncate">Review Flag</dt>
+                                        <dd class="slds-item_detail">{reviewFlagLabel}</dd>
+                                    </dl>
+                                </section>
+
+                                <section class="panel">
+                                    <div class="panel-header">
+                                        <h3 class="section-title">Why Pulse360 Flagged This</h3>
+                                    </div>
+                                    <p class="section-copy"><strong>Top Match Features:</strong> {topMatchFeatures}</p>
+                                    <p class="section-copy"><strong>Feature Explanations:</strong> {featureExplanations}</p>
+                                    <p class="section-copy"><strong>Source Snapshot:</strong> {sourceSnapshotId}</p>
+                                    <p class="section-copy"><strong>Model Version:</strong> {modelVersion}</p>
+                                </section>
+
+                                <div class="evidence-grid">
+                                    <section class="panel">
+                                        <div class="panel-header">
+                                            <h3 class="section-title">Attribute Trust</h3>
+                                        </div>
+                                        <p class="section-copy">{attributeValidityPayload}</p>
+                                    </section>
+
+                                    <section class="panel">
+                                        <div class="panel-header">
+                                            <h3 class="section-title">Hierarchy Impact</h3>
+                                        </div>
+                                        <p class="section-copy"><strong>Conflict:</strong> {hierarchyConflictLabel}</p>
+                                        <p class="section-copy"><strong>Impact:</strong> {hierarchyImpactSummary}</p>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <aside class="secondary-column">
+                                <section class="panel panel_decision">
+                                    <div class="panel-header">
+                                        <h3 class="section-title">Decision Workspace</h3>
+                                        <p class="section-kicker">{mergeSelectionHelp}</p>
+                                    </div>
+                                    <div class="decision-fieldset">
+                                        <lightning-record-picker
+                                            label="Surviving Account"
+                                            placeholder="Search Accounts"
+                                            object-api-name="Account"
+                                            value={survivingAccountId}
+                                            onchange={handleSurvivingAccountChange}>
+                                        </lightning-record-picker>
+                                        <lightning-record-picker
+                                            label="Merged Account"
+                                            placeholder="Search Accounts"
+                                            object-api-name="Account"
+                                            value={mergedAccountId}
+                                            onchange={handleMergedAccountChange}>
+                                        </lightning-record-picker>
+                                        <div class="selection-summary">
+                                            <div>
+                                                <span class="summary-label">Surviving</span>
+                                                <div class="selection-link">
+                                                    <template if:true={survivingAccountUrl}>
+                                                        <lightning-formatted-url value={survivingAccountUrl} label={survivingAccountName} target="_blank"></lightning-formatted-url>
+                                                    </template>
+                                                    <template if:false={survivingAccountUrl}>{survivingAccountName}</template>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span class="summary-label">Merged</span>
+                                                <div class="selection-link">
+                                                    <template if:true={mergedAccountUrl}>
+                                                        <lightning-formatted-url value={mergedAccountUrl} label={mergedAccountName} target="_blank"></lightning-formatted-url>
+                                                    </template>
+                                                    <template if:false={mergedAccountUrl}>{mergedAccountName}</template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <lightning-combobox
+                                            name="decisionReasonCode"
+                                            label="Decision Reason Code"
+                                            value={decisionReasonCode}
+                                            options={decisionReasonOptions}
+                                            onchange={handleReasonChange}>
+                                        </lightning-combobox>
+                                        <lightning-textarea
+                                            name="decisionReasonText"
+                                            label="Decision Reason Text"
+                                            value={decisionReasonText}
+                                            onchange={handleReasonTextChange}>
+                                        </lightning-textarea>
+                                        <lightning-input
+                                            type="checkbox"
+                                            label="Review Followup Required"
+                                            checked={reviewFollowupRequired}
+                                            onchange={handleFollowupChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="decision-actions" role="group">
+                                        <lightning-button label="Approve" variant="brand" onclick={handleApprove} disabled={isSaving}></lightning-button>
+                                        <lightning-button label="Reject" variant="destructive-text" onclick={handleReject} disabled={isSaving}></lightning-button>
+                                        <lightning-button label="Defer" variant="neutral" onclick={handleDefer} disabled={isSaving}></lightning-button>
+                                    </div>
+                                </section>
+
+                                <section class="panel">
+                                    <div class="panel-header">
+                                        <h3 class="section-title">Audit and Outcome</h3>
+                                    </div>
+                                    <dl class="slds-list_horizontal slds-wrap detail-list detail-list_compact">
+                                        <dt class="slds-item_label slds-truncate">Decision Status</dt>
+                                        <dd class="slds-item_detail">{decisionStatus}</dd>
+                                        <dt class="slds-item_label slds-truncate">Decided By</dt>
+                                        <dd class="slds-item_detail">
+                                            <template if:true={decidedByUrl}>
+                                                <lightning-formatted-url value={decidedByUrl} label={decidedByName} target="_blank"></lightning-formatted-url>
+                                            </template>
+                                            <template if:false={decidedByUrl}>{decidedByName}</template>
+                                        </dd>
+                                        <dt class="slds-item_label slds-truncate">Decided At</dt>
+                                        <dd class="slds-item_detail">{decidedAt}</dd>
+                                        <dt class="slds-item_label slds-truncate">Downstream Update</dt>
+                                        <dd class="slds-item_detail">{downstreamUpdateStatus}</dd>
+                                        <dt class="slds-item_label slds-truncate">Merge Execution</dt>
+                                        <dd class="slds-item_detail">{mergeExecutionStatus}</dd>
+                                        <dt class="slds-item_label slds-truncate">Merge Executed By</dt>
+                                        <dd class="slds-item_detail">
+                                            <template if:true={mergeExecutedByUrl}>
+                                                <lightning-formatted-url value={mergeExecutedByUrl} label={mergeExecutedByName} target="_blank"></lightning-formatted-url>
+                                            </template>
+                                            <template if:false={mergeExecutedByUrl}>{mergeExecutedByName}</template>
+                                        </dd>
+                                        <dt class="slds-item_label slds-truncate">Merge Executed At</dt>
+                                        <dd class="slds-item_detail">{mergeExecutedAt}</dd>
+                                    </dl>
+                                </section>
+                            </aside>
+                        </div>
+                    </div>
+                </template>
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading governance case"></lightning-spinner>
+                </template>
+                <template if:false={isLoaded}>
+                    <template if:false={isLoading}>
+                        <template if:false={hasError}>
+                            <div class="slds-text-color_weak">Governance case details are not available yet.</div>
+                        </template>
+                    </template>
+                </template>
+            </template>
+            <template if:false={recordId}>
+                <p class="section-copy">Place this component on the Governance Case record page.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,3 @@
+CREATE SCHEMA IF NOT EXISTS pulse360_s4.gold;
+CREATE SCHEMA IF NOT EXISTS pulse360_s4.intelligence;
+

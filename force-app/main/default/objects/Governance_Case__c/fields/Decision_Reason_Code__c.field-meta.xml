@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Decision_Reason_Code__c</fullName>
+    <description>Structured reason code for the stewardship decision.</description>
+    <inlineHelpText>Required reason code for approve, reject, or defer decisions.</inlineHelpText>
+    <label>Decision Reason Code</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>CLEAR_DUPLICATE_MATCH</fullName><default>false</default><label>Clear Duplicate Match</label></value>
+            <value><fullName>LEGAL_ENTITY_MATCH_CONFIRMED</fullName><default>false</default><label>Legal Entity Match Confirmed</label></value>
+            <value><fullName>TRUSTED_ATTRIBUTE_ALIGNMENT</fullName><default>false</default><label>Trusted Attribute Alignment</label></value>
+            <value><fullName>HIERARCHY_ALIGNMENT_CONFIRMED</fullName><default>false</default><label>Hierarchy Alignment Confirmed</label></value>
+            <value><fullName>REFERENCE_DATA_CONFIRMED</fullName><default>false</default><label>Reference Data Confirmed</label></value>
+            <value><fullName>DIFFERENT_LEGAL_ENTITIES</fullName><default>false</default><label>Different Legal Entities</label></value>
+            <value><fullName>INSUFFICIENT_MATCH_EVIDENCE</fullName><default>false</default><label>Insufficient Match Evidence</label></value>
+            <value><fullName>HIERARCHY_CONFLICT_BLOCKS_MATCH</fullName><default>false</default><label>Hierarchy Conflict Blocks Match</label></value>
+            <value><fullName>TRUSTED_ATTRIBUTE_CONFLICT</fullName><default>false</default><label>Trusted Attribute Conflict</label></value>
+            <value><fullName>FALSE_POSITIVE_MODEL_OUTPUT</fullName><default>false</default><label>False Positive Model Output</label></value>
+            <value><fullName>NEEDS_EXTERNAL_REFERENCE_CHECK</fullName><default>false</default><label>Needs External Reference Check</label></value>
+            <value><fullName>NEEDS_BUSINESS_OWNER_REVIEW</fullName><default>false</default><label>Needs Business Owner Review</label></value>
+            <value><fullName>NEEDS_HIERARCHY_VALIDATION</fullName><default>false</default><label>Needs Hierarchy Validation</label></value>
+            <value><fullName>NEEDS_DATA_REMEDIATION</fullName><default>false</default><label>Needs Data Remediation</label></value>
+            <value><fullName>NEEDS_POLICY_DECISION</fullName><default>false</default><label>Needs Policy Decision</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

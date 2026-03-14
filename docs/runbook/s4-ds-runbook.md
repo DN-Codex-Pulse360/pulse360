@@ -29,8 +29,11 @@ Expected proof:
 1. Salesforce before-state BU-limited account view.
 2. Databricks hierarchy stitching evidence.
 3. Data Cloud group rollup and insights.
-4. Agentforce cross-sell action in Salesforce.
+4. Agentforce cross-sell action in Salesforce (create opportunity).
+5. Data Cloud insights recompute and re-activation in session.
 
 Expected proof:
 - Last synced timestamp visible.
 - Opportunity creation from live insights.
+- Competitor risk signal visible in Account 360 context.
+- Recompute occurs from `opportunity_created` trigger within session target window (`<= 5` minutes).

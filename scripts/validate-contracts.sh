@@ -52,7 +52,7 @@ engagement_export_csv_header="$(head -n 1 data/samples/datacloud_engagement_cano
 [[ "$engagement_export_csv_header" == "$expected_engagement_export_csv_header" ]] || fail "Engagement export CSV header mismatch"
 pass "Canonical export CSV headers match contract"
 
-for key in unified_profile_id identity_confidence hierarchy_payload group_revenue_rollup cross_sell_propensity health_score coverage_gap_flag primary_brand_name active_product_count engagement_intensity_score open_opportunity_count last_engagement_timestamp last_synced_timestamp; do
+for key in unified_profile_id identity_confidence hierarchy_payload group_revenue_rollup cross_sell_propensity health_score coverage_gap_flag competitor_risk_signal primary_brand_name active_product_count engagement_intensity_score open_opportunity_count last_engagement_timestamp last_synced_timestamp; do
   grep -q "\"$key\"" data/samples/datacloud_activation_sample.json || fail "Missing JSON key: $key"
 done
 pass "Data Cloud activation sample includes required keys"

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Decided_By__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>User who finalized the stewardship decision.</description>
+    <inlineHelpText>Decision maker for the governance case.</inlineHelpText>
+    <label>Decided By</label>
+    <referenceTo>User</referenceTo>
+    <relationshipLabel>Decided Governance Cases</relationshipLabel>
+    <relationshipName>DecidedGovernanceCases</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <type>Lookup</type>
+</CustomField>

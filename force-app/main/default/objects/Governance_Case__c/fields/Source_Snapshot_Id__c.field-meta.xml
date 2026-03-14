@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Source_Snapshot_Id__c</fullName>
+    <description>Replay-safe source snapshot identifier for the evidence package.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Source snapshot that produced the stewardship evidence.</inlineHelpText>
+    <label>Source Snapshot Id</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

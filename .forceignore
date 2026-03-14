@@ -1,0 +1,18 @@
+# Salesforce DX .forceignore
+
+# Local auth and machine state
+.sf/
+.sfdx/
+
+# OS/editor artifacts
+.DS_Store
+*.swp
+.idea/
+.vscode/settings.json
+
+# Managed or org-specific noise
+**/settings/OrgPreference.settings-meta.xml
+**/settings/Territory2.settings-meta.xml
+
+# Prefer permission sets over broad profiles
+**/profiles/*.profile-meta.xml
