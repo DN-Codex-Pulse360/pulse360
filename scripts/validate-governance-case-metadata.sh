@@ -11,6 +11,9 @@ lwc_dir="force-app/main/default/lwc/governanceCaseReview"
 flexipage_meta="force-app/main/default/flexipages/Governance_Case_Record_Page.flexipage-meta.xml"
 tab_meta="force-app/main/default/tabs/Governance_Case__c.tab-meta.xml"
 permset_meta="force-app/main/default/permissionsets/Governance_Case_Steward.permissionset-meta.xml"
+decision_stamping_class="force-app/main/default/classes/GovernanceCaseDecisionStamping.cls"
+decision_stamping_test_class="force-app/main/default/classes/GovernanceCaseDecisionStampingTest.cls"
+decision_stamping_trigger="force-app/main/default/triggers/GovernanceCaseDecisionStamping.trigger"
 
 [[ -f "sfdx-project.json" ]] || fail "Missing sfdx-project.json"
 [[ -f "$object_meta" ]] || fail "Missing Governance_Case__c object metadata"
@@ -20,6 +23,9 @@ permset_meta="force-app/main/default/permissionsets/Governance_Case_Steward.perm
 [[ -f "$flexipage_meta" ]] || fail "Missing Governance Case Lightning Record Page metadata"
 [[ -f "$tab_meta" ]] || fail "Missing Governance Case custom tab metadata"
 [[ -f "$permset_meta" ]] || fail "Missing Governance Case steward permission set metadata"
+[[ -f "$decision_stamping_class" ]] || fail "Missing Governance Case decision stamping Apex class"
+[[ -f "$decision_stamping_test_class" ]] || fail "Missing Governance Case decision stamping Apex test class"
+[[ -f "$decision_stamping_trigger" ]] || fail "Missing Governance Case decision stamping trigger"
 
 required_fields=(
   "Candidate_Pair_Id__c"
@@ -80,6 +86,25 @@ for file in governanceCaseReview.html governanceCaseReview.js governanceCaseRevi
   [[ -f "$lwc_dir/$file" ]] || fail "Missing governanceCaseReview bundle file: $file"
 done
 pass "governanceCaseReview LWC bundle exists"
+
+for token in \
+  "FINAL_DECISION_STATUSES" \
+  "Decided_By__c = UserInfo.getUserId()" \
+  "Decided_At__c = System.now()" \
+  "Merge_Execution_Status__c = 'Ready for Merge'"; do
+  rg -Fq "$token" "$decision_stamping_class" || fail "Missing decision stamping token: $token"
+done
+
+rg -Fq "GovernanceCaseDecisionStamping.apply(Trigger.new, Trigger.oldMap);" "$decision_stamping_trigger" \
+  || fail "Missing trigger handler invocation"
+
+for token in \
+  "@IsTest" \
+  "stampsApprovedDecisionAndMergeStatus" \
+  "stampsRejectedDecisionWithoutMergePreparation"; do
+  rg -Fq "$token" "$decision_stamping_test_class" || fail "Missing decision stamping test token: $token"
+done
+pass "Governance Case decision stamping automation exists"
 
 for token in \
   "<label>Governance Case</label>" \

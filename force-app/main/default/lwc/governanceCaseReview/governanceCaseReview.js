@@ -29,6 +29,8 @@ import DECISION_REASON_TEXT_FIELD from '@salesforce/schema/Governance_Case__c.De
 import REVIEW_FOLLOWUP_REQUIRED_FIELD from '@salesforce/schema/Governance_Case__c.Review_Followup_Required__c';
 import SURVIVING_ACCOUNT_FIELD from '@salesforce/schema/Governance_Case__c.Surviving_Account__c';
 import DECISION_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Decision_Status__c';
+import DECIDED_BY_FIELD from '@salesforce/schema/Governance_Case__c.Decided_By__c';
+import DECIDED_AT_FIELD from '@salesforce/schema/Governance_Case__c.Decided_At__c';
 import DOWNSTREAM_UPDATE_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Downstream_Update_Status__c';
 import EVIDENCE_RUN_TIMESTAMP_FIELD from '@salesforce/schema/Governance_Case__c.Evidence_Run_Timestamp__c';
 import MERGE_EXECUTION_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Merge_Execution_Status__c';
@@ -60,6 +62,8 @@ const CASE_FIELDS = [
     REVIEW_FOLLOWUP_REQUIRED_FIELD,
     SURVIVING_ACCOUNT_FIELD,
     DECISION_STATUS_FIELD,
+    DECIDED_BY_FIELD,
+    DECIDED_AT_FIELD,
     DOWNSTREAM_UPDATE_STATUS_FIELD,
     EVIDENCE_RUN_TIMESTAMP_FIELD,
     MERGE_EXECUTION_STATUS_FIELD,
@@ -290,7 +294,7 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get decidedById() {
-        return null;
+        return this.fieldValue(DECIDED_BY_FIELD);
     }
 
     get decidedByName() {
@@ -302,7 +306,7 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get decidedAt() {
-        return 'Recorded by automation';
+        return this.displayValue(DECIDED_AT_FIELD) || 'Not decided';
     }
 
     get downstreamUpdateStatus() {
@@ -310,7 +314,7 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get mergeExecutionStatus() {
-        return this.displayValue(MERGE_EXECUTION_STATUS_FIELD) || 'Pending automation';
+        return this.displayValue(MERGE_EXECUTION_STATUS_FIELD) || 'Not Started';
     }
 
     get mergeExecutedById() {
