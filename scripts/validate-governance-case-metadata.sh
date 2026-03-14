@@ -4,6 +4,17 @@ set -euo pipefail
 fail() { echo "[FAIL] $1" >&2; exit 1; }
 pass() { echo "[PASS] $1"; }
 
+search_fixed() {
+  local needle="$1"
+  shift
+
+  if command -v rg >/dev/null 2>&1; then
+    rg -Fq "$needle" "$@"
+  else
+    grep -Fq -- "$needle" "$@"
+  fi
+}
+
 object_meta="force-app/main/default/objects/Governance_Case__c/Governance_Case__c.object-meta.xml"
 field_dir="force-app/main/default/objects/Governance_Case__c/fields"
 validation_rule_dir="force-app/main/default/objects/Governance_Case__c/validationRules"
@@ -92,17 +103,17 @@ for token in \
   "Decided_By__c = UserInfo.getUserId()" \
   "Decided_At__c = System.now()" \
   "Merge_Execution_Status__c = 'Ready for Merge'"; do
-  rg -Fq "$token" "$decision_stamping_class" || fail "Missing decision stamping token: $token"
+  search_fixed "$token" "$decision_stamping_class" || fail "Missing decision stamping token: $token"
 done
 
-rg -Fq "GovernanceCaseDecisionStamping.apply(Trigger.new, Trigger.oldMap);" "$decision_stamping_trigger" \
+search_fixed "GovernanceCaseDecisionStamping.apply(Trigger.new, Trigger.oldMap);" "$decision_stamping_trigger" \
   || fail "Missing trigger handler invocation"
 
 for token in \
   "@IsTest" \
   "stampsApprovedDecisionAndMergeStatus" \
   "stampsRejectedDecisionWithoutMergePreparation"; do
-  rg -Fq "$token" "$decision_stamping_test_class" || fail "Missing decision stamping test token: $token"
+  search_fixed "$token" "$decision_stamping_test_class" || fail "Missing decision stamping test token: $token"
 done
 pass "Governance Case decision stamping automation exists"
 
@@ -110,7 +121,7 @@ for token in \
   "<label>Governance Case</label>" \
   "<pluralLabel>Governance Cases</pluralLabel>" \
   "<enableHistory>true</enableHistory>"; do
-  rg -Fq "$token" "$object_meta" || fail "Missing object metadata token: $token"
+  search_fixed "$token" "$object_meta" || fail "Missing object metadata token: $token"
 done
 pass "Governance_Case__c object metadata includes required baseline"
 
@@ -118,7 +129,7 @@ for token in \
   "CLEAR_DUPLICATE_MATCH" \
   "FALSE_POSITIVE_MODEL_OUTPUT" \
   "NEEDS_POLICY_DECISION"; do
-  rg -Fq "$token" "$field_dir/Decision_Reason_Code__c.field-meta.xml" \
+  search_fixed "$token" "$field_dir/Decision_Reason_Code__c.field-meta.xml" \
     || fail "Missing decision reason code picklist value: $token"
 done
 
@@ -126,7 +137,7 @@ for token in \
   "Approve Merge" \
   "Review" \
   "Reject Match"; do
-  rg -Fq "$token" "$field_dir/Recommended_Action__c.field-meta.xml" \
+  search_fixed "$token" "$field_dir/Recommended_Action__c.field-meta.xml" \
     || fail "Missing recommended action picklist value: $token"
 done
 
@@ -134,7 +145,7 @@ for token in \
   "New" \
   "Ready for Review" \
   "Closed"; do
-  rg -Fq "$token" "$field_dir/Status__c.field-meta.xml" \
+  search_fixed "$token" "$field_dir/Status__c.field-meta.xml" \
     || fail "Missing case status picklist value: $token"
 done
 
@@ -142,7 +153,7 @@ for token in \
   "Not Started" \
   "Ready for Merge" \
   "Completed"; do
-  rg -Fq "$token" "$field_dir/Merge_Execution_Status__c.field-meta.xml" \
+  search_fixed "$token" "$field_dir/Merge_Execution_Status__c.field-meta.xml" \
     || fail "Missing merge execution status picklist value: $token"
 done
 pass "Picklist fields include required stewardship values"
@@ -154,7 +165,7 @@ for token in \
   "updateRecord" \
   "ShowToastEvent" \
   "isCasePairAccount"; do
-  rg -Fq "$token" "$lwc_dir/governanceCaseReview.js-meta.xml" "$lwc_dir/governanceCaseReview.js" \
+  search_fixed "$token" "$lwc_dir/governanceCaseReview.js-meta.xml" "$lwc_dir/governanceCaseReview.js" \
     || fail "Missing LWC token: $token"
 done
 pass "governanceCaseReview bundle includes expected exposure and event contract"
@@ -163,14 +174,14 @@ for token in \
   "<masterLabel>Governance Case Record Page</masterLabel>" \
   "<sobjectType>Governance_Case__c</sobjectType>" \
   "c:governanceCaseReview"; do
-  rg -Fq "$token" "$flexipage_meta" || fail "Missing FlexiPage token: $token"
+  search_fixed "$token" "$flexipage_meta" || fail "Missing FlexiPage token: $token"
 done
 pass "Governance Case Lightning Record Page metadata exists"
 
 for token in \
   "<customObject>true</customObject>" \
   "Governance Case"; do
-  rg -Fq "$token" "$tab_meta" || fail "Missing custom tab token: $token"
+  search_fixed "$token" "$tab_meta" || fail "Missing custom tab token: $token"
 done
 pass "Governance Case custom tab metadata exists"
 
@@ -178,7 +189,7 @@ for token in \
   "<label>Governance Case Steward</label>" \
   "Governance_Case__c.Recommended_Action__c" \
   "<tab>Governance_Case__c</tab>"; do
-  rg -Fq "$token" "$permset_meta" || fail "Missing permission set token: $token"
+  search_fixed "$token" "$permset_meta" || fail "Missing permission set token: $token"
 done
 
 for token in \
@@ -187,7 +198,7 @@ for token in \
   "<editable>false</editable><field>Governance_Case__c.Merge_Executed_At__c</field>" \
   "<editable>false</editable><field>Governance_Case__c.Merge_Executed_By__c</field>" \
   "<editable>false</editable><field>Governance_Case__c.Merge_Execution_Status__c</field>"; do
-  rg -Fq "$token" "$permset_meta" || fail "Missing system-managed field protection token: $token"
+  search_fixed "$token" "$permset_meta" || fail "Missing system-managed field protection token: $token"
 done
 pass "Governance Case steward permission set metadata exists"
 
