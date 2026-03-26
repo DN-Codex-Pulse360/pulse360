@@ -87,3 +87,16 @@ The major remaining gap is merge execution orchestration, not stewardship review
 
 Next product step:
 - define and implement how a governance case in `Ready for Merge` becomes an actual Salesforce account merge transaction, with audit/status feedback into the case.
+
+## Scope Boundary Clarification (2026-03-25)
+
+This evidence note is sufficient to treat the first-slice Salesforce stewardship review experience as delivered for Milestone D:
+
+- `Governance_Case__c` metadata, page, tab, LWC, permissioning, and validation rules are present in source.
+- The stewardship console renders repo-backed confidence, validity, hierarchy, and audit fields from the governance case record.
+- Decision stamping automation covers the first final-decision transition and prepares approved cases for merge follow-through.
+
+The remaining open items are outside the clean Milestone D implementation boundary:
+
+- live Data Cloud activation freshness, identity confidence propagation, and seller-facing downstream field population remain Milestone C work under `DAN-61` and `DAN-114`
+- actual merge execution orchestration and post-decision downstream status feedback should be tracked as a separate follow-up issue rather than keeping `DAN-63` artificially open

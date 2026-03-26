@@ -38,12 +38,11 @@ Checklist:
 3. Scope boundaries and accepted decisions documented (this artifact).
 4. Control-center stage tracker references current evidence links.
 
-Status: **Pass candidate**  
-Note: final pass requires Milestone A issue review completion in Linear.
+Status: **Pass**  
+Note: final pass confirmed after Milestone A Linear/repo reconciliation on 2026-03-25.
 
 ## Gate 1.5 Self-Check
 Gate question: if a new architect joined tomorrow, could they onboard from project documentation alone?
 
-Status: **Pass candidate**  
-Rationale: scope, decisions, and evidence paths are documented and cross-linked for onboarding.
-
+Status: **Pass**  
+Rationale: scope, decisions, and evidence paths are documented and cross-linked for onboarding, with Milestone A gate alignment completed on 2026-03-25.

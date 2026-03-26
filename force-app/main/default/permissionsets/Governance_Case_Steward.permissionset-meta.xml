@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Access required to review and manage Pulse360 Governance Cases.</description>
+    <fieldPermissions><editable>false</editable><field>Account.Competitor_Risk_Signal__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Coverage_Gap_Flag__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Cross_Sell_Propensity__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.DataCloud_Last_Synced__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Group_Revenue_Rollup__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Health_Score__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Identity_Confidence__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Unified_Profile_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Attribute_Validity_Payload__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Audit_Event_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Candidate_Pair_Id__c</field><readable>true</readable></fieldPermissions>
