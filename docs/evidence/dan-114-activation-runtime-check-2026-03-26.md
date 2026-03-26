@@ -15,12 +15,26 @@
   - `DataStreamStatus`: `ACTIVE`
   - `ImportRunStatus`: `SUCCESS`
   - `TotalRowsProcessed`: `13`
+- Confirmed through the Data Cloud UI that the replacement activation path now exposes a non-zero field mapping surface:
+  - source object: `datacloud_export_accounts Pulse360_Datab`
+  - target object: `Account`
+  - mapped fields shown in UI: `15`
+- Confirmed the Salesforce `Account` page layout now exposes a dedicated `Pulse360` section in the live record UI.
 - Confirmed the activation path still does not show completed mapping/writeback evidence through the org-facing API:
   - `MktDataLakeMapping` rows: `0`
   - `ActivationTargetPlatform` rows for `85UdM00000EGtEzUAL`: `0`
   - `ActivationTrgtIntOrgAccess` rows for `85UdM00000EGtEzUAL`: `0`
   - `ActvTgtPlatformFieldValue` rows: `0`
   - sample `Account` query with populated Pulse360 activation fields: `0` rows
+- Confirmed on sampled Account `Globex APAC Pte Ltd` that the visible Pulse360 fields remain blank in the live Salesforce UI:
+  - `Unified Profile Id`
+  - `Identity Confidence`
+  - `Health Score`
+  - `Cross Sell Propensity`
+  - `Competitor Risk Signal`
+  - `Coverage Gap Flag`
+  - `Group Revenue Rollup`
+  - `DataCloud Last Synced`
 
 ## Runtime Snapshot
 - Target org: `pulse360-dev`
@@ -57,6 +71,14 @@
   - `DataCloud_Last_Synced__c`
   - result: `0`
 
+## UI Validation Checks
+- Data Cloud mapping UI now shows `15` mapped fields from `datacloud_export_accounts Pulse360_Datab` to Salesforce `Account`.
+- The active Account record page is still driven by standard `Record Detail`, so field visibility depends on the assigned Account page layout.
+- The Account page layout was updated to include a visible `Pulse360` section containing the expected activation fields.
+- In the live Salesforce UI, sampled Account `Globex APAC Pte Ltd` now shows the `Pulse360` section, but the displayed values remain blank.
+
+This removes page layout placement as the primary blocker. The remaining gap is value realization into Salesforce `Account`.
+
 ## Mapping Picklist Surface Check
 Queried the `MktDataLakeMapping` describe result for the expected Pulse360 source and Salesforce target fields.
 
@@ -82,16 +104,17 @@ This keeps the repo mapping contract ahead of the currently visible mapping surf
 ## Current Assessment
 - The repo-side implementation for `DAN-114` remains intact.
 - The org is no longer in the exact March 14 failure shape because the original failed target appears to have been replaced with a new target that reports `ACTIVE/SUCCESS`.
-- Despite that improvement, the API-visible evidence still does not show completed mapping configuration or Account writeback.
+- The Data Cloud UI now proves that non-zero mapping configuration exists, and the Salesforce UI now proves the target fields are visible on the Account page.
+- Despite that improvement, neither the org-facing API nor the sampled live Account record shows actual activated values yet.
 - `DAN-114` should remain open until the Data Cloud UI or a deeper platform-native validation proves:
-  - non-zero mapping configuration
-  - a valid match-key setup
   - successful writeback into sample Salesforce `Account` records
+  - repeatable end-to-end value flow from Databricks export to Salesforce Account field population
 
 ## Recommended Next Step
-- Validate the replacement target directly in the Data Cloud UI:
-  - confirm the match key is `source_account_id -> Account.Id`
-  - confirm the mapping page shows non-zero field mappings
-  - confirm the publish state is healthy
-  - capture a screenshot of at least one `Account` record with populated Pulse360 activation fields
-- If the UI confirms mapping exists while the public API still shows zero rows, treat the remaining gap as an observability/documentation issue rather than a setup blocker and attach UI evidence to `DAN-114`, `DAN-61`, and `DAN-103`.
+- Treat the remaining work as activation realization troubleshooting rather than metadata deployment.
+- Next validation pass should focus on why values are not landing in `Account`:
+  - confirm the activation target run history is healthy for the current mapping
+  - verify the mapped source rows contain non-null values for the exported Pulse360 fields
+  - verify the match key resolves to the intended Salesforce `Account.Id`
+  - identify whether the activation run is skipping rows, matching zero Accounts, or writing nulls through
+- Once at least one Account shows populated Pulse360 values in the live UI, update `DAN-114`, `DAN-61`, and `DAN-103` with the successful screenshot and move toward closeout.
