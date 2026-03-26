@@ -35,6 +35,10 @@
   - `Coverage Gap Flag`
   - `Group Revenue Rollup`
   - `DataCloud Last Synced`
+- Confirmed through live Databricks SQL that the upstream CRM ingest and gold base view are current for `Globex APAC Pte Ltd`, but the materialized Data Cloud export table is stale:
+  - `pulse360_s4.silver_salesforce.crm_account` contains `Globex APAC Pte Ltd` rows including sampled Salesforce ID `001dM00003aUn53QAC`
+  - `pulse360_s4.gold.account_export_base` returns current Globex enrichment rows with non-null values and `run_id = run_20260326_063859`
+  - `pulse360_s4.intelligence.datacloud_export_accounts` returns `0` rows for `Globex APAC Pte Ltd` and only exposes a stale `run_id = run_20260310_111329` snapshot
 
 ## Runtime Snapshot
 - Target org: `pulse360-dev`
@@ -79,6 +83,28 @@
 
 This removes page layout placement as the primary blocker. The remaining gap is value realization into Salesforce `Account`.
 
+## Databricks Runtime Validation
+- Unity Catalog confirms both live objects exist:
+  - `pulse360_s4.gold.account_export_base` (view)
+  - `pulse360_s4.intelligence.datacloud_export_accounts` (managed Delta table)
+- The live materialized export table currently reflects an older snapshot:
+  - sample export rows show `last_synced_timestamp = 2026-03-10T11:13:29.706Z`
+  - sample export rows show `run_id = run_20260310_111329`
+  - sampled names are the original developer-edition seed accounts such as `Burlington Textiles Corp of America`, `United Oil & Gas Corp.`, and `GenePoint`
+- The current upstream base view is newer and includes the expected seeded Globex rows:
+  - sampled rows show `source_account_id = 001dM00003aUn53QAC`
+  - `account_name = Globex APAC Pte Ltd`
+  - `unified_profile_id = ucp_001dM00003aUn53QAC`
+  - `identity_confidence = 90`
+  - `health_score = 35.0`
+  - `cross_sell_propensity = 25.0`
+  - `coverage_gap_flag = true`
+  - `competitor_risk_signal = 18.0`
+  - `last_synced_timestamp = 2026-03-26T06:38:59.859Z`
+  - `run_id = run_20260326_063859`
+
+This shows the end-to-end issue is not enrichment logic quality. The stale `pulse360_s4.intelligence.datacloud_export_accounts` table is the most likely blocker preventing Data Cloud from activating current values into Salesforce.
+
 ## Mapping Picklist Surface Check
 Queried the `MktDataLakeMapping` describe result for the expected Pulse360 source and Salesforce target fields.
 
@@ -100,21 +126,28 @@ This keeps the repo mapping contract ahead of the currently visible mapping surf
 - `sf data query --target-org pulse360-dev --query "SELECT Id, ActivationTargetPlatformId, OverridenValue FROM ActvTgtPlatformFieldValue LIMIT 20" --json`
 - `sf data query --target-org pulse360-dev --query "SELECT Id, Name, Unified_Profile_Id__c, Identity_Confidence__c, Health_Score__c, Cross_Sell_Propensity__c, DataCloud_Last_Synced__c FROM Account WHERE Unified_Profile_Id__c != null OR Identity_Confidence__c != null OR Health_Score__c != null OR Cross_Sell_Propensity__c != null OR DataCloud_Last_Synced__c != null LIMIT 20" --json`
 - `sf sobject describe --target-org pulse360-dev --sobject MktDataLakeMapping --json`
+- `databricks unity-catalog tables get --full-name pulse360_s4.intelligence.datacloud_export_accounts`
+- `databricks unity-catalog tables get --full-name pulse360_s4.gold.account_export_base`
+- Databricks SQL API query against `pulse360_s4.intelligence.datacloud_export_accounts` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
+- Databricks SQL API query against `pulse360_s4.intelligence.datacloud_export_accounts` ordered by `last_synced_timestamp DESC`
+- Databricks SQL API query against `pulse360_s4.silver_salesforce.crm_account` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
+- Databricks SQL API query against `pulse360_s4.gold.account_export_base` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
 
 ## Current Assessment
 - The repo-side implementation for `DAN-114` remains intact.
 - The org is no longer in the exact March 14 failure shape because the original failed target appears to have been replaced with a new target that reports `ACTIVE/SUCCESS`.
 - The Data Cloud UI now proves that non-zero mapping configuration exists, and the Salesforce UI now proves the target fields are visible on the Account page.
 - Despite that improvement, neither the org-facing API nor the sampled live Account record shows actual activated values yet.
+- The current root cause is now much narrower: the live Databricks upstream ingest and gold base view contain the current Globex rows and enrichment values, but the materialized `pulse360_s4.intelligence.datacloud_export_accounts` table is stale and does not include those rows.
 - `DAN-114` should remain open until the Data Cloud UI or a deeper platform-native validation proves:
   - successful writeback into sample Salesforce `Account` records
   - repeatable end-to-end value flow from Databricks export to Salesforce Account field population
 
 ## Recommended Next Step
-- Treat the remaining work as activation realization troubleshooting rather than metadata deployment.
-- Next validation pass should focus on why values are not landing in `Account`:
-  - confirm the activation target run history is healthy for the current mapping
-  - verify the mapped source rows contain non-null values for the exported Pulse360 fields
-  - verify the match key resolves to the intended Salesforce `Account.Id`
-  - identify whether the activation run is skipping rows, matching zero Accounts, or writing nulls through
+- Treat the remaining work as a Databricks export refresh plus activation realization check, not a metadata deployment problem.
+- Next execution step should be to rebuild `pulse360_s4.intelligence.datacloud_export_accounts` from the already-current `pulse360_s4.gold.account_export_base` view using `sql/databricks/gold/30_datacloud_export_accounts.sql`.
+- After that rebuild:
+  - confirm `Globex APAC Pte Ltd` appears in `pulse360_s4.intelligence.datacloud_export_accounts`
+  - refresh the Data Cloud stream / activation target
+  - re-check the sampled Salesforce Account for populated Pulse360 values
 - Once at least one Account shows populated Pulse360 values in the live UI, update `DAN-114`, `DAN-61`, and `DAN-103` with the successful screenshot and move toward closeout.
