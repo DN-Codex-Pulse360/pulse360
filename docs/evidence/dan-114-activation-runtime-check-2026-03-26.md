@@ -136,6 +136,40 @@ This closes the Databricks-side stale export blocker.
 
 The Databricks export is now current, but the downstream Data Cloud stream/activation path has not yet ingested this refreshed snapshot.
 
+## Data Cloud DMO Source Split - 2026-03-27
+- After the stream refresh, the Account DMO contains the expected current Globex enrichment values for the sampled Salesforce Account IDs.
+- For each `Globex APAC Pte Ltd` account ID, `ssot__Account__dlm` surfaces two source-backed variants:
+  - `Databricks_Pulse360_Databricks_Source_datacloud_export_accounts` row with populated enrichment values
+  - `Salesforce_Home / Account` row with null enrichment values
+- Example for sampled current CRM record `001dM00003aUn53QAC`:
+  - Databricks-backed DMO variant:
+    - `Unified_Profile_Id__c = ucp_001dM00003aUn53QAC`
+    - `Identity_Confidence__c = 90`
+    - `Health_Score__c = 35`
+    - `Cross_Sell_Propensity__c = 25`
+    - `Last_Synced_Timestamp__c = 2026-03-27T00:51:38.057+0000`
+    - `ssot__DataSourceId__c = Databricks_Pulse360_Databricks_Source`
+    - `ssot__DataSourceObjectId__c = Databricks_Pulse360_Databricks_Source_datacloud_export_accounts`
+  - Salesforce-home DMO variant:
+    - `ssot__DataSourceId__c = Salesforce_Home`
+    - `ssot__DataSourceObjectId__c = Account`
+    - enrichment fields remain null
+
+This proves Data Cloud now has the refreshed enrichment values. The remaining gap is not upstream data availability.
+
+## Activation Materialization Check
+- `ActivationTarget` record `85UdM00000EGtEzUAL` still reports:
+  - `RunStatus = SUCCESS`
+  - `TargetStatus = ACTIVE`
+  - `LastPublishStatusDate = null`
+  - `LastTargetStatusDateTime = null`
+- Related platform-state objects are still empty:
+  - `ActivationTargetPlatform` rows for `85UdM00000EGtEzUAL`: `0`
+  - `ActivationTrgtIntOrgAccess` rows for `85UdM00000EGtEzUAL`: `0`
+  - `ActvTgtPlatformFieldValue` rows in org: `0`
+
+This strongly suggests the activation target has not actually materialized or executed from the platform side, despite the UI showing it as active.
+
 ## Mapping Picklist Surface Check
 Queried the `MktDataLakeMapping` describe result for the expected Pulse360 source and Salesforce target fields.
 
@@ -167,6 +201,11 @@ This keeps the repo mapping contract ahead of the currently visible mapping surf
 - Databricks SQL API post-rebuild query against `pulse360_s4.intelligence.datacloud_export_accounts` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
 - `sf data query --target-org pulse360-dev --query "SELECT Id, Name, DataStreamStatus, ImportRunStatus, TotalRowsProcessed, LastRefreshDate FROM DataStream WHERE Name = 'datacloud_export_accounts Pulse360_Datab'" --json`
 - `sf data query --target-org pulse360-dev --query "SELECT Id, MasterLabel, RunStatus, TargetStatus, LastPublishStatusDate, LastTargetStatusDateTime FROM ActivationTarget WHERE MasterLabel LIKE 'Pulse360 Salesforce Account Activation%'" --json`
+- `sf data query --target-org pulse360-dev --query "SELECT Id, Name, CreatedDate, LastModifiedDate, Unified_Profile_Id__c, Identity_Confidence__c, Health_Score__c, Cross_Sell_Propensity__c, DataCloud_Last_Synced__c FROM Account WHERE Name = 'Globex APAC Pte Ltd' ORDER BY LastModifiedDate DESC" --json`
+- `sf data query --target-org pulse360-dev --query "SELECT Id, Name, Unified_Profile_Id__c, Identity_Confidence__c, Health_Score__c, Cross_Sell_Propensity__c, DataCloud_Last_Synced__c FROM Account WHERE Id IN ('001dM00003aP2DFQA0','001dM00003aUn53QAC')" --json`
+- `sf sobject describe --target-org pulse360-dev --sobject ssot__Account__dlm --json`
+- `sf data query --target-org pulse360-dev --query "SELECT ssot__Id__c, ssot__Name__c, Unified_Profile_Id__c, Identity_Confidence__c, Health_Score__c, Cross_Sell_Propensity__c, Group_Revenue_Rollup__c, Coverage_Gap_Flag__c, Competitor_Risk_Signal__c, Primary_Brand_Name__c, Last_Synced_Timestamp__c FROM ssot__Account__dlm WHERE ssot__Name__c = 'Globex APAC Pte Ltd'" --json`
+- `sf data query --target-org pulse360-dev --query "SELECT Id, ssot__Id__c, ssot__Name__c, ssot__AccountSource__c, ssot__DataSourceId__c, ssot__DataSourceObjectId__c, ssot__InternalOrganizationId__c, Unified_Profile_Id__c, Identity_Confidence__c, Health_Score__c, Cross_Sell_Propensity__c, Last_Synced_Timestamp__c FROM ssot__Account__dlm WHERE ssot__Name__c = 'Globex APAC Pte Ltd' ORDER BY ssot__Id__c, Last_Synced_Timestamp__c DESC NULLS LAST" --json`
 
 ## Current Assessment
 - The repo-side implementation for `DAN-114` remains intact.
@@ -174,16 +213,18 @@ This keeps the repo mapping contract ahead of the currently visible mapping surf
 - The Data Cloud UI now proves that non-zero mapping configuration exists, and the Salesforce UI now proves the target fields are visible on the Account page.
 - Despite that improvement, neither the org-facing API nor the sampled live Account record shows actual activated values yet.
 - The stale Databricks export-table blocker has now been fixed. The live handoff table contains the current Globex rows and enrichment values.
-- The remaining blocker has moved downstream: Data Cloud has not yet refreshed from the rebuilt export snapshot, so Salesforce still does not show realized values.
+- The Data Cloud stream refresh is complete, and the DMO now contains the refreshed Databricks enrichment values for the sampled Globex accounts.
+- The remaining blocker is now specifically the activation target itself: no platform companion rows exist, and no publish/run timestamps are populated, so the target has likely never materialized or executed from the platform side.
 - `DAN-114` should remain open until the Data Cloud UI or a deeper platform-native validation proves:
   - successful writeback into sample Salesforce `Account` records
   - repeatable end-to-end value flow from Databricks export to Salesforce Account field population
 
 ## Recommended Next Step
-- Treat the remaining work as a downstream Data Cloud refresh / activation realization step.
-- Next execution step should be to refresh the Data Cloud stream and/or activation target so the rebuilt `pulse360_s4.intelligence.datacloud_export_accounts` snapshot is ingested.
-- After that refresh:
-  - confirm the Data Cloud stream `LastRefreshDate` advances past the rebuild timestamp
-  - confirm processed rows are non-zero for the refreshed snapshot
+- Treat the remaining work as an activation target materialization / execution step.
+- Next execution step should be to explicitly publish or run `Pulse360 Salesforce Account Activation v2` from the Data Cloud UI so the target materializes its platform companion state.
+- After that target run:
+  - confirm `LastPublishStatusDate` or `LastTargetStatusDateTime` becomes non-null
+  - confirm `ActivationTargetPlatform` rows are created
+  - confirm processed or matched rows are reported in the target run details
   - re-check sampled Salesforce Account `001dM00003aUn53QAC` for populated Pulse360 values
 - Once at least one Account shows populated Pulse360 values in the live UI, update `DAN-114`, `DAN-61`, and `DAN-103` with the successful screenshot and move toward closeout.
