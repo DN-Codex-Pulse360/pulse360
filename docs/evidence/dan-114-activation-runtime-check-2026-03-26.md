@@ -228,3 +228,37 @@ This keeps the repo mapping contract ahead of the currently visible mapping surf
   - confirm processed or matched rows are reported in the target run details
   - re-check sampled Salesforce Account `001dM00003aUn53QAC` for populated Pulse360 values
 - Once at least one Account shows populated Pulse360 values in the live UI, update `DAN-114`, `DAN-61`, and `DAN-103` with the successful screenshot and move toward closeout.
+
+## Copy Field Enrichment Success - 2026-03-27
+- The working CRM sync path is `Data Cloud Copy Field Enrichment`, not the previously inspected activation-target materialization surface.
+- Live CRM verification now shows the sampled Account `Globex APAC Pte Ltd` (`001dM00003aUn53QAC`) populated through the end-to-end flow from Databricks export -> Data Cloud ingest -> Data Cloud model -> CRM field sync.
+- Verified CRM field values:
+  - `Unified_Profile_Id__c = ucp_001dM00003aUn53QAC`
+  - `Identity_Confidence__c = 90`
+  - `Health_Score__c = 35`
+  - `Cross_Sell_Propensity__c = 25`
+  - `Competitor_Risk_Signal__c = 18`
+- Verified CRM writeback provenance:
+  - `LastModifiedBy = Platform Integration User`
+  - `LastModifiedDate = 2026-03-27T07:26:11.000+0000`
+- Verified org-wide realization is not isolated to one sample record:
+  - multiple `Account` records now return non-null `Unified_Profile_Id__c`, `Identity_Confidence__c`, `Health_Score__c`, and `Cross_Sell_Propensity__c`
+- `ActivationTarget` still reports:
+  - `RunStatus = SUCCESS`
+  - `TargetStatus = ACTIVE`
+  - `LastPublishStatusDate = null`
+  - `LastTargetStatusDateTime = null`
+
+This means the earlier activation-target materialization hypothesis was not the path that ultimately completed CRM field population. The required and now-proven mechanism is the `Copy Field Enrichment` sync.
+
+## Final Assessment - 2026-03-27
+- `DAN-114` end-to-end enrichment-to-CRM sync is now proven complete.
+- The production-shaped acceptance path that matters for this story is:
+  - Databricks export rebuilt from repo SQL
+  - Data Cloud stream refreshed
+  - Data Cloud DMO populated for the current CRM Account IDs
+  - Copy Field Enrichment sync wrote values into Salesforce `Account` custom fields
+- Remaining follow-up is administrative rather than functional:
+  - reconcile or document fields still not syncing, such as `DataCloud_Last_Synced__c`
+  - update issue status and screenshots in Linear
+  - decide whether the older activation-target observations should remain as historical context or move into a separate troubleshooting note
