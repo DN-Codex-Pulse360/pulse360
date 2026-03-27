@@ -105,6 +105,37 @@ This removes page layout placement as the primary blocker. The remaining gap is 
 
 This shows the end-to-end issue is not enrichment logic quality. The stale `pulse360_s4.intelligence.datacloud_export_accounts` table is the most likely blocker preventing Data Cloud from activating current values into Salesforce.
 
+## Databricks Export Rebuild - 2026-03-27
+- Executed the repo-backed rebuild statement from `sql/databricks/gold/30_datacloud_export_accounts.sql`.
+- Rebuild statement status: `SUCCEEDED`
+- Post-rebuild verification confirms `pulse360_s4.intelligence.datacloud_export_accounts` now contains the current Globex rows, including sampled Salesforce ID `001dM00003aUn53QAC`.
+- Verified refreshed export values for sampled Globex row:
+  - `unified_profile_id = ucp_001dM00003aUn53QAC`
+  - `identity_confidence = 90.0`
+  - `group_revenue_rollup = 0.0`
+  - `health_score = 35.0`
+  - `cross_sell_propensity = 25.0`
+  - `coverage_gap_flag = true`
+  - `competitor_risk_signal = 18.0`
+  - `last_synced_timestamp = 2026-03-27T00:51:38.057Z`
+  - `run_id = run_20260327_005138`
+
+This closes the Databricks-side stale export blocker.
+
+## Downstream Status After Rebuild
+- Data Cloud stream `datacloud_export_accounts Pulse360_Datab` remains:
+  - `DataStreamStatus = ACTIVE`
+  - `ImportRunStatus = SUCCESS`
+  - `TotalRowsProcessed = 0`
+  - `LastRefreshDate = 2026-03-26T03:40:44.000+0000`
+- Activation target `Pulse360 Salesforce Account Activation v2` remains:
+  - `RunStatus = SUCCESS`
+  - `TargetStatus = ACTIVE`
+  - `LastPublishStatusDate = null`
+  - `LastTargetStatusDateTime = null`
+
+The Databricks export is now current, but the downstream Data Cloud stream/activation path has not yet ingested this refreshed snapshot.
+
 ## Mapping Picklist Surface Check
 Queried the `MktDataLakeMapping` describe result for the expected Pulse360 source and Salesforce target fields.
 
@@ -132,22 +163,27 @@ This keeps the repo mapping contract ahead of the currently visible mapping surf
 - Databricks SQL API query against `pulse360_s4.intelligence.datacloud_export_accounts` ordered by `last_synced_timestamp DESC`
 - Databricks SQL API query against `pulse360_s4.silver_salesforce.crm_account` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
 - Databricks SQL API query against `pulse360_s4.gold.account_export_base` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
+- Databricks SQL API execution of `sql/databricks/gold/30_datacloud_export_accounts.sql`
+- Databricks SQL API post-rebuild query against `pulse360_s4.intelligence.datacloud_export_accounts` for `Globex APAC Pte Ltd` / `001dM00003aUn53QAC`
+- `sf data query --target-org pulse360-dev --query "SELECT Id, Name, DataStreamStatus, ImportRunStatus, TotalRowsProcessed, LastRefreshDate FROM DataStream WHERE Name = 'datacloud_export_accounts Pulse360_Datab'" --json`
+- `sf data query --target-org pulse360-dev --query "SELECT Id, MasterLabel, RunStatus, TargetStatus, LastPublishStatusDate, LastTargetStatusDateTime FROM ActivationTarget WHERE MasterLabel LIKE 'Pulse360 Salesforce Account Activation%'" --json`
 
 ## Current Assessment
 - The repo-side implementation for `DAN-114` remains intact.
 - The org is no longer in the exact March 14 failure shape because the original failed target appears to have been replaced with a new target that reports `ACTIVE/SUCCESS`.
 - The Data Cloud UI now proves that non-zero mapping configuration exists, and the Salesforce UI now proves the target fields are visible on the Account page.
 - Despite that improvement, neither the org-facing API nor the sampled live Account record shows actual activated values yet.
-- The current root cause is now much narrower: the live Databricks upstream ingest and gold base view contain the current Globex rows and enrichment values, but the materialized `pulse360_s4.intelligence.datacloud_export_accounts` table is stale and does not include those rows.
+- The stale Databricks export-table blocker has now been fixed. The live handoff table contains the current Globex rows and enrichment values.
+- The remaining blocker has moved downstream: Data Cloud has not yet refreshed from the rebuilt export snapshot, so Salesforce still does not show realized values.
 - `DAN-114` should remain open until the Data Cloud UI or a deeper platform-native validation proves:
   - successful writeback into sample Salesforce `Account` records
   - repeatable end-to-end value flow from Databricks export to Salesforce Account field population
 
 ## Recommended Next Step
-- Treat the remaining work as a Databricks export refresh plus activation realization check, not a metadata deployment problem.
-- Next execution step should be to rebuild `pulse360_s4.intelligence.datacloud_export_accounts` from the already-current `pulse360_s4.gold.account_export_base` view using `sql/databricks/gold/30_datacloud_export_accounts.sql`.
-- After that rebuild:
-  - confirm `Globex APAC Pte Ltd` appears in `pulse360_s4.intelligence.datacloud_export_accounts`
-  - refresh the Data Cloud stream / activation target
-  - re-check the sampled Salesforce Account for populated Pulse360 values
+- Treat the remaining work as a downstream Data Cloud refresh / activation realization step.
+- Next execution step should be to refresh the Data Cloud stream and/or activation target so the rebuilt `pulse360_s4.intelligence.datacloud_export_accounts` snapshot is ingested.
+- After that refresh:
+  - confirm the Data Cloud stream `LastRefreshDate` advances past the rebuild timestamp
+  - confirm processed rows are non-zero for the refreshed snapshot
+  - re-check sampled Salesforce Account `001dM00003aUn53QAC` for populated Pulse360 values
 - Once at least one Account shows populated Pulse360 values in the live UI, update `DAN-114`, `DAN-61`, and `DAN-103` with the successful screenshot and move toward closeout.
