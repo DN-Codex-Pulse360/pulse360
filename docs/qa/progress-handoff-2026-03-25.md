@@ -83,3 +83,52 @@ Update Linear to:
 - create a separate follow-up issue for merge execution/orchestration
 - return `DAN-106` to `Done`
 - refresh the Milestone D description so its proof links point at files that exist in the repo today
+
+## Status Continuation - 2026-03-28
+
+### Current State
+- The core Milestone C runtime path is now working in the live `pulse360-dev` org.
+- The validated end-to-end path is:
+  - Databricks export rebuilt from repo SQL
+  - Data Cloud stream ingest refreshed and healthy
+  - Data Cloud Account DMO populated for current CRM account IDs
+  - Salesforce CRM `Account` fields populated through `Data Cloud Copy Field Enrichment`
+- Sample proof record:
+  - `Globex APAC Pte Ltd`
+  - `Account.Id = 001dM00003aUn53QAC`
+  - populated values include `Unified_Profile_Id__c`, `Identity_Confidence__c`, `Health_Score__c`, `Cross_Sell_Propensity__c`, and `Competitor_Risk_Signal__c`
+
+### Architectural Correction
+- The originally assumed CRM realization path was a Data Cloud `ActivationTarget`.
+- The implemented and working path for CRM field population is `Copy Field Enrichment`.
+- Existing evidence retains the activation-target investigation for audit history, but the final design narrative should treat copy-field sync as the working mechanism.
+
+### Current Linear Status Snapshot
+- Project `Pulse360`: `In Progress`
+- Milestone A: `100%`
+- Milestone B: `52%`
+- Milestone C: `63%`
+- Milestone D: `100%`
+- Milestone E: `89%`
+
+### Current Repo Gate Snapshot
+From `docs/epf/control-center.md`:
+- `1.1` -> `Pass`
+- `1.2` -> `Pass`
+- `1.3` -> `Pass`
+- `1.4` -> `Pass`
+- `1.5` -> `Pass`
+- `2.3` -> `Pass`
+- `2.4` -> `In Review`
+- `2.1`, `2.2`, `2.5`, `2.6` -> `Not Started`
+
+### Why 2.4 Remains In Review
+- The core enrichment-to-CRM runtime path is now proven.
+- Formal gate closeout still needs the review narrative and acceptance wording reconciled against the implemented design.
+- Specifically, Milestone C docs and issue language still over-index on activation-target assumptions even though the working CRM sync path is now documented as `Copy Field Enrichment`.
+
+### Recommended Restart Point
+Start the next session by reviewing [pulse360-solution-goals-and-implemented-design-2026-03-28.md](/Users/danielnortje/Documents/Pulse360/docs/readout/pulse360-solution-goals-and-implemented-design-2026-03-28.md), then decide:
+- whether to normalize all Milestone C acceptance wording to the implemented copy-field-sync design
+- whether to split older activation-target investigation into a separate retrospective note
+- which follow-on build tasks should be prioritized after architecture review
