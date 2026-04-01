@@ -27,6 +27,7 @@ This repository tracks implementation artifacts for the EPF v3.2.4 prototype bui
 - `docs/evidence`: dated validation evidence and blocker tracking
 - `sql/databricks`: Databricks silver/gold SQL packages for CRM-key-safe exports
 - `force-app`: Salesforce metadata for activation target fields
+- `config/packages`: package member lists for generated Salesforce and Databricks workspaces
 - `scripts`: local validation and runtime helper scripts
 
 ## Working Rule
@@ -38,6 +39,14 @@ Every completed Linear issue must update at least one Notion page and one releva
 - Lightning Record Pages and LWC for CRM execution surfaces
 - Manifest and validation discipline for releases
 - Runbook-driven handling for org-locked Data Cloud setup
+
+## Package Workspaces
+- `./scripts/build-salesforce-package-workspace.sh` generates unlocked-package-ready Salesforce workspaces
+- `./scripts/build-databricks-package-workspace.sh` generates Databricks solution pack workspaces
+- `./scripts/build-package-workspaces.sh` builds both sets together
+- `./scripts/validate-salesforce-package-layout.sh` and `./scripts/validate-databricks-package-layout.sh` validate the generated layouts
+
+See [package-workspaces.md](/Users/danielnortje/Documents/Pulse360/docs/setup/package-workspaces.md).
 
 See [AGENTS.md](/Users/danielnortje/Documents/Pulse360/AGENTS.md) and [salesforce-devops-operating-model.md](/Users/danielnortje/Documents/Pulse360/docs/devops/salesforce-devops-operating-model.md).
 

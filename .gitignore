@@ -3,3 +3,4 @@
 .venv-pptx/
 __pycache__/
 *.pyc
+build/

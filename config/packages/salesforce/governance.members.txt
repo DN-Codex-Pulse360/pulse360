@@ -1,0 +1,11 @@
+force-app/main/default/objects/Governance_Case__c
+force-app/main/default/classes/GovernanceCaseDecisionStamping.cls
+force-app/main/default/classes/GovernanceCaseDecisionStamping.cls-meta.xml
+force-app/main/default/classes/GovernanceCaseDecisionStampingTest.cls
+force-app/main/default/classes/GovernanceCaseDecisionStampingTest.cls-meta.xml
+force-app/main/default/triggers/GovernanceCaseDecisionStamping.trigger
+force-app/main/default/triggers/GovernanceCaseDecisionStamping.trigger-meta.xml
+force-app/main/default/lwc/governanceCaseReview
+force-app/main/default/flexipages/Governance_Case_Record_Page.flexipage-meta.xml
+force-app/main/default/permissionsets/Governance_Case_Steward.permissionset-meta.xml
+force-app/main/default/tabs/Governance_Case__c.tab-meta.xml
