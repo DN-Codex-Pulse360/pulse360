@@ -1,0 +1,71 @@
+<template>
+    <section class="surface">
+        <div class="panel-label">Commercial Group</div>
+        <p class="panel-copy">{hierarchyNote}</p>
+
+        <div class="coverage-shell">
+            <div class="coverage-header">
+                <span>CRM group coverage</span>
+                <span>{coveragePercent}%</span>
+            </div>
+            <div class="bar-track">
+                <div class="bar-fill" style={coverageBarStyle}></div>
+            </div>
+            <p class="micro-copy">
+                {crmCoveredSubsidiaryCount} of {groupKnownSubsidiaryCount} known entities are represented in CRM.
+            </p>
+        </div>
+
+        <template if:true={hasHierarchyEntities}>
+            <div class="entity-list">
+                <template for:each={normalizedHierarchyEntities} for:item="entity">
+                    <article class={entity.className} key={entity.entityName}>
+                        <div class="entity-name">{entity.entityName}</div>
+                        <div class="entity-role">{entity.entityRole}</div>
+                        <div class="entity-meta">
+                            <span class="entity-chip">{entity.coverageLabel}</span>
+                            <template if:true={entity.suggestedPlay}>
+                                <span class="entity-chip entity-chip_alt">{entity.suggestedPlay}</span>
+                            </template>
+                        </div>
+                        <template if:true={entity.signal}>
+                            <p class="micro-copy entity-signal">{entity.signal}</p>
+                        </template>
+                        <div class="entity-actions">
+                            <lightning-button
+                                label="Focus"
+                                variant="neutral"
+                                data-entity-name={entity.entityName}
+                                data-action-type="open_entity"
+                                data-mode="focus"
+                                onclick={handleEntityAction}>
+                            </lightning-button>
+                            <lightning-button
+                                label="Make primary"
+                                variant="brand-outline"
+                                data-entity-name={entity.entityName}
+                                data-action-type="open_entity"
+                                data-mode="promote"
+                                onclick={handleEntityAction}>
+                            </lightning-button>
+                            <lightning-button
+                                label="Ask agent"
+                                variant="neutral"
+                                data-entity-name={entity.entityName}
+                                data-action-type="launch_agent"
+                                onclick={handleEntityAction}>
+                            </lightning-button>
+                            <lightning-button
+                                label="Create task"
+                                variant="neutral"
+                                data-entity-name={entity.entityName}
+                                data-action-type="create_task"
+                                onclick={handleEntityAction}>
+                            </lightning-button>
+                        </div>
+                    </article>
+                </template>
+            </div>
+        </template>
+    </section>
+</template>

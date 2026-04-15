@@ -1,0 +1,49 @@
+<template>
+    <div class="workspace-shell">
+        <template if:true={hasError}>
+            <section class="workspace-notice workspace-notice_error">
+                <p class="error-copy">{errorMessage}</p>
+            </section>
+        </template>
+
+        <template if:true={hasWorkspace}>
+            <c-pulse360-seller-workspace-header
+                account-id={recordId}
+                account-name={workspace.accountName}
+                hidden-revenue={workspace.hiddenRevenue}
+                currency-code={workspace.currencyCode}
+                group-known-subsidiary-count={workspace.groupKnownSubsidiaryCount}
+                uncovered-entity-count={workspace.uncoveredEntityCount}
+                freshness-label={workspace.freshnessLabel}
+                freshness-tone={workspace.freshnessTone}
+                coverage-gap-flag={workspace.coverageGapFlag}
+                coverage-percent={coveragePercent}
+                action-context={selectedActionContext}
+                onworkspaceaction={handleWorkspaceAction}>
+            </c-pulse360-seller-workspace-header>
+
+            <c-pulse360-seller-workspace-metrics
+                workspace={workspace}
+                action-context={selectedActionContext}
+                onworkspaceaction={handleWorkspaceAction}>
+            </c-pulse360-seller-workspace-metrics>
+
+            <c-pulse360-seller-workspace-action
+                action={selectedActionContext}
+                prompt-version={workspace.promptVersion}
+                onworkspaceaction={handleWorkspaceAction}>
+            </c-pulse360-seller-workspace-action>
+
+            <template if:true={hasSecondaryActions}>
+                <c-pulse360-seller-workspace-follow-through
+                    actions={secondaryActions}
+                    primary-action={selectedActionContext}
+                    account-id={recordId}
+                    account-name={workspace.accountName}
+                    prompt-version={workspace.promptVersion}
+                    onworkspaceaction={handleWorkspaceAction}>
+                </c-pulse360-seller-workspace-follow-through>
+            </template>
+        </template>
+    </div>
+</template>

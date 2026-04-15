@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Synchronizes seller action context between the Pulse360 seller workspace surfaces.</description>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <description>Workspace message type.</description>
+        <fieldName>messageType</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <description>Serialized action context payload.</description>
+        <fieldName>actionContext</fieldName>
+    </lightningMessageFields>
+    <masterLabel>Pulse360 Seller Workspace Context</masterLabel>
+</LightningMessageChannel>

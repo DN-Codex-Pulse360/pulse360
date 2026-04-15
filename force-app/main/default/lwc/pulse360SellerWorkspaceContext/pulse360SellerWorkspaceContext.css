@@ -1,0 +1,81 @@
+:host {
+    display: block;
+}
+
+.surface {
+    background: #ffffff;
+    border: 1px solid #dde3ea;
+    border-radius: 0.95rem;
+    padding: 1rem;
+}
+
+.panel-label,
+.detail-label {
+    color: #5b6470;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.panel-copy,
+.micro-copy {
+    color: #3e3e3c;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.panel-copy {
+    margin-top: 0.35rem;
+}
+
+.context-block + .context-block {
+    margin-top: 0.8rem;
+}
+
+.signal-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.9rem;
+}
+
+.signal-card {
+    background: #f9fbff;
+    border: 1px solid #e0e8f4;
+    border-radius: 0.85rem;
+    padding: 0.75rem 0.8rem;
+}
+
+.detail-value {
+    color: #032d60;
+    font-weight: 700;
+    margin-top: 0.2rem;
+}
+
+.meta-row {
+    color: #5b6470;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+    margin-top: 0.9rem;
+}
+
+.action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+}
+
+.micro-stack {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.8rem;
+}
+
+@media (max-width: 540px) {
+    .signal-grid {
+        grid-template-columns: 1fr;
+    }
+}

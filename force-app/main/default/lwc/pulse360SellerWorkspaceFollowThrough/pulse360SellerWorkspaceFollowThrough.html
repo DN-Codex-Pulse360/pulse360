@@ -1,0 +1,42 @@
+<template>
+    <section class="surface">
+        <div class="panel-label">Additional Follow-Through</div>
+        <div class="secondary-grid">
+            <template for:each={normalizedActions} for:item="action">
+                <article class="secondary-card" key={action.rank}>
+                    <div class="secondary-header">
+                        <span class="chip">{action.solutionFamily}</span>
+                        <span class="micro-copy">{action.confidenceLabel}</span>
+                    </div>
+                    <div class="secondary-title">{action.recommendedPlay}</div>
+                    <p class="micro-copy">{action.reasoning}</p>
+                    <p class="why-not-now">{action.whyNotNow}</p>
+                    <div class="secondary-actions">
+                        <lightning-button
+                            label="Make primary"
+                            variant="brand-outline"
+                            data-rank={action.rank}
+                            data-action-type="open_entity"
+                            data-mode="promote"
+                            onclick={handleAction}>
+                        </lightning-button>
+                        <lightning-button
+                            label="Quick task"
+                            variant="neutral"
+                            data-rank={action.rank}
+                            data-action-type="create_task"
+                            onclick={handleAction}>
+                        </lightning-button>
+                        <lightning-button
+                            label="Ask agent"
+                            variant="neutral"
+                            data-rank={action.rank}
+                            data-action-type="launch_agent"
+                            onclick={handleAction}>
+                        </lightning-button>
+                    </div>
+                </article>
+            </template>
+        </div>
+    </section>
+</template>

@@ -1,0 +1,96 @@
+<template>
+    <section class="surface">
+        <div class="panel-label">Trust and Agent Support</div>
+
+        <div class="context-block">
+            <div class="detail-label">Why Pulse360 believes this</div>
+            <p class="panel-copy">{workspace.aiNarrative}</p>
+        </div>
+
+        <div class="context-block">
+            <div class="detail-label">What evidence supports the move</div>
+            <p class="panel-copy">{evidenceSummary}</p>
+        </div>
+
+        <div class="context-block">
+            <div class="detail-label">What is still uncertain</div>
+            <p class="panel-copy">{uncertaintySummary}</p>
+        </div>
+
+        <div class="signal-grid">
+            <article class="signal-card">
+                <div class="detail-label">Cross-Sell Propensity</div>
+                <div class="detail-value">{workspace.crossSellPropensity}</div>
+            </article>
+            <article class="signal-card">
+                <div class="detail-label">Competitor Risk</div>
+                <div class="detail-value">{workspace.competitorRiskSignal}</div>
+            </article>
+            <article class="signal-card">
+                <div class="detail-label">Health Score</div>
+                <div class="detail-value">{workspace.healthScore}</div>
+            </article>
+            <article class="signal-card">
+                <div class="detail-label">External Validation</div>
+                <div class="detail-value">{externalValidationLabel}</div>
+            </article>
+        </div>
+
+        <div class="action-row">
+            <lightning-button
+                label="Generate outreach brief"
+                variant="neutral"
+                data-agent-goal="generate_outreach_brief"
+                onclick={handleAgentAction}>
+            </lightning-button>
+            <lightning-button
+                label="Generate manager summary"
+                variant="neutral"
+                data-agent-goal="summarize_account_for_manager"
+                onclick={handleAgentAction}>
+            </lightning-button>
+            <lightning-button
+                label="Validate evidence"
+                variant="brand-outline"
+                data-agent-goal="validate_evidence"
+                onclick={handleAgentAction}>
+            </lightning-button>
+        </div>
+
+        <div class="meta-row">
+            <span>Model: {workspace.modelId}</span>
+            <span>Prompt: {workspace.promptVersion}</span>
+            <span>Citations: {workspace.citationCount}</span>
+        </div>
+
+        <div class="micro-stack">
+            <template if:true={workspace.lastSyncedTimestamp}>
+                <p class="micro-copy">
+                    Synced:
+                    <lightning-formatted-date-time
+                        value={workspace.lastSyncedTimestamp}
+                        year="numeric"
+                        month="short"
+                        day="2-digit"
+                        hour="2-digit"
+                        minute="2-digit">
+                    </lightning-formatted-date-time>
+                </p>
+            </template>
+
+            <template if:true={workspace.lastEngagementTimestamp}>
+                <p class="micro-copy">
+                    Last engagement:
+                    <lightning-formatted-date-time
+                        value={workspace.lastEngagementTimestamp}
+                        year="numeric"
+                        month="short"
+                        day="2-digit"
+                        hour="2-digit"
+                        minute="2-digit">
+                    </lightning-formatted-date-time>
+                </p>
+            </template>
+        </div>
+    </section>
+</template>
