@@ -46,7 +46,15 @@ jobs:
         run: |
           chmod +x scripts/validate-governance-case-metadata.sh
           ./scripts/validate-governance-case-metadata.sh
+      - name: Validate Salesforce package workspace layout
+        run: |
+          chmod +x scripts/validate-salesforce-package-layout.sh
+          ./scripts/validate-salesforce-package-layout.sh
       - name: Validate Databricks Salesforce SQL package
         run: |
           chmod +x scripts/validate-databricks-salesforce-sql-pack.sh
           ./scripts/validate-databricks-salesforce-sql-pack.sh
+      - name: Validate Databricks package workspace layout
+        run: |
+          chmod +x scripts/validate-databricks-package-layout.sh
+          ./scripts/validate-databricks-package-layout.sh

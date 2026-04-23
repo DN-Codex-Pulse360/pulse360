@@ -1,0 +1,66 @@
+:host {
+    display: block;
+}
+
+.metric-grid {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.metric-card {
+    background: #ffffff;
+    border: 1px solid #dde3ea;
+    border-radius: 0.95rem;
+    padding: 0.95rem 1rem;
+}
+
+.metric-button {
+    appearance: none;
+    cursor: pointer;
+    display: grid;
+    gap: 0.3rem;
+    text-align: left;
+    transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+    width: 100%;
+}
+
+.metric-button:hover,
+.metric-button:focus {
+    border-color: #aacbff;
+    box-shadow: 0 0 0 3px rgba(27, 150, 255, 0.12);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.metric-card_emphasis {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    border-color: #cfe3ff;
+}
+
+.metric-label {
+    color: #5b6470;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    color: #032d60;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.metric-subcopy {
+    color: #5b6470;
+    margin-top: 0.28rem;
+}
+
+.metric-action {
+    color: #0b5cab;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 0.2rem;
+}

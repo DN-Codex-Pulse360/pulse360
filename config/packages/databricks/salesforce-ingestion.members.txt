@@ -1,0 +1,6 @@
+sql/databricks/silver_salesforce
+config/databricks/lineage-targets.env.sample
+config/databricks/unity-catalog-governance.yaml
+docs/contracts/salesforce-crm-to-databricks-account-ingestion-contract.md
+docs/setup/databricks-silver-salesforce-runbook.md
+scripts/validate-databricks-salesforce-sql-pack.sh

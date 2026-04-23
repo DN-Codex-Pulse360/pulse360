@@ -51,7 +51,7 @@ Add an explicit upstream design item to ingest Salesforce CRM Account records in
 
 ## Gate Self-Checks
 Stage 1.3 gate: can data flow between critical systems be explained without guessing?  
-Status: **Pass candidate**
+Status: **Pass**
 
 Stage 1.4 gate: are rejected options and tradeoffs explicit?  
-Status: **Pass candidate**
+Status: **Pass**
