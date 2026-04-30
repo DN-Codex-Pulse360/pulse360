@@ -1,0 +1,38 @@
+<template>
+    <lightning-card title="AI Narrative" icon-name="utility:prompt">
+        <div class="shell">
+            <template if:true={hasNarrative}>
+                <p class="lead-copy">
+                    GPT-generated narrative for {accountName}. This is a model summary of bound public evidence and CRM context.
+                </p>
+                <div class="meta-strip">
+                    <span>Model: {modelId}</span>
+                    <span>Prompt: {promptVersion}</span>
+                    <span>Generated: {generatedAt}</span>
+                    <span>Run: {enrichmentRunId}</span>
+                    <span>Citations: {citationCount}</span>
+                </div>
+                <p class="narrative-copy">{narrative}</p>
+
+                <template if:true={hasSourceRefs}>
+                    <section class="source-section">
+                        <div class="section-label">Public Evidence</div>
+                        <template for:each={sourceRefs} for:item="source">
+                            <article class="source-card" key={source.source_id}>
+                                <div class="source-header">
+                                    <strong>{source.source_name}</strong>
+                                    <span>{source.document_date}</span>
+                                </div>
+                                <p class="source-copy">{source.excerpt}</p>
+                                <lightning-formatted-url value={source.source_url} label={source.source_url} target="_blank"></lightning-formatted-url>
+                            </article>
+                        </template>
+                    </section>
+                </template>
+            </template>
+            <template if:false={hasNarrative}>
+                <p class="lead-copy">No GPT narrative is available for this account yet.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
