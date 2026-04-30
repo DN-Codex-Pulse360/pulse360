@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Pulse360 Planner Workspace</masterLabel>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__Tab</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage">
+            <property
+                name="defaultFilter"
+                type="String"
+                label="Default Planner Filter"
+                description="Supported values: all, coverage, whitespace, risk, validation."
+                default="all" />
+            <property
+                name="maxVisibleGroups"
+                type="Integer"
+                label="Max Visible Groups"
+                description="Maximum number of ranked groups to request and show."
+                default="12" />
+            <property
+                name="summaryMetricLimit"
+                type="Integer"
+                label="Summary Metric Count"
+                description="How many summary KPI chips to show in the dashboard module."
+                default="4" />
+            <property
+                name="maxTimelineItems"
+                type="Integer"
+                label="Timeline Event Count"
+                description="Maximum number of planning timeline events to show."
+                default="8" />
+            <property
+                name="boardDensity"
+                type="String"
+                label="Board Density"
+                description="Use compact or expanded to control how much detail the ranked board shows."
+                default="compact" />
+            <property
+                name="showSummaryPanel"
+                type="Boolean"
+                label="Show Summary Dashboard"
+                description="Show or hide the analytical dashboard module."
+                default="true" />
+            <property
+                name="showTimelinePanel"
+                type="Boolean"
+                label="Show Timeline"
+                description="Show or hide the planning chronology module."
+                default="true" />
+            <property
+                name="showActionRail"
+                type="Boolean"
+                label="Show Action Rail"
+                description="Show or hide the leadership action queue."
+                default="true" />
+            <property
+                name="showExecutivePrompts"
+                type="Boolean"
+                label="Show Executive Prompts"
+                description="Show or hide the executive prompt copy in each ranked card."
+                default="true" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

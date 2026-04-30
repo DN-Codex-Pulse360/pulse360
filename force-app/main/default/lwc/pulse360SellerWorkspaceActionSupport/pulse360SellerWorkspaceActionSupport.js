@@ -1,5 +1,6 @@
 const DEFAULT_BUYING_GROUP_GAP = 'Confirm sponsor, economic buyer, and technical owner coverage.';
 const DEFAULT_OUTREACH_OBJECTIVE = 'Validate the next best commercial move and agree the follow-up path.';
+const SALESFORCE_RECORD_ID_PATTERN = /^[a-zA-Z0-9]{15}(?:[a-zA-Z0-9]{3})?$/;
 
 function coalesce(...values) {
     return values.find((value) => value !== undefined && value !== null && value !== '');
@@ -14,6 +15,11 @@ function normalizeActionType(actionType) {
     }
 }
 
+function normalizeRecordId(...values) {
+    const candidate = values.find((value) => SALESFORCE_RECORD_ID_PATTERN.test(value || ''));
+    return candidate || null;
+}
+
 export function normalizeActionContext({
     action = {},
     accountId,
@@ -24,6 +30,14 @@ export function normalizeActionContext({
     targetEntity,
     hierarchyEntity,
     agentGoal,
+    recommendedPlay,
+    solutionFamily,
+    reasoning,
+    estimatedRevenueImpact,
+    buyingGroupGap,
+    outreachObjective,
+    confidence,
+    confidenceLabel,
     mode,
     rank
 } = {}) {
@@ -41,18 +55,23 @@ export function normalizeActionContext({
         accountName,
         actionType: normalizeActionType(actionType || action.actionType),
         targetEntity: resolvedTargetEntity,
-        targetRecordId: coalesce(hierarchyEntity?.entityId, action.targetRecordId),
-        recommendedPlay: coalesce(action.recommendedPlay, action.target, 'Pulse360 follow-up'),
-        solutionFamily: coalesce(action.solutionFamily, hierarchyEntity?.suggestedPlay, 'Account Intelligence'),
+        targetRecordId: normalizeRecordId(
+            hierarchyEntity?.targetRecordId,
+            hierarchyEntity?.crmRecordId,
+            hierarchyEntity?.entityId,
+            action.targetRecordId
+        ),
+        recommendedPlay: coalesce(recommendedPlay, action.recommendedPlay, hierarchyEntity?.suggestedPlay, action.target, 'Pulse360 follow-up'),
+        solutionFamily: coalesce(solutionFamily, action.solutionFamily, hierarchyEntity?.suggestedPlay, 'Account Intelligence'),
         specialistRoute: coalesce(action.specialistRoute, 'Account Team'),
-        buyingGroupGap: coalesce(action.buyingGroupGap, DEFAULT_BUYING_GROUP_GAP),
-        outreachObjective: coalesce(action.outreachObjective, action.reasoning, hierarchyEntity?.signal, DEFAULT_OUTREACH_OBJECTIVE),
+        buyingGroupGap: coalesce(buyingGroupGap, action.buyingGroupGap, DEFAULT_BUYING_GROUP_GAP),
+        outreachObjective: coalesce(outreachObjective, action.outreachObjective, action.reasoning, hierarchyEntity?.signal, DEFAULT_OUTREACH_OBJECTIVE),
         supportingSources,
         sourceContext: sourceContext || 'workspace',
-        reasoning: coalesce(action.reasoning, hierarchyEntity?.signal, 'Pulse360 identified a commercially relevant next step.'),
-        estimatedRevenueImpact: coalesce(action.estimatedRevenueImpact, 'Not specified'),
-        confidence: action.confidence,
-        confidenceLabel: coalesce(action.confidenceLabel, 'Pulse360-guided'),
+        reasoning: coalesce(reasoning, action.reasoning, hierarchyEntity?.signal, 'Pulse360 identified a commercially relevant next step.'),
+        estimatedRevenueImpact: coalesce(estimatedRevenueImpact, action.estimatedRevenueImpact, 'Not specified'),
+        confidence: coalesce(confidence, action.confidence),
+        confidenceLabel: coalesce(confidenceLabel, action.confidenceLabel, 'Pulse360-guided'),
         promptVersion: coalesce(promptVersion, action.promptVersion),
         agentGoal: agentGoal || 'generate_opportunity_brief',
         mode: mode || 'execute',
@@ -107,6 +126,37 @@ export function buildAgentBrief(actionContext) {
     return lines.join('\n');
 }
 
+export function requiresApproval(actionType) {
+    return normalizeActionType(actionType) === 'open_opportunity';
+}
+
+export function buildExecutionRequest(actionContext, approvalMode = 'auto_prepare') {
+    return {
+        subagent: 'Seller Account Manager',
+        actionType: normalizeActionType(actionContext.actionType),
+        recordId: actionContext.accountId,
+        targetRecordId: actionContext.targetRecordId || null,
+        approvalRequired: requiresApproval(actionContext.actionType),
+        userMessage: actionContext.userMessage || null,
+        sessionId: actionContext.sessionId || null,
+        approvalMode,
+        accountName: actionContext.accountName,
+        targetEntity: actionContext.targetEntity,
+        recommendedPlay: actionContext.recommendedPlay,
+        solutionFamily: actionContext.solutionFamily,
+        specialistRoute: actionContext.specialistRoute,
+        reasoning: actionContext.reasoning,
+        estimatedRevenueImpact: actionContext.estimatedRevenueImpact,
+        buyingGroupGap: actionContext.buyingGroupGap,
+        outreachObjective: actionContext.outreachObjective,
+        promptVersion: actionContext.promptVersion,
+        confidence: actionContext.confidence,
+        confidenceLabel: actionContext.confidenceLabel,
+        sourceContext: actionContext.sourceContext,
+        agentGoal: actionContext.agentGoal
+    };
+}
+
 export function whyNotNow(action, primaryAction) {
     if (!action) {
         return 'Pulse360 has not generated a secondary action yet.';
@@ -138,4 +188,20 @@ export function agentGoalLabel(agentGoal) {
         default:
             return 'Generate opportunity brief';
     }
+}
+
+export function summarizeSupportingSources(supportingSources = []) {
+    const total = (supportingSources || []).length;
+    if (!total) {
+        return 'Pulse360 is relying on CRM and Data Cloud context, but no external source links were attached to this move.';
+    }
+
+    if (total === 1) {
+        return `1 evidence source supports this move: ${supportingSources[0].sourceName || 'Unnamed source'}.`;
+    }
+
+    return `${total} evidence sources support this move, led by ${supportingSources
+        .slice(0, 2)
+        .map((source) => source.sourceName || 'Unnamed source')
+        .join(' and ')}.`;
 }

@@ -1,0 +1,36 @@
+.planner-shell {
+    display: block;
+}
+
+.planner-layout {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 2.2fr) minmax(20rem, 1fr);
+    margin-top: 1.25rem;
+}
+
+.planner-main,
+.planner-rail {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+}
+
+.notice {
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    border: 1px solid #dba7a7;
+    background: #fff1f1;
+    color: #772a2a;
+}
+
+.notice p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+    .planner-layout {
+        grid-template-columns: 1fr;
+    }
+}

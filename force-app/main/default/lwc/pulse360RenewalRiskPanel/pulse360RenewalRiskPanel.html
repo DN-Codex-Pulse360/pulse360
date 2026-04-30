@@ -1,0 +1,50 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasWorkspace}>
+        <section class="surface renewal-surface">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Renewal risk</p>
+                    <h2 class="section-title">Recommended save move</h2>
+                    <p class="section-copy">{riskNarrative}</p>
+                </div>
+                <div class="badge-row">
+                    <span class={riskBadgeClass}>{riskLevelLabel}</span>
+                    <span class={freshnessBadgeClass}>{workspace.freshnessLabel}</span>
+                </div>
+            </div>
+
+            <div class="renewal-grid">
+                <article class="card-block highlight-card">
+                    <div class="detail-label">Save play</div>
+                    <div class="highlight-title">{recommendedSavePlay.title}</div>
+                    <p>{recommendedSavePlay.copy}</p>
+                </article>
+                <article class="card-block">
+                    <div class="detail-label">Why risk changed</div>
+                    <p>{riskChangeExplanation}</p>
+                </article>
+                <article class="card-block">
+                    <div class="detail-label">Coverage and sponsor readiness</div>
+                    <p>{coverageRiskCopy}</p>
+                </article>
+                <article class="card-block">
+                    <div class="detail-label">Commercial consequence</div>
+                    <p>{commercialImpactCopy}</p>
+                </article>
+            </div>
+
+            <div class="button-row">
+                <lightning-button label="Create save plan task" variant="brand" onclick={handleCreateSavePlan}></lightning-button>
+                <lightning-button label="Create executive outreach" variant="neutral" onclick={handleCreateExecutiveOutreach}></lightning-button>
+                <lightning-button label="Route specialist" variant="neutral" onclick={handleRouteSpecialist}></lightning-button>
+                <lightning-button label="Open seller workspace" variant="base" onclick={handleOpenSellerV2}></lightning-button>
+            </div>
+        </section>
+    </template>
+</template>

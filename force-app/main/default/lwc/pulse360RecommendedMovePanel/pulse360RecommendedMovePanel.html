@@ -1,0 +1,64 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasWorkspace}>
+        <section class="surface move-surface">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Execute now</p>
+                    <h2 class="section-title">Recommended move</h2>
+                </div>
+                <div class="chip-row">
+                    <span class="chip">{primaryAction.solutionFamily}</span>
+                    <span class="chip chip_alt">{primaryAction.specialistRoute}</span>
+                </div>
+            </div>
+
+            <div class="highlight-card">
+                <div class="detail-label">Top recommended move</div>
+                <div class="highlight-title">{primaryAction.recommendedPlay}</div>
+                <p>{primaryAction.reasoning}</p>
+                <div class="mini-grid">
+                    <div>
+                        <div class="detail-label">Target entity</div>
+                        <div class="detail-value">{primaryAction.targetEntity}</div>
+                    </div>
+                    <div>
+                        <div class="detail-label">Confidence</div>
+                        <div class="detail-value">{primaryAction.confidenceLabel}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendation-grid">
+                <div class="card-block">
+                    <div class="detail-label">Why now</div>
+                    <p>{primaryAction.reasoning}</p>
+                </div>
+                <div class="card-block">
+                    <div class="detail-label">Buying committee or sponsor gap</div>
+                    <p>{primaryAction.buyingGroupGap}</p>
+                </div>
+                <div class="card-block">
+                    <div class="detail-label">Outreach objective</div>
+                    <p>{primaryAction.outreachObjective}</p>
+                </div>
+                <div class="card-block">
+                    <div class="detail-label">Estimated impact</div>
+                    <p>{primaryAction.estimatedRevenueImpact}</p>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <lightning-button label="Create opportunity" variant="brand" onclick={handleCreateOpportunity}></lightning-button>
+                <lightning-button label="Create task" variant="neutral" onclick={handleCreateTask}></lightning-button>
+                <lightning-button label="Route specialist" variant="neutral" onclick={handleRouteSpecialist}></lightning-button>
+                <lightning-button label="Open portfolio dashboard" variant="base" onclick={handleOpenPlanner}></lightning-button>
+            </div>
+        </section>
+    </template>
+</template>

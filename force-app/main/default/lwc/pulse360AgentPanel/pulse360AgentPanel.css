@@ -1,0 +1,232 @@
+.agent-surface {
+    display: grid;
+    gap: 1rem;
+    padding: 1.2rem 1.35rem;
+    border-radius: 1.25rem;
+    background:
+        linear-gradient(135deg, rgba(15, 76, 129, 0.08), rgba(15, 76, 129, 0.02)),
+        #ffffff;
+    border: 1px solid rgba(15, 76, 129, 0.14);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: start;
+}
+
+.eyebrow,
+.detail-label {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #52667a;
+}
+
+.section-title,
+.assistant-title {
+    margin: 0.2rem 0 0;
+    color: #102a43;
+}
+
+.section-title {
+    font-size: 1.2rem;
+}
+
+.section-copy,
+.turn p,
+.meta-card p,
+.response-copy,
+.step-list li p,
+.bullet-list li,
+.loading-panel p {
+    margin: 0;
+    color: #486581;
+    line-height: 1.5;
+}
+
+.badge-row,
+.assistant-badges,
+.action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.badge_soft {
+    background: rgba(15, 76, 129, 0.08);
+    color: #0f4c81;
+}
+
+.badge_ready {
+    background: rgba(18, 166, 118, 0.14);
+    color: #0f7a58;
+}
+
+.badge_warning {
+    background: rgba(191, 90, 36, 0.14);
+    color: #a84314;
+}
+
+.prompt-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.prompt-chip {
+    border: 1px solid rgba(130, 141, 160, 0.24);
+    background: rgba(255, 255, 255, 0.92);
+    color: #102a43;
+    border-radius: 999px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.prompt-chip:hover,
+.prompt-chip:focus {
+    border-color: rgba(15, 76, 129, 0.36);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+}
+
+.prompt-chip_active {
+    background: #0f4c81;
+    border-color: #0f4c81;
+    color: #ffffff;
+}
+
+.loading-panel,
+.turn,
+.support-card,
+.response-card,
+.meta-card {
+    border-radius: 1rem;
+    border: 1px solid rgba(130, 141, 160, 0.18);
+    background: rgba(255, 255, 255, 0.94);
+}
+
+.loading-panel {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+}
+
+.conversation-list {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.conversation-turn {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.turn {
+    padding: 0.9rem 1rem;
+}
+
+.turn_user {
+    background: rgba(241, 245, 249, 0.9);
+}
+
+.turn_assistant {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.assistant-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.assistant-headline {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #102a43;
+}
+
+.assistant-meta-grid,
+.support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.75rem;
+}
+
+.meta-card,
+.support-card,
+.response-card {
+    padding: 0.85rem 0.95rem;
+}
+
+.support-card_full {
+    width: 100%;
+}
+
+.response-copy {
+    margin-top: 0.45rem;
+    white-space: pre-wrap;
+}
+
+.step-list,
+.bullet-list {
+    margin: 0.55rem 0 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.step-list li strong,
+.step-list li span {
+    display: block;
+}
+
+.step-list li strong {
+    color: #102a43;
+}
+
+.step-list li span {
+    margin-top: 0.15rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0f4c81;
+}
+
+.step-list li p {
+    margin-top: 0.2rem;
+}
+
+.notice_error {
+    padding: 0.85rem 1rem;
+    border-radius: 1rem;
+    color: #b91c1c;
+    background: rgba(185, 28, 28, 0.08);
+    border: 1px solid rgba(185, 28, 28, 0.18);
+}
+
+@media (max-width: 64rem) {
+    .section-header,
+    .assistant-header {
+        flex-direction: column;
+    }
+}

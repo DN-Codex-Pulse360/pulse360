@@ -1,0 +1,53 @@
+<template>
+    <section class="surface">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">{eyebrow}</p>
+                <h2 class="section-title">{heading}</h2>
+                <p class="section-copy">{summaryCopy}</p>
+            </div>
+        </div>
+
+        <div class="summary-chip-row">
+            <template for:each={visibleMetrics} for:item="metric">
+                <article class={metric.className} key={metric.key}>
+                    <div class="metric-label">{metric.label}</div>
+                    <div class="metric-value">{metric.value}</div>
+                    <p class="metric-help">{metric.helperText}</p>
+                </article>
+            </template>
+        </div>
+
+        <div class="analytics-grid">
+            <article class="analytic-card">
+                <div class="detail-label">Portfolio mix</div>
+                <template for:each={portfolioMix} for:item="item">
+                    <div class="analytic-row" key={item.label}>
+                        <div class="analytic-copy">
+                            <span>{item.label}</span>
+                            <strong>{item.value}</strong>
+                        </div>
+                        <div class="analytic-bar">
+                            <span class={item.tone} style={item.style}></span>
+                        </div>
+                    </div>
+                </template>
+            </article>
+
+            <article class="analytic-card">
+                <div class="detail-label">Priority concentration</div>
+                <template for:each={priorityDistribution} for:item="item">
+                    <div class="analytic-row" key={item.label}>
+                        <div class="analytic-copy">
+                            <span>{item.label}</span>
+                            <strong>{item.value}</strong>
+                        </div>
+                        <div class="analytic-bar">
+                            <span class={item.tone} style={item.style}></span>
+                        </div>
+                    </div>
+                </template>
+            </article>
+        </div>
+    </section>
+</template>

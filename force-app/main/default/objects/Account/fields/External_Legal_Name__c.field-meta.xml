@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>External_Legal_Name__c</fullName>
+    <description>Publicly confirmed legal name of the account from external registry or filing evidence.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>External legal name confirmed through public evidence such as annual reports, filings, or registry sources.</inlineHelpText>
+    <label>External Legal Name</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+</CustomField>

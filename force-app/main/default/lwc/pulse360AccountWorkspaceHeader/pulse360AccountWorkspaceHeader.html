@@ -1,0 +1,31 @@
+<template>
+    <section class="surface workspace-header">
+        <div class="header-copy">
+            <p class="eyebrow">Altitude 3 · Salesforce Account Workspace</p>
+            <h2 class="header-title">Pulse360 Account Workspace</h2>
+            <p class="header-summary">Make the Account page the default daily-user operating surface: weighted summary, seller guidance, renewal risk, and trust cues in one place.</p>
+            <div class="badge-row">
+                <span class="badge badge_soft">Account-centered execution</span>
+                <span class="badge badge_soft">Weighted summary</span>
+                <span class="badge badge_soft">Trust-first actions</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <template if:true={hasPortfolioLink}>
+                <lightning-button
+                    label="Open portfolio dashboard"
+                    variant="brand"
+                    onclick={handleOpenPortfolioDashboard}>
+                </lightning-button>
+            </template>
+            <template if:true={hasGovernanceLink}>
+                <lightning-button
+                    label="Open governance cases"
+                    variant="neutral"
+                    onclick={handleOpenGovernanceCases}>
+                </lightning-button>
+            </template>
+        </div>
+    </section>
+</template>

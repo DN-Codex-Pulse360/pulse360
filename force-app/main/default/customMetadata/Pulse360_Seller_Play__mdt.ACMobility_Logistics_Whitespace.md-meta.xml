@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>ACMobility Logistics Whitespace</label>
+    <protected>false</protected>
+    <values>
+        <field>Match_Keyword__c</field>
+        <value xsi:type="xsd:string">acmobility</value>
+    </values>
+    <values>
+        <field>Target_Entity_Hint__c</field>
+        <value xsi:type="xsd:string">ACMobility and AC Logistics</value>
+    </values>
+    <values>
+        <field>Solution_Family__c</field>
+        <value xsi:type="xsd:string">Connected Operations</value>
+    </values>
+    <values>
+        <field>Recommended_Play__c</field>
+        <value xsi:type="xsd:string">Review mobility and logistics platform whitespace</value>
+    </values>
+    <values>
+        <field>Specialist_Route__c</field>
+        <value xsi:type="xsd:string">Industry Solutions Specialist</value>
+    </values>
+    <values>
+        <field>Buying_Group_Gap__c</field>
+        <value xsi:type="xsd:string">Operations sponsor, logistics lead, and digital transformation owner</value>
+    </values>
+    <values>
+        <field>Outreach_Objective__c</field>
+        <value xsi:type="xsd:string">Confirm mobility and logistics transformation priorities and identify whitespace that can move this quarter.</value>
+    </values>
+    <values>
+        <field>Match_Priority__c</field>
+        <value xsi:type="xsd:double">75</value>
+    </values>
+</CustomMetadata>
