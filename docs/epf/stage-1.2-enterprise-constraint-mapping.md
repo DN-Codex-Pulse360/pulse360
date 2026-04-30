@@ -27,11 +27,10 @@ This artifact records prototype-critical enterprise constraints for Pulse360 and
 | Blocker ID | Blocking Constraint | Current State | Escalation Path | Decision Needed By |
 | --- | --- | --- | --- | --- |
 | B-01 | Absence of minimal real Databricks extract evidence for canonical exports | Open | Escalate to Data Engineering owner in Milestone C execution | Before closing DAN-60/61/62 |
-| B-02 | Final approval cadence for remaining Milestone A gate artifacts | Open | Escalate to Project Lead for review window commitment | Before Milestone A closeout |
+| B-02 | Final approval cadence for remaining Milestone A gate artifacts | Resolved | Closed during Milestone A gate reconciliation on 2026-03-25 | Closed |
 
 ## Gate 1.2 Self-Check
 Gate question: identify at least one blocking constraint per category (regulatory, data, procurement, organizational).
 
-Status: **Pass candidate**  
-Rationale: all four categories are represented, risk ownership is assigned, and active blockers include escalation paths.
-
+Status: **Pass**  
+Rationale: all four categories are represented, risk ownership is assigned, and the remaining Milestone A approval blocker was cleared during the 2026-03-25 reconciliation.

@@ -1,0 +1,104 @@
+<template>
+    <section class="surface surface_primary">
+        <div class="panel-label">Recommended Move</div>
+
+        <template if:true={action}>
+            <div class="chip-row">
+                <span class="chip">{action.solutionFamily}</span>
+                <span class="chip chip_alt">{action.confidenceLabel}</span>
+            </div>
+
+            <h3 class="action-title">{action.recommendedPlay}</h3>
+
+            <div class="detail-grid">
+                <div>
+                    <div class="detail-label">Target Entity</div>
+                    <div class="detail-value">{action.targetEntity}</div>
+                </div>
+                <div>
+                    <div class="detail-label">Specialist Route</div>
+                    <div class="detail-value">{action.specialistRoute}</div>
+                </div>
+            </div>
+
+            <div class="detail-block">
+                <div class="detail-label">Why Now</div>
+                <p class="panel-copy">{action.reasoning}</p>
+            </div>
+
+            <div class="detail-block">
+                <div class="detail-label">Buying-Group Gap</div>
+                <p class="panel-copy">{action.buyingGroupGap}</p>
+            </div>
+
+            <div class="detail-block">
+                <div class="detail-label">Outreach Objective</div>
+                <p class="panel-copy">{action.outreachObjective}</p>
+            </div>
+
+            <div class="detail-grid detail-grid_compact">
+                <div>
+                    <div class="detail-label">Estimated Impact</div>
+                    <div class="detail-value">{action.estimatedRevenueImpact}</div>
+                </div>
+                <div>
+                    <div class="detail-label">Prompt Version</div>
+                    <div class="detail-value">{promptVersion}</div>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <lightning-button
+                    label="Create Opportunity"
+                    variant="brand"
+                    data-action-type="open_opportunity"
+                    onclick={handleAction}>
+                </lightning-button>
+                <lightning-button
+                    label="Create Task"
+                    variant="neutral"
+                    data-action-type="create_task"
+                    onclick={handleAction}>
+                </lightning-button>
+                <lightning-button
+                    label="Route Specialist"
+                    variant="neutral"
+                    data-action-type="route_specialist"
+                    onclick={handleAction}>
+                </lightning-button>
+                <lightning-button
+                    label="Launch Agent Brief"
+                    variant="brand-outline"
+                    data-action-type="launch_agent"
+                    onclick={handleAction}>
+                </lightning-button>
+            </div>
+
+            <template if:true={hasSupportingSources}>
+                <div class="evidence-shell">
+                    <div class="detail-label">Evidence</div>
+                    <div class="source-list">
+                        <template for:each={action.supportingSources} for:item="source">
+                            <article class="source-card" key={source.sourceId}>
+                                <div class="source-header">
+                                    <strong>{source.sourceName}</strong>
+                                    <span>{source.documentDate}</span>
+                                </div>
+                                <p class="micro-copy">{source.excerpt}</p>
+                                <lightning-formatted-url
+                                    value={source.sourceUrl}
+                                    label="Open evidence"
+                                    target="_blank">
+                                </lightning-formatted-url>
+                            </article>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </template>
+
+        <template if:false={action}>
+            <p class="panel-copy">Pulse360 has not generated a recommended move for this account yet.</p>
+        </template>
+    </section>
+</template>

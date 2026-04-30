@@ -1,0 +1,41 @@
+<template>
+    <section class="surface header-shell">
+        <div class="eyebrow">Pulse360 Seller Workspace</div>
+        <div class="header-row">
+            <div class="title-block">
+                <h2 class="title">{accountName}</h2>
+                <div class="summary-stack">
+                    <p class="summary-copy">
+                        Pulse360 sees {groupKnownSubsidiaryCount} known group entities, with {uncoveredEntityCount}
+                        still outside visible CRM coverage.
+                    </p>
+                    <div class="urgency-strip">
+                        <span class="urgency-value">{formattedHiddenRevenue}</span>
+                        <span class="urgency-copy">still sits outside the seller's current operating surface.</span>
+                    </div>
+                    <template if:true={topActionLabel}>
+                        <div class="top-action">
+                            <span class="top-action-label">Top move</span>
+                            <strong>{topActionLabel}</strong>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="badge-row">
+                <span class={freshnessClassName}>{freshnessLabel}</span>
+                <template if:true={coverageGapFlag}>
+                    <span class="badge badge_gap">Coverage gap open</span>
+                </template>
+                <template if:true={showCoverageBadge}>
+                    <span class="badge badge_info">{coveragePercent}% CRM group coverage</span>
+                </template>
+                <lightning-button
+                    label="Ask Pulse360 Agent"
+                    variant="brand-outline"
+                    onclick={handleAskAgent}>
+                </lightning-button>
+            </div>
+        </div>
+    </section>
+</template>

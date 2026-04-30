@@ -1,0 +1,37 @@
+<template>
+    <section class="metric-grid">
+        <button class="metric-card metric-button" data-metric="confirmed" onclick={handleMetricAction}>
+            <div class="metric-label">Confirmed Group Revenue</div>
+            <lightning-formatted-number
+                value={workspace.groupRevenueRollup}
+                format-style="currency"
+                currency-code={workspace.currencyCode}>
+            </lightning-formatted-number>
+            <div class="metric-action">Brief manager</div>
+        </button>
+
+        <button class="metric-card metric-card_emphasis metric-button" data-metric="hidden" onclick={handleMetricAction}>
+            <div class="metric-label">Hidden Revenue</div>
+            <lightning-formatted-number
+                value={workspace.hiddenRevenue}
+                format-style="currency"
+                currency-code={workspace.currencyCode}>
+            </lightning-formatted-number>
+            <div class="metric-action">Focus whitespace target</div>
+        </button>
+
+        <button class="metric-card metric-button" data-metric="engagement" onclick={handleMetricAction}>
+            <div class="metric-label">Engagement Momentum</div>
+            <div class="metric-value">{workspace.engagementLabel}</div>
+            <div class="metric-subcopy">Score {workspace.engagementIntensityScore}</div>
+            <div class="metric-action">Create outreach task</div>
+        </button>
+
+        <button class="metric-card metric-button" data-metric="products" onclick={handleMetricAction}>
+            <div class="metric-label">Active Products</div>
+            <div class="metric-value">{workspace.activeProductCount}</div>
+            <div class="metric-subcopy">{workspace.openOpportunityCount} open opportunities</div>
+            <div class="metric-action">Find whitespace with agent</div>
+        </button>
+    </section>
+</template>

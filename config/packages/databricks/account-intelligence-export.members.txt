@@ -1,0 +1,10 @@
+sql/databricks/gold
+dashboards/databricks/s4_use_case_dashboard.sql
+config/databricks/lineage-targets.env.sample
+config/databricks/unity-catalog-governance.yaml
+contracts/databricks_to_datacloud.schema.json
+contracts/datacloud_to_salesforce_agentforce.schema.json
+docs/contracts/databricks-to-datacloud-contract.md
+docs/setup/databricks-gold-account-export-runbook.md
+scripts/validate-contracts.sh
+scripts/validate-canonical-exports.sh

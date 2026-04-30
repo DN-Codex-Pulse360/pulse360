@@ -1,0 +1,31 @@
+<template>
+    <div class="sidebar-shell">
+        <template if:true={hasError}>
+            <section class="sidebar-notice">
+                <p class="error-copy">{errorMessage}</p>
+            </section>
+        </template>
+
+        <template if:true={hasWorkspace}>
+            <c-pulse360-seller-workspace-group
+                account-id={recordId}
+                account-name={workspace.accountName}
+                prompt-version={workspace.promptVersion}
+                primary-action={selectedActionContext}
+                hierarchy-note={workspace.hierarchyNote}
+                coverage-percent={coveragePercent}
+                crm-covered-subsidiary-count={workspace.crmCoveredSubsidiaryCount}
+                group-known-subsidiary-count={workspace.groupKnownSubsidiaryCount}
+                hierarchy-entities={hierarchyEntities}
+                selected-entity-name={selectedEntityName}
+                onworkspaceaction={handleWorkspaceAction}>
+            </c-pulse360-seller-workspace-group>
+
+            <c-pulse360-seller-workspace-context
+                workspace={workspace}
+                action-context={selectedActionContext}
+                onworkspaceaction={handleWorkspaceAction}>
+            </c-pulse360-seller-workspace-context>
+        </template>
+    </div>
+</template>

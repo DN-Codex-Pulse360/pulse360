@@ -38,6 +38,5 @@ This checklist is the repo source for control points. The same control points sh
 ## Gate 2.3 Self-Check
 Gate question: can a developer trace requests end-to-end through the observability stack?
 
-Status: **Pass candidate**  
-Rationale: checklist defines required telemetry fields, trace controls, and replay evidence expectations.
-
+Status: **Pass**  
+Rationale: the checklist defines required telemetry fields, trace controls, and replay evidence expectations, and remains linked from the EPF control center as the repo source of truth.

@@ -1,0 +1,11 @@
+force-app/main/default/objects/Account/fields
+force-app/main/default/classes/Pulse360HealthScanService.cls
+force-app/main/default/classes/Pulse360HealthScanService.cls-meta.xml
+force-app/main/default/classes/Pulse360HealthScanServiceTest.cls
+force-app/main/default/classes/Pulse360HealthScanServiceTest.cls-meta.xml
+force-app/main/default/lwc/pulse360HealthScan
+force-app/main/default/lwc/pulse360NarrativeCard
+force-app/main/default/lwc/pulse360NextBestAction
+force-app/main/default/lwc/pulse360GroupRevenueReveal
+force-app/main/default/flexipages/Account_Record_Page.flexipage-meta.xml
+force-app/main/default/permissionsets/Pulse360_Account_Intelligence_User.permissionset-meta.xml

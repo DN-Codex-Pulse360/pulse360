@@ -63,9 +63,23 @@ should not depend on those files being present at runtime.
 2. Real deployments belong behind explicit approval gates.
 3. Pipeline auth should use headless Salesforce patterns, not interactive logins.
 
+## Codex Harness Rules
+
+1. Cross-system Codex work should start from the documented decision stack:
+   solution brief -> UX spec -> technical bridge -> contracts -> repo rules -> validators.
+2. For Salesforce UX work, direct FlexiPage composition of focused modules is the target shape; wrapper LWCs that host several large modules are transitional only.
+3. If Linear, Notion, or another hosted connector is unavailable, capture the intended status update in a repo artifact and report the connector failure explicitly.
+4. Run the Codex operator health check before cross-system work or after any hosted MCP failure:
+   - `./scripts/check-codex-operator-health.sh`
+5. Treat Databricks outputs used by Salesforce as product contracts that must preserve CRM-safe IDs, provenance, freshness, and confidence cues.
+6. Do not call a custom LWC, Apex orchestration panel, or prompt-driven helper a real Agentforce agent unless the target org has proven native Agentforce runtime support for the intended experience.
+7. Treat Agentforce work as capability-gated:
+   - source-backed metadata and actions can be built in repo
+   - native Agentforce runtime, Builder behavior, and page-surface availability must be proven in the target org before claiming success
+8. If native Agentforce runtime is unavailable, describe the result precisely as a custom assistant, action panel, or fallback UI rather than an agent.
+
 ## Data Cloud Rules
 
 1. Do not assume all Data Cloud assets are deployable through standard `sf project deploy`.
 2. Document org-locked Data Cloud setup as runbooks under `docs/runbook` or `config/data-cloud`.
 3. Ground CRM-facing intelligence on Data Cloud/DMO semantics, not guessed field names.
-
