@@ -52,6 +52,12 @@ def load_csv(path: Path) -> list[dict]:
         return list(DictReader(handle))
 
 
+def copy_field_required(row: dict) -> bool:
+    if "copy_field_required" in row:
+        return row.get("copy_field_required", "").lower() == "true"
+    return row.get("required", "").lower() == "true"
+
+
 def missing_required_fields(records: list[dict], fields: list[str]) -> list[dict]:
     missing: list[dict] = []
     for record in records:
@@ -82,17 +88,6 @@ repo_root = Path.cwd()
 activation_mapping_path = repo_root / "config/data-cloud/activation-field-mapping.csv"
 dmo_mapping_path = config.dmo_mapping_path
 
-copy_field_unsupported_source_fields = {
-    "hierarchy_payload",
-    "intent_signal_payload",
-    "group_revenue_rollup",
-    "group_revenue_visible",
-    "external_revenue_confirmed",
-    "ai_narrative",
-    "ai_recommended_actions",
-    "source_refs",
-}
-
 activation_rows = load_csv(activation_mapping_path)
 dmo_mapping_rows = load_csv(dmo_mapping_path)
 dmo_field_by_source = {
@@ -105,9 +100,15 @@ required_supported_source_fields = [
     row["source_field"]
     for row in activation_rows
     if row["target_object"] == "Account"
-    and row["required"].lower() == "true"
-    and row["source_field"] not in copy_field_unsupported_source_fields
+    and copy_field_required(row)
 ]
+exception_source_fields = sorted(
+    row["source_field"]
+    for row in activation_rows
+    if row["target_object"] == "Account"
+    and row.get("decision_status") == "accepted_exception"
+    and not copy_field_required(row)
+)
 required_source_fields = [f"{field}__c" for field in required_supported_source_fields]
 required_dmo_fields = [
     dmo_field_by_source[field]
@@ -171,6 +172,8 @@ summary = {
     "source_object_missing_activation_id_count": len(missing_source_ids),
     "source_object_missing_activation_ids_sample": missing_source_ids[:20],
     "source_object_required_supported_field_count": len(required_source_fields),
+    "copy_field_required_source_fields": required_supported_source_fields,
+    "copy_field_exception_source_fields": exception_source_fields,
     "source_object_rows_missing_required_supported_fields_count": len(source_missing_required_fields),
     "source_object_rows_missing_required_supported_fields_sample": source_missing_required_fields[:5],
     "dmo_total_size": dmo_total,
