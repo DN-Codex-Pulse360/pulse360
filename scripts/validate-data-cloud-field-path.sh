@@ -33,16 +33,29 @@ def picklist_values_by_name(describe_payload, field_name):
         return values
     return []
 
+
+def copy_field_required(row):
+    if "copy_field_required" in row:
+        return row.get("copy_field_required", "").lower() == "true"
+    return row.get("required", "").lower() == "true"
+
 config = ServiceConfig.load()
 sf = SalesforceCliClient(default_org_alias=config.default_org_alias)
 
 source_contract_fields = load_contract_required_fields(config.source_contract_path)
 account_sync_contract_fields = load_contract_required_fields(config.account_sync_contract_path)
 dmo_mapping_rows = load_mapping(config.dmo_mapping_path, target_object=config.default_dmo_name)
+activation_mapping_rows = load_mapping(config.activation_mapping_path, target_object="Account")
 dmo_runtime_required_fields = sorted(
     row["source_field"]
     for row in dmo_mapping_rows
-    if row.get("required", "").lower() == "true"
+    if copy_field_required(row)
+)
+copy_field_exception_fields = sorted(
+    row["source_field"]
+    for row in activation_mapping_rows
+    if row.get("decision_status") == "accepted_exception"
+    and not copy_field_required(row)
 )
 default_dlo_developer_name = config.default_source_object.removesuffix("__dll")
 
@@ -86,7 +99,7 @@ dmo_gap = compare_required_fields_to_mapping(
 )
 account_gap = compare_required_fields_to_mapping(
     account_sync_contract_fields,
-    load_mapping(config.activation_mapping_path, target_object="Account"),
+    activation_mapping_rows,
     {field["name"] for field in account_payload.get("fields", [])},
 )
 source_object_picklist_available = (
@@ -120,6 +133,11 @@ summary = {
         "data_lake_mapping_count": mapping_rows.get("totalSize", 0),
     },
     "account_sync_contract_path": str(config.account_sync_contract_path),
+    "copy_field": {
+        "required_supported_field_count": len(dmo_runtime_required_fields),
+        "exception_field_count": len(copy_field_exception_fields),
+        "exception_fields": copy_field_exception_fields,
+    },
     "source_object": {
         "name": source_payload.get("name"),
         "missing_field_count": source_gap["missing_field_count"],
