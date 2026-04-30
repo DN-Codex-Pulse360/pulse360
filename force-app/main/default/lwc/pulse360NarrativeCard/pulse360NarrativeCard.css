@@ -1,0 +1,53 @@
+.shell {
+    display: grid;
+    gap: 0.9rem;
+    padding: 0.95rem 1rem 1rem;
+}
+
+.lead-copy,
+.narrative-copy,
+.source-copy {
+    color: #3e3e3c;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.meta-strip {
+    background: linear-gradient(180deg, #fbfdff 0%, #f6f9fc 100%);
+    border: 1px solid #dde3ea;
+    border-radius: 0.85rem;
+    color: #5c5c5c;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+}
+
+.section-label {
+    color: #5c5c5c;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.source-section {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.source-card {
+    background: #ffffff;
+    border: 1px solid #dde3ea;
+    border-radius: 0.85rem;
+    padding: 0.85rem 0.95rem;
+}
+
+.source-header {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}

@@ -16,7 +16,22 @@ from pulse360_salesforce_data_cloud_mcp.comparison import (
 )
 from pulse360_salesforce_data_cloud_mcp.config import ServiceConfig
 from pulse360_salesforce_data_cloud_mcp.salesforce_cli import SalesforceCliClient, SalesforceCliError
-from pulse360_salesforce_data_cloud_mcp.server import _picklist_values_by_name
+
+
+def picklist_values_by_name(describe_payload, field_name):
+    for field in describe_payload.get("fields", []):
+        if field.get("name") != field_name:
+            continue
+        values = []
+        for picklist_value in field.get("picklistValues", []):
+            if isinstance(picklist_value, dict):
+                value = picklist_value.get("value")
+            else:
+                value = picklist_value
+            if value is not None:
+                values.append(str(value))
+        return values
+    return []
 
 config = ServiceConfig.load()
 sf = SalesforceCliClient(default_org_alias=config.default_org_alias)
@@ -75,10 +90,10 @@ account_gap = compare_required_fields_to_mapping(
     {field["name"] for field in account_payload.get("fields", [])},
 )
 source_object_picklist_available = (
-    config.default_source_object in _picklist_values_by_name(mapping_payload, "SourceObjectRef")
+    config.default_source_object in picklist_values_by_name(mapping_payload, "SourceObjectRef")
     or any(
         value.startswith(f"{config.default_source_object}.")
-        for value in _picklist_values_by_name(mapping_payload, "SourceFieldRef")
+        for value in picklist_values_by_name(mapping_payload, "SourceFieldRef")
     )
 )
 source_object_registered = (
@@ -93,8 +108,8 @@ summary = {
     "data_stream": stream_payload.get("records", []),
     "data_lake_object": dlo_payload.get("records", []),
     "mapping_surface": {
-        "source_object_ref_count": len(_picklist_values_by_name(mapping_payload, "SourceObjectRef")),
-        "source_field_ref_count": len(_picklist_values_by_name(mapping_payload, "SourceFieldRef")),
+        "source_object_ref_count": len(picklist_values_by_name(mapping_payload, "SourceObjectRef")),
+        "source_field_ref_count": len(picklist_values_by_name(mapping_payload, "SourceFieldRef")),
         "source_object_picklist_available": source_object_picklist_available,
         "source_object_registered": source_object_registered,
     },
