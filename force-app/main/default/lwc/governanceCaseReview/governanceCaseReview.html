@@ -42,6 +42,20 @@
                             </div>
                         </div>
 
+                        <section class="panel">
+                            <div class="panel-header">
+                                <h3 class="section-title">{agentSubagentName}</h3>
+                                <p class="section-kicker">{reviewEvidenceStatus}</p>
+                            </div>
+                            <p class="section-copy">{reviewAgentSummary}</p>
+                            <p class="section-copy"><strong>Direct Data Cloud validity:</strong> {directEvidenceSummary}</p>
+                            <p class="section-copy"><strong>Direct hierarchy impact:</strong> {directHierarchyImpact}</p>
+                            <p class="section-copy"><strong>Evidence timestamp:</strong> {directEvidenceTimestamp}</p>
+                            <template if:true={reviewEvidenceError}>
+                                <p class="section-copy slds-text-color_error">{reviewEvidenceError}</p>
+                            </template>
+                        </section>
+
                         <div class="review-grid">
                             <div class="primary-column">
                                 <section class="panel panel_accounts">
@@ -105,6 +119,37 @@
                                         <p class="section-copy"><strong>Impact:</strong> {hierarchyImpactSummary}</p>
                                     </section>
                                 </div>
+
+                                <template if:true={hasExternalEvidence}>
+                                    <section class="panel">
+                                        <div class="panel-header">
+                                            <h3 class="section-title">External Evidence</h3>
+                                            <p class="section-kicker">{registryMatchStatus}</p>
+                                        </div>
+                                        <div class="external-evidence-grid">
+                                            <article class="account-card">
+                                                <div class="eyebrow">Left Account Evidence</div>
+                                                <div class="account-name">{leftExternalEvidence.accountName}</div>
+                                                <p class="section-copy"><strong>External Legal Name:</strong> {leftExternalEvidence.legalName}</p>
+                                                <p class="section-copy"><strong>Registration:</strong> {leftExternalEvidence.registration}</p>
+                                                <p class="section-copy"><strong>Validation:</strong> {leftExternalEvidence.externallyValidated}</p>
+                                                <p class="section-copy"><strong>Validity Score:</strong> {leftExternalEvidence.validityScore}</p>
+                                                <p class="section-copy"><strong>Citations:</strong> {leftExternalEvidence.citationCount}</p>
+                                                <p class="section-copy"><strong>Model:</strong> {leftExternalEvidence.modelId}</p>
+                                            </article>
+                                            <article class="account-card">
+                                                <div class="eyebrow">Right Account Evidence</div>
+                                                <div class="account-name">{rightExternalEvidence.accountName}</div>
+                                                <p class="section-copy"><strong>External Legal Name:</strong> {rightExternalEvidence.legalName}</p>
+                                                <p class="section-copy"><strong>Registration:</strong> {rightExternalEvidence.registration}</p>
+                                                <p class="section-copy"><strong>Validation:</strong> {rightExternalEvidence.externallyValidated}</p>
+                                                <p class="section-copy"><strong>Validity Score:</strong> {rightExternalEvidence.validityScore}</p>
+                                                <p class="section-copy"><strong>Citations:</strong> {rightExternalEvidence.citationCount}</p>
+                                                <p class="section-copy"><strong>Model:</strong> {rightExternalEvidence.modelId}</p>
+                                            </article>
+                                        </div>
+                                    </section>
+                                </template>
                             </div>
 
                             <aside class="secondary-column">
@@ -169,10 +214,15 @@
                                         </lightning-input>
                                     </div>
                                     <div class="decision-actions" role="group">
-                                        <lightning-button label="Approve" variant="brand" onclick={handleApprove} disabled={isSaving}></lightning-button>
-                                        <lightning-button label="Reject" variant="destructive-text" onclick={handleReject} disabled={isSaving}></lightning-button>
-                                        <lightning-button label="Defer" variant="neutral" onclick={handleDefer} disabled={isSaving}></lightning-button>
+                                        <lightning-button label="Approve" variant="brand" onclick={handleApprove} disabled={decisionDisabled}></lightning-button>
+                                        <lightning-button label="Reject" variant="destructive-text" onclick={handleReject} disabled={decisionDisabled}></lightning-button>
+                                        <lightning-button label="Defer" variant="neutral" onclick={handleDefer} disabled={decisionDisabled}></lightning-button>
                                     </div>
+                                    <template if:false={canCommitDecision}>
+                                        <p class="section-copy slds-text-color_error slds-m-top_small">
+                                            Pulse360 blocks governance execution until the direct Data Cloud evidence read succeeds.
+                                        </p>
+                                    </template>
                                 </section>
 
                                 <section class="panel">

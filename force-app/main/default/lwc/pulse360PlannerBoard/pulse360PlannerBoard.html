@@ -1,0 +1,92 @@
+<template>
+    <section class="surface">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">{eyebrow}</p>
+                <h2 class="section-title">{sectionTitle}</h2>
+                <p class="section-copy">{sectionCopy}</p>
+            </div>
+            <p class="section-copy">{groupCount} groups match the current lens.</p>
+        </div>
+
+        <template if:true={hasGroups}>
+            <div class={boardClass}>
+                <template for:each={groups} for:item="group">
+                    <article class={group.className} key={group.accountId}>
+                        <div class="group-topline">
+                            <div class="rank-pill">{group.rankLabel}</div>
+                            <div class="group-heading">
+                                <h3>{group.accountName}</h3>
+                                <p>{group.subheading}</p>
+                            </div>
+                            <div class="group-badges">
+                                <span class={group.priorityClass}>{group.priorityBand}</span>
+                                <span class="badge badge_soft">{group.suggestedTier}</span>
+                                <span class={group.trustBadgeClass}>{group.freshnessLabel}</span>
+                            </div>
+                        </div>
+
+                        <div class="group-body">
+                            <div class="group-main">
+                                <div class="group-block">
+                                    <div class="detail-label">Why now</div>
+                                    <p>{group.priorityReason}</p>
+                                </div>
+
+                                <div class="group-block">
+                                    <div class="detail-label">Recommended move</div>
+                                    <p>{group.nextPlanningAction}</p>
+                                </div>
+
+                                <div class="compact-copy">
+                                    <div class="detail-label">Coverage and value</div>
+                                    <p>{group.scoreSummary}</p>
+                                </div>
+                            </div>
+
+                            <aside class="group-side">
+                                <div class="detail-label">Whitespace context</div>
+                                <p class="trust-copy">{group.whitespaceSummary}</p>
+                                <div class="trust-row">
+                                    <span class="trust-label">Risk</span>
+                                    <strong>{group.riskSummary}</strong>
+                                </div>
+                                <div class="trust-row">
+                                    <span class="trust-label">Trust cues</span>
+                                    <strong>{group.trustSummary}</strong>
+                                </div>
+                            </aside>
+                        </div>
+
+                        <template if:true={showExecutivePrompts}>
+                            <p class="executive-copy">{group.executivePrompt}</p>
+                        </template>
+
+                        <div class="group-footer">
+                            <div class="button-row">
+                                <lightning-button
+                                    label="Open account context"
+                                    variant="brand"
+                                    data-account-id={group.accountId}
+                                    onclick={handleOpenAccount}>
+                                </lightning-button>
+                                <lightning-button
+                                    label="View seller workspace"
+                                    variant="neutral"
+                                    data-account-id={group.accountId}
+                                    onclick={handleOpenSellerWorkspace}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </article>
+                </template>
+            </div>
+        </template>
+
+        <template if:false={hasGroups}>
+            <div class="empty-state">
+                <p>No groups match this filter yet. Try another lens or bring more portfolio signals into the workspace.</p>
+            </div>
+        </template>
+    </section>
+</template>

@@ -25,6 +25,17 @@ Use that generated workspace to create unlocked packages in this order:
 The governance package depends on the account intelligence package because the
 Governance Case UI and permission set rely on Account intelligence fields.
 
+Current Salesforce split:
+
+1. `pulse360-account-intelligence`
+   - Account fields and seller-play metadata
+   - seller workspace runtime and seller execution orchestration
+   - planner, renewal-risk, signal-routing, and seller-v2 tabs
+2. `pulse360-governance`
+   - Governance Case object and trigger
+   - governance review/orchestration runtime
+   - governance record-page review surfaces
+
 ## Databricks
 
 Run:

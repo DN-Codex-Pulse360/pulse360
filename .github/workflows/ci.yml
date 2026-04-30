@@ -42,10 +42,26 @@ jobs:
         run: |
           chmod +x scripts/validate-salesforce-account-activation-fields.sh
           ./scripts/validate-salesforce-account-activation-fields.sh
+      - name: Validate Account intelligence experience
+        run: |
+          chmod +x scripts/validate-account-intelligence-experience.sh
+          ./scripts/validate-account-intelligence-experience.sh
+      - name: Validate Agentforce orchestration experience
+        run: |
+          chmod +x scripts/validate-agentforce-orchestrator.sh
+          ./scripts/validate-agentforce-orchestrator.sh
       - name: Validate Governance Case Salesforce metadata
         run: |
           chmod +x scripts/validate-governance-case-metadata.sh
           ./scripts/validate-governance-case-metadata.sh
+      - name: Validate signal-routing workspace
+        run: |
+          chmod +x scripts/validate-signal-routing-workspace.sh
+          ./scripts/validate-signal-routing-workspace.sh
+      - name: Validate multi-surface seller experience
+        run: |
+          chmod +x scripts/validate-multi-surface-experience.sh
+          ./scripts/validate-multi-surface-experience.sh
       - name: Validate Salesforce package workspace layout
         run: |
           chmod +x scripts/validate-salesforce-package-layout.sh

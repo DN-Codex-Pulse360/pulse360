@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Navigation tab for the Pulse360 Portfolio Dashboard altitude-2 portfolio experience.</description>
+    <flexiPage>Pulse360_Portfolio_Dashboard</flexiPage>
+    <label>Pulse360 Planner</label>
+    <motif>Custom18: Form</motif>
+</CustomTab>

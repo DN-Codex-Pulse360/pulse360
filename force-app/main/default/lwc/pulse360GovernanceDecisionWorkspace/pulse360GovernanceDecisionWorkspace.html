@@ -1,0 +1,107 @@
+<template>
+    <lightning-card title="Decision Workspace" icon-name="utility:change_owner">
+        <div class="shell">
+            <template if:true={hasError}>
+                <div class="slds-text-color_error">{errorMessage}</div>
+            </template>
+            <template if:true={isLoaded}>
+                <p class="copy">{mergeSelectionHelp}</p>
+                <div class="status-strip">
+                    <div>
+                        <div class="eyebrow">Direct Evidence</div>
+                        <div class="status-value">{reviewEvidenceStatus}</div>
+                    </div>
+                    <div>
+                        <div class="eyebrow">Recommended Action</div>
+                        <div class="status-value">{recommendedAction}</div>
+                    </div>
+                </div>
+
+                <template if:true={isCspReview}>
+                    <section class="csp-panel">
+                        <div class="eyebrow">CSP Smart City Review</div>
+                        <div class="status-value">{cspTargetSummary}</div>
+                        <p class="copy"><strong>Target B2B customers:</strong> {cspTargetCustomers}</p>
+                        <p class="copy"><strong>Review priority:</strong> {cspReviewPriority}</p>
+                        <p class="copy"><strong>Recommended next actions:</strong> {cspRecommendedNextActions}</p>
+                    </section>
+                </template>
+
+                <div class="decision-fieldset">
+                    <template if:true={showMergeControls}>
+                        <lightning-record-picker
+                            label="Surviving Account"
+                            placeholder="Search Accounts"
+                            object-api-name="Account"
+                            value={survivingAccountId}
+                            onchange={handleSurvivingAccountChange}>
+                        </lightning-record-picker>
+                        <lightning-record-picker
+                            label="Merged Account"
+                            placeholder="Search Accounts"
+                            object-api-name="Account"
+                            value={mergedAccountId}
+                            onchange={handleMergedAccountChange}>
+                        </lightning-record-picker>
+
+                        <div class="selection-summary">
+                            <div>
+                                <div class="eyebrow">Surviving</div>
+                                <div class="selection-link">
+                                    <template if:true={survivingAccountUrl}>
+                                        <lightning-formatted-url value={survivingAccountUrl} label={survivingAccountName} target="_blank"></lightning-formatted-url>
+                                    </template>
+                                    <template if:false={survivingAccountUrl}>{survivingAccountName}</template>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="eyebrow">Merged</div>
+                                <div class="selection-link">
+                                    <template if:true={mergedAccountUrl}>
+                                        <lightning-formatted-url value={mergedAccountUrl} label={mergedAccountName} target="_blank"></lightning-formatted-url>
+                                    </template>
+                                    <template if:false={mergedAccountUrl}>{mergedAccountName}</template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <lightning-combobox
+                        name="decisionReasonCode"
+                        label="Decision Reason Code"
+                        value={decisionReasonCode}
+                        options={decisionReasonOptions}
+                        onchange={handleReasonChange}>
+                    </lightning-combobox>
+                    <lightning-textarea
+                        name="decisionReasonText"
+                        label="Decision Reason Text"
+                        value={decisionReasonText}
+                        onchange={handleReasonTextChange}>
+                    </lightning-textarea>
+                    <lightning-input
+                        type="checkbox"
+                        label="Review Followup Required"
+                        checked={reviewFollowupRequired}
+                        onchange={handleFollowupChange}>
+                    </lightning-input>
+                </div>
+
+                <div class="decision-actions" role="group">
+                    <lightning-button label="Approve" variant="brand" onclick={handleApprove} disabled={decisionDisabled}></lightning-button>
+                    <lightning-button label="Reject" variant="destructive-text" onclick={handleReject} disabled={decisionDisabled}></lightning-button>
+                    <lightning-button label="Defer" variant="neutral" onclick={handleDefer} disabled={decisionDisabled}></lightning-button>
+                </div>
+
+                <template if:false={canCommitDecision}>
+                    <p class="copy slds-text-color_error">
+                        Pulse360 blocks governance execution until the direct Data Cloud evidence read succeeds.
+                    </p>
+                </template>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading decision workspace"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -10,11 +10,11 @@ mapping="config/data-cloud/activation-field-mapping.csv"
 [[ -f "$cfg" ]] || fail "Missing calculated insights config"
 [[ -f "$mapping" ]] || fail "Missing activation field mapping"
 
-for metric in health_score cross_sell_propensity coverage_gap_flag competitor_risk_signal; do
+for metric in health_score cross_sell_propensity coverage_gap_flag competitor_risk_signal regulatory_readiness_score; do
   grep -q "name: $metric" "$cfg" || fail "Missing metric in calculated insights config: $metric"
 done
 
-for field in unified_profile_id identity_confidence group_revenue_rollup health_score cross_sell_propensity coverage_gap_flag competitor_risk_signal primary_brand_name active_product_count engagement_intensity_score open_opportunity_count last_engagement_timestamp last_synced_timestamp; do
+for field in unified_profile_id identity_confidence group_revenue_rollup health_score cross_sell_propensity coverage_gap_flag competitor_risk_signal primary_brand_name active_product_count engagement_intensity_score open_opportunity_count last_engagement_timestamp last_synced_timestamp external_legal_name is_externally_validated validity_score_external external_subsidiaries_found ai_narrative ai_recommended_actions ai_narrative_generated_at enrichment_run_id regulatory_readiness_score duplicate_exposure_count group_known_subsidiary_count crm_covered_subsidiary_count group_revenue_visible external_revenue_confirmed model_id prompt_version source_refs citation_count; do
   grep -q "^$field," "$mapping" || fail "Missing activation mapping for: $field"
 done
 

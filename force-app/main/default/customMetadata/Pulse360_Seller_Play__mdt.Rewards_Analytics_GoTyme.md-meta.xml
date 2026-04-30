@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Rewards Analytics GoTyme</label>
+    <protected>false</protected>
+    <values>
+        <field>Match_Keyword__c</field>
+        <value xsi:type="xsd:string">rewards analytics</value>
+    </values>
+    <values>
+        <field>Target_Entity_Hint__c</field>
+        <value xsi:type="xsd:string">GoTyme</value>
+    </values>
+    <values>
+        <field>Solution_Family__c</field>
+        <value xsi:type="xsd:string">Customer Intelligence and Loyalty</value>
+    </values>
+    <values>
+        <field>Recommended_Play__c</field>
+        <value xsi:type="xsd:string">Expand rewards analytics and customer decisioning</value>
+    </values>
+    <values>
+        <field>Specialist_Route__c</field>
+        <value xsi:type="xsd:string">Customer Intelligence Specialist</value>
+    </values>
+    <values>
+        <field>Buying_Group_Gap__c</field>
+        <value xsi:type="xsd:string">Digital banking analytics lead, loyalty owner, and data platform sponsor</value>
+    </values>
+    <values>
+        <field>Outreach_Objective__c</field>
+        <value xsi:type="xsd:string">Validate GoTyme loyalty analytics priorities and confirm sponsorship for the next expansion cycle.</value>
+    </values>
+    <values>
+        <field>Match_Priority__c</field>
+        <value xsi:type="xsd:double">90</value>
+    </values>
+</CustomMetadata>

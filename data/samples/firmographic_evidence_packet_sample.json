@@ -1,0 +1,76 @@
+{
+  "evidence_packet_id": "firmographic_packet_ent_ph_sec_as096_003241",
+  "account_context": {
+    "crm_account_id": null,
+    "crm_account_name": "Ayala Corporation",
+    "country": "PH",
+    "website_domain": "ayala.com"
+  },
+  "resolved_identity": {
+    "resolved_entity_id": "ent_ph_sec_as096_003241",
+    "sovereign_identity_key": "PH|SEC_AS096|003241",
+    "crm_safe_activation_key": null,
+    "identity_confidence": 96
+  },
+  "firmographic_facts": [
+    {
+      "source_id": "src_neutral_firmographic_ayala_revenue_2024",
+      "fact_type": "financial",
+      "fact_name": "annual_revenue",
+      "fact_value": 176300000000,
+      "fact_value_normalized": 176300000000,
+      "fact_unit": "PHP",
+      "fact_period_start": "2024-01-01",
+      "fact_period_end": "2024-12-31",
+      "source_confidence": 0.91,
+      "source_reliability_code": "independently_corroborated",
+      "field_completeness_score": 0.86,
+      "freshness_status": "fresh",
+      "last_refreshed_at": "2026-04-25T00:00:00Z",
+      "license_or_contract_reference": "approved-neutral-fixture"
+    },
+    {
+      "source_id": "src_neutral_firmographic_ayala_group_hint",
+      "fact_type": "hierarchy_hint",
+      "fact_name": "external_subsidiaries_found",
+      "fact_value": 3,
+      "fact_value_normalized": 3,
+      "fact_unit": "count",
+      "fact_period_start": null,
+      "fact_period_end": "2026-04-25",
+      "source_confidence": 0.84,
+      "source_reliability_code": "single_source_review_required",
+      "field_completeness_score": 0.78,
+      "freshness_status": "fresh",
+      "last_refreshed_at": "2026-04-25T00:00:00Z",
+      "license_or_contract_reference": "approved-neutral-fixture"
+    }
+  ],
+  "hierarchy_context": {
+    "known_subsidiary_count": 4,
+    "crm_covered_subsidiary_count": 1,
+    "external_subsidiaries_found": 3,
+    "coverage_gap_flag": true
+  },
+  "source_refs": [
+    {
+      "source_id": "src_neutral_firmographic_ayala_revenue_2024",
+      "source_type": "approved_firmographic_source",
+      "document_date": "2024-12-31",
+      "accessed_at": "2026-04-25T00:00:00Z",
+      "source_url": null,
+      "excerpt": "Neutral fixture: revenue fact is bound to a governed source row."
+    },
+    {
+      "source_id": "src_neutral_firmographic_ayala_group_hint",
+      "source_type": "approved_firmographic_source",
+      "document_date": "2026-04-25",
+      "accessed_at": "2026-04-25T00:00:00Z",
+      "source_url": null,
+      "excerpt": "Neutral fixture: group coverage fact is bound to a governed source row."
+    }
+  ],
+  "run_id": "firmographic_evidence_fixture_run_20260425000000",
+  "run_timestamp": "2026-04-25T00:00:00Z",
+  "model_version": "firmographic-evidence-packet-v1"
+}

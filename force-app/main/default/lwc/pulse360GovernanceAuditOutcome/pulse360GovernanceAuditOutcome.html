@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="Audit and Outcome" icon-name="utility:timeline">
+        <div class="shell">
+            <template if:true={hasError}>
+                <div class="slds-text-color_error">{errorMessage}</div>
+            </template>
+            <template if:true={isLoaded}>
+                <dl class="slds-list_horizontal slds-wrap detail-list">
+                    <dt class="slds-item_label slds-truncate">Decision Status</dt>
+                    <dd class="slds-item_detail">{decisionStatus}</dd>
+                    <dt class="slds-item_label slds-truncate">Decided By</dt>
+                    <dd class="slds-item_detail">
+                        <template if:true={decidedByUrl}>
+                            <lightning-formatted-url value={decidedByUrl} label={decidedByName} target="_blank"></lightning-formatted-url>
+                        </template>
+                        <template if:false={decidedByUrl}>{decidedByName}</template>
+                    </dd>
+                    <dt class="slds-item_label slds-truncate">Decided At</dt>
+                    <dd class="slds-item_detail">{decidedAt}</dd>
+                    <dt class="slds-item_label slds-truncate">Downstream Update</dt>
+                    <dd class="slds-item_detail">{downstreamUpdateStatus}</dd>
+                    <dt class="slds-item_label slds-truncate">Merge Execution</dt>
+                    <dd class="slds-item_detail">{mergeExecutionStatus}</dd>
+                    <dt class="slds-item_label slds-truncate">Merge Executed By</dt>
+                    <dd class="slds-item_detail">
+                        <template if:true={mergeExecutedByUrl}>
+                            <lightning-formatted-url value={mergeExecutedByUrl} label={mergeExecutedByName} target="_blank"></lightning-formatted-url>
+                        </template>
+                        <template if:false={mergeExecutedByUrl}>{mergeExecutedByName}</template>
+                    </dd>
+                    <dt class="slds-item_label slds-truncate">Merge Executed At</dt>
+                    <dd class="slds-item_detail">{mergeExecutedAt}</dd>
+                </dl>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading audit outcome"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

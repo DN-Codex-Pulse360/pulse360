@@ -1,0 +1,48 @@
+{
+  "entity": "Ayala Corporation",
+  "jurisdiction": "PH",
+  "legal_identity_packet": [
+    {
+      "source_id": "ayala_home_2026",
+      "source_name": "Ayala Corporate Site",
+      "source_type": "corporate_profile",
+      "source_url": "https://ayala.com/",
+      "document_date": "2026-03-28",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Ayala describes itself as a Philippine group with a broad portfolio across multiple industries and emerging businesses."
+    }
+  ],
+  "filing_packet": [
+    {
+      "source_id": "ayala_ir_2024",
+      "source_name": "Ayala Integrated Report 2024",
+      "source_type": "annual_report",
+      "source_url": "https://ayala.com/app/uploads/2025/04/Ayala_IR2024_Full-Report_1004.pdf",
+      "document_date": "2025-04-11",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Ayala's 2024 Integrated Report states that sale of goods and rendering services increased 12 percent to PHP 325.7 billion and core net income reached PHP 45.0 billion."
+    }
+  ],
+  "hierarchy_packet": [
+    {
+      "source_id": "ayala_portfolio_2026",
+      "source_name": "Ayala Portfolio Overview",
+      "source_type": "portfolio",
+      "source_url": "https://ayala.com/",
+      "document_date": "2026-03-28",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Ayala's public portfolio view highlights ACEN, AC Health, AC Logistics, ACMobility, iPeople, and other operating businesses."
+    }
+  ],
+  "public_signal_packet": [
+    {
+      "source_id": "ayala_internship_2026",
+      "source_name": "Ayala Group opens 2026 internship",
+      "source_type": "news",
+      "source_url": "https://ayala.com/stories/",
+      "document_date": "2026-02-27",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Ayala highlighted investment in next-generation talent through its 2026 internship announcement."
+    }
+  ]
+}

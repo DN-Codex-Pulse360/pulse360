@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/weighted_attribute_resolution",
+  "title": "Pulse360 Weighted Attribute Resolution",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "resolved_entity_id",
+    "attribute_name",
+    "resolved_value",
+    "resolved_value_type",
+    "attribute_confidence",
+    "winning_source_id",
+    "source_contributions",
+    "freshness_status",
+    "review_required_flag",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "resolved_entity_id": {
+      "type": "string",
+      "pattern": "^ent_[A-Za-z0-9_]+$"
+    },
+    "crm_account_id": {
+      "type": "string",
+      "minLength": 15,
+      "maxLength": 18
+    },
+    "attribute_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resolved_value": {
+      "type": ["string", "number", "integer", "boolean", "null"]
+    },
+    "resolved_value_type": {
+      "type": "string",
+      "enum": ["string", "number", "integer", "boolean", "date", "datetime", "json"]
+    },
+    "attribute_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "winning_source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "survivorship_rule": {
+      "type": "string",
+      "enum": [
+        "highest_weight",
+        "most_recent_trusted",
+        "sovereign_source_preferred",
+        "customer_internal_preferred",
+        "model_scored",
+        "manual_override",
+        "no_winner_review_required"
+      ]
+    },
+    "source_contributions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "source_name",
+          "source_type",
+          "candidate_value",
+          "source_weight",
+          "source_confidence",
+          "last_refreshed_at",
+          "citation"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_type": {
+            "type": "string",
+            "enum": [
+              "crm",
+              "national_registry",
+              "commercial_provider",
+              "customer_internal",
+              "internet_research",
+              "clean_room",
+              "model_output",
+              "manual_stewardship"
+            ]
+          },
+          "candidate_value": {
+            "type": ["string", "number", "integer", "boolean", "null"]
+          },
+          "source_weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "source_confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "last_refreshed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "citation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_ref_id", "accessed_at"],
+            "properties": {
+              "source_ref_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "document_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "accessed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "excerpt": {
+                "type": "string"
+              }
+            }
+          },
+          "license_or_contract_reference": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "freshness_status": {
+      "type": "string",
+      "enum": ["fresh", "stale", "expired", "unknown"]
+    },
+    "review_required_flag": {
+      "type": "boolean"
+    },
+    "review_reason": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

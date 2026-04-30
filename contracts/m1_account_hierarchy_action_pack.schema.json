@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/m1_account_hierarchy_action_pack",
+  "title": "Pulse360 M1 Account Hierarchy Action Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "surface_context",
+    "action_type",
+    "target_entity",
+    "crm_safe_execution_key",
+    "recommended_play",
+    "reasoning",
+    "confidence_label",
+    "freshness_label",
+    "evidence_refs",
+    "approval_required",
+    "expected_artifact"
+  ],
+  "properties": {
+    "record_id": { "type": "string", "minLength": 1 },
+    "surface_context": {
+      "type": "string",
+      "enum": [
+        "account_summary",
+        "group_revenue_reveal",
+        "recommended_move",
+        "planner_queue",
+        "signal_routing",
+        "renewal_risk",
+        "governance_review"
+      ]
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "create_task",
+        "route_specialist",
+        "open_entity",
+        "open_opportunity",
+        "escalate_governance",
+        "record_governance_decision"
+      ]
+    },
+    "target_entity": { "type": "string", "minLength": 1 },
+    "target_record_id": { "type": "string" },
+    "crm_safe_execution_key": { "type": "string", "minLength": 1 },
+    "recommended_play": { "type": "string", "minLength": 1 },
+    "reasoning": { "type": "string", "minLength": 1 },
+    "confidence_label": { "type": "string", "minLength": 1 },
+    "freshness_label": { "type": "string", "minLength": 1 },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "source_name", "source_type"],
+        "properties": {
+          "source_id": { "type": "string", "minLength": 1 },
+          "source_name": { "type": "string", "minLength": 1 },
+          "source_type": { "type": "string", "minLength": 1 },
+          "source_url": { "type": "string" },
+          "excerpt": { "type": "string" }
+        }
+      }
+    },
+    "approval_required": { "type": "boolean" },
+    "expected_artifact": {
+      "type": "string",
+      "enum": ["Task", "Opportunity", "AccountNavigation", "Governance_Case__c", "NoMutation"]
+    }
+  }
+}
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Source_Product__c</fullName>
+    <description>Databricks/Data Cloud source product that produced the governance review row.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Identifies whether this case came from duplicate matching, firmographic enrichment, CSP smart-city readiness, or another governed source product.</inlineHelpText>
+    <label>Source Product</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,45 @@
+{
+  "research_document_id": "research_doc_ayala_integrated_report_2024",
+  "source_type": "approved_public_pdf",
+  "source_url": "https://www.ayala.com/investors/reports",
+  "document_title": "Ayala Corporation Integrated Report 2024",
+  "document_date": "2024-12-31",
+  "accessed_at": "2026-04-26T00:00:00Z",
+  "license_or_use_basis": "public-company-investor-report-demo-use",
+  "account_candidate": {
+    "company_name": "Ayala Corporation",
+    "country": "PH",
+    "website_domain": "ayala.com",
+    "resolved_entity_id": "ent_ph_sec_as096_003241",
+    "sovereign_identity_key": "PH|SEC_AS096|003241",
+    "crm_safe_activation_key": null,
+    "identity_confidence": 96
+  },
+  "extracted_facts": [
+    {
+      "fact_type": "financial",
+      "fact_name": "annual_revenue",
+      "fact_value": 176300000000,
+      "fact_value_normalized": 176300000000,
+      "fact_unit": "PHP",
+      "fact_period_start": "2024-01-01",
+      "fact_period_end": "2024-12-31",
+      "source_excerpt": "Approved research fixture: annual revenue fact extracted from governed public-report row.",
+      "extraction_confidence": 0.9
+    },
+    {
+      "fact_type": "hierarchy_hint",
+      "fact_name": "external_subsidiaries_found",
+      "fact_value": 3,
+      "fact_value_normalized": 3,
+      "fact_unit": "count",
+      "fact_period_start": null,
+      "fact_period_end": "2026-04-26",
+      "source_excerpt": "Approved research fixture: group coverage hint extracted from governed public-report row.",
+      "extraction_confidence": 0.82
+    }
+  ],
+  "approval_status": "approved_for_demo",
+  "run_id": "firmographic_research_fixture_run_20260426000000",
+  "run_timestamp": "2026-04-26T00:00:00Z"
+}

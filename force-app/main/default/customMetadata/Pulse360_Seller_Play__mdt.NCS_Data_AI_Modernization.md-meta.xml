@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>NCS Data AI Modernization</label>
+    <protected>false</protected>
+    <values>
+        <field>Match_Keyword__c</field>
+        <value xsi:type="xsd:string">data and ai modernization</value>
+    </values>
+    <values>
+        <field>Target_Entity_Hint__c</field>
+        <value xsi:type="xsd:string">NCS</value>
+    </values>
+    <values>
+        <field>Solution_Family__c</field>
+        <value xsi:type="xsd:string">Data and AI Modernization</value>
+    </values>
+    <values>
+        <field>Recommended_Play__c</field>
+        <value xsi:type="xsd:string">Modernize the enterprise data and AI platform</value>
+    </values>
+    <values>
+        <field>Specialist_Route__c</field>
+        <value xsi:type="xsd:string">Data and AI Specialist</value>
+    </values>
+    <values>
+        <field>Buying_Group_Gap__c</field>
+        <value xsi:type="xsd:string">Enterprise architect, data platform owner, and transformation sponsor</value>
+    </values>
+    <values>
+        <field>Outreach_Objective__c</field>
+        <value xsi:type="xsd:string">Confirm the modernization roadmap and qualify platform scope, timing, and executive sponsor.</value>
+    </values>
+    <values>
+        <field>Match_Priority__c</field>
+        <value xsi:type="xsd:double">80</value>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,32 @@
+{
+  "name": "pulse360-data-layer-closeout-validation job",
+  "email_notifications": {
+    "on_failure": [
+      "dnortje@danielnortje.com"
+    ]
+  },
+  "timeout_seconds": 0,
+  "trigger": {
+    "pause_status": "UNPAUSED",
+    "periodic": {
+      "interval": 6,
+      "unit": "HOURS"
+    }
+  },
+  "tasks": [
+    {
+      "task_key": "validate_data_layer_closeout",
+      "notebook_task": {
+        "notebook_path": "/Shared/pulse360/pulse360-data-layer-closeout/dev/notebooks/databricks/data_layer_closeout_validation_job",
+        "source": "WORKSPACE"
+      },
+      "email_notifications": {
+        "on_failure": [
+          "dnortje@danielnortje.com"
+        ]
+      }
+    }
+  ],
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK"
+}

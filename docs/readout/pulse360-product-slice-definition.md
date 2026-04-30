@@ -5,6 +5,24 @@ Turn the Pulse360 proposition into three delivery-ready product slices that can 
 
 This document keeps the focus on what will change user behavior in the real world, not on abstract positioning or broad implementation planning.
 
+## Current Direction Note
+
+This document remains useful for explaining the earlier stewardship, seller, and planner slice framing.
+
+The current product target has moved forward and should now be read alongside the UX-led realignment package:
+
+- [pulse360-research-led-ux-realignment-program-2026-04-19.md](/Users/danielnortje/Documents/Pulse360/docs/improvements/pulse360-research-led-ux-realignment-program-2026-04-19.md)
+- [pulse360-ux-surface-specification-2026-04-19.md](/Users/danielnortje/Documents/Pulse360/docs/improvements/pulse360-ux-surface-specification-2026-04-19.md)
+- [pulse360-technical-design-derived-from-ux-2026-04-19.md](/Users/danielnortje/Documents/Pulse360/docs/improvements/pulse360-technical-design-derived-from-ux-2026-04-19.md)
+
+That newer package extends the earlier slice framing into explicit product surfaces:
+
+- planner workspace
+- seller workspace
+- signal routing workspace
+- renewal and risk workspace
+- supporting governance and trust flows
+
 ## S4 framing that constrains the slice design
 - The current S4 proof points are already anchored in three scenario families: fragmentation discovery, governance resolution, and Account 360 group insight.
 - Databricks must produce trusted duplicate, hierarchy, enrichment, and governance evidence with lineage and run metadata.

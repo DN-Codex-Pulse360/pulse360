@@ -11,26 +11,51 @@ members_root="$repo_root/config/packages/databricks"
 bundle_slugs=(
   "salesforce-ingestion"
   "account-intelligence-export"
+  "identity-resolution"
+  "firmographic-enrichment"
+  "account-intelligence-sources"
+  "csp-smart-city"
+  "governance-evidence"
 )
 
 bundle_names=(
   "pulse360-salesforce-ingestion"
   "pulse360-account-intelligence-export"
+  "pulse360-identity-resolution"
+  "pulse360-firmographic-enrichment"
+  "pulse360-account-intelligence-sources"
+  "pulse360-csp-smart-city"
+  "pulse360-governance-evidence"
 )
 
 member_files=(
   "salesforce-ingestion.members.txt"
   "account-intelligence-export.members.txt"
+  "identity-resolution.members.txt"
+  "firmographic-enrichment.members.txt"
+  "account-intelligence-sources.members.txt"
+  "csp-smart-city.members.txt"
+  "governance-evidence.members.txt"
 )
 
 validate_scripts=(
   "scripts/validate-databricks-salesforce-sql-pack.sh"
   "scripts/validate-contracts.sh && bash scripts/validate-canonical-exports.sh"
+  "scripts/validate-databricks-identity-resolution-pack.sh && bash scripts/validate-contracts.sh"
+  "scripts/validate-databricks-firmographic-genai-pack.sh && bash scripts/validate-contracts.sh"
+  "scripts/validate-databricks-account-intelligence-sources-pack.sh && bash scripts/validate-contracts.sh"
+  "scripts/validate-databricks-csp-smart-city-pack.sh && bash scripts/validate-contracts.sh"
+  "scripts/validate-databricks-governance-evidence-pack.sh && bash scripts/validate-contracts.sh"
 )
 
 run_orders=(
   "sql/databricks/silver_salesforce/00_create_schema.sql sql/databricks/silver_salesforce/10_crm_account.sql sql/databricks/silver_salesforce/20_crm_contact.sql sql/databricks/silver_salesforce/30_crm_opportunity.sql sql/databricks/silver_salesforce/40_crm_opportunity_contact_role.sql sql/databricks/silver_salesforce/50_crm_product.sql sql/databricks/silver_salesforce/60_crm_opportunity_line_item.sql sql/databricks/silver_salesforce/70_crm_account_contact_bridge.sql sql/databricks/silver_salesforce/80_crm_account_hierarchy_edge.sql"
   "sql/databricks/gold/00_create_schemas.sql sql/databricks/gold/10_account_export_base.sql sql/databricks/gold/20_account_core_export.sql sql/databricks/gold/30_datacloud_export_accounts.sql"
+  "sql/databricks/identity_resolution/00_create_schema.sql sql/databricks/identity_resolution/05_registry_identity_source_sample.sql sql/databricks/identity_resolution/10_identity_source_xref_base.sql sql/databricks/identity_resolution/20_resolved_entity.sql sql/databricks/identity_resolution/30_weighted_attribute_resolution.sql sql/databricks/identity_resolution/40_entity_hierarchy_edge.sql sql/databricks/identity_resolution/50_entity_hierarchy_rollup.sql sql/databricks/identity_resolution/60_m1_account_hierarchy_operational_profile.sql"
+  "sql/databricks/firmographic_enrichment/00_create_bronze_schema.sql sql/databricks/firmographic_enrichment/01_create_silver_schema.sql sql/databricks/firmographic_enrichment/02_create_gold_schema.sql sql/databricks/firmographic_enrichment/05_raw_research_document_sample.sql sql/databricks/firmographic_enrichment/10_firmographic_evidence_sample.sql sql/databricks/firmographic_enrichment/15_extracted_firmographic_fact.sql sql/databricks/firmographic_enrichment/20_firmographic_fact.sql sql/databricks/firmographic_enrichment/30_account_genai_enrichment_output.sql"
+  "sql/databricks/account_intelligence_sources/00_create_schemas.sql sql/databricks/account_intelligence_sources/05_synthetic_enterprise_source_sample.sql sql/databricks/account_intelligence_sources/10_synthetic_source_signal.sql sql/databricks/account_intelligence_sources/20_account_ai_enrichment_output.sql"
+  "sql/databricks/csp_smart_city/00_create_schemas.sql sql/databricks/csp_smart_city/05_smart_city_signal_sample.sql sql/databricks/csp_smart_city/10_smart_city_proposition_readiness.sql"
+  "sql/databricks/governance_evidence/00_create_gold_schema.sql sql/databricks/governance_evidence/10_account_intelligence_governance_evidence.sql sql/databricks/governance_evidence/20_activation_eligibility_review_queue.sql sql/databricks/governance_evidence/30_datacloud_activation_review_queue.sql"
 )
 
 copy_member() {
@@ -69,6 +94,7 @@ emit_bundle_config() {
     echo "    - config/**"
     echo "    - contracts/**"
     echo "    - docs/**"
+    echo "    - notebooks/**"
     echo "    - scripts/**"
     echo "    - dashboards/**"
     echo

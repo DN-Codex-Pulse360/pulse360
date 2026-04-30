@@ -1,0 +1,20 @@
+.shell {
+    display: grid;
+}
+
+.detail-list dt {
+    width: 35%;
+    font-weight: 600;
+}
+
+.detail-list dd {
+    width: 65%;
+    margin-bottom: 0.45rem;
+}
+
+@media (max-width: 768px) {
+    .detail-list dt,
+    .detail-list dd {
+        width: 100%;
+    }
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/genai_firmographic_enrichment_output",
+  "title": "Pulse360 Gen AI Firmographic Enrichment Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "genai_enrichment_id",
+    "evidence_packet_id",
+    "resolved_entity_id",
+    "ai_narrative",
+    "ai_recommended_actions",
+    "llm_result_confidence",
+    "business_action_confidence",
+    "confidence_components",
+    "unsupported_claim_count",
+    "insufficient_evidence_flag",
+    "source_refs",
+    "model_id",
+    "prompt_version",
+    "llm_run_id",
+    "llm_input_hash",
+    "llm_output_hash",
+    "generation_mode",
+    "activation_eligible_flag",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "genai_enrichment_id": { "type": "string", "minLength": 1 },
+    "evidence_packet_id": { "type": "string", "minLength": 1 },
+    "resolved_entity_id": { "type": "string", "pattern": "^ent_[A-Za-z0-9_]+$" },
+    "crm_account_id": { "type": ["string", "null"], "minLength": 15, "maxLength": 18 },
+    "ai_narrative": { "type": "string", "minLength": 1 },
+    "ai_recommended_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rank",
+          "action_type",
+          "target",
+          "reasoning",
+          "confidence",
+          "source_ids"
+        ],
+        "properties": {
+          "rank": { "type": "integer", "minimum": 1 },
+          "action_type": { "type": "string", "minLength": 1 },
+          "target": { "type": "string", "minLength": 1 },
+          "target_record_id": { "type": ["string", "null"] },
+          "reasoning": { "type": "string", "minLength": 1 },
+          "estimated_revenue_impact": { "type": ["string", "null"] },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "source_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "llm_result_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "business_action_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "confidence_components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_reliability_score",
+        "evidence_coverage_score",
+        "corroboration_score",
+        "freshness_score",
+        "extraction_certainty_score",
+        "conflict_penalty",
+        "schema_validation_score",
+        "citation_binding_score",
+        "actionability_score",
+        "crm_anchor_score",
+        "policy_safety_score"
+      ],
+      "properties": {
+        "source_reliability_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence_coverage_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "corroboration_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "freshness_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "extraction_certainty_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "conflict_penalty": { "type": "number", "minimum": 0, "maximum": 1 },
+        "schema_validation_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "citation_binding_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "actionability_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "crm_anchor_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "policy_safety_score": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "unsupported_claim_count": { "type": "integer", "minimum": 0 },
+    "insufficient_evidence_flag": { "type": "boolean" },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "model_id": { "type": "string", "minLength": 1 },
+    "prompt_version": { "type": "string", "minLength": 1 },
+    "llm_run_id": { "type": "string", "minLength": 1 },
+    "llm_input_hash": { "type": "string", "minLength": 1 },
+    "llm_output_hash": { "type": "string", "minLength": 1 },
+    "llm_cost_estimate": { "type": ["number", "null"], "minimum": 0 },
+    "generation_mode": {
+      "type": "string",
+      "enum": ["source_bound_fixture", "batch_llm", "human_reviewed_llm"]
+    },
+    "activation_eligible_flag": { "type": "boolean" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}

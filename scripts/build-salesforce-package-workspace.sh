@@ -86,6 +86,16 @@ without restructuring the primary `force-app` tree.
 - `pulse360-account-intelligence`
 - `pulse360-governance` (depends on `pulse360-account-intelligence`)
 
+## Current Split
+1. `pulse360-account-intelligence`
+   - Account intelligence fields and seller-play metadata
+   - seller workspace runtime and seller execution orchestration
+   - planner, renewal-risk, seller-v2, and signal-routing surfaces
+2. `pulse360-governance`
+   - Governance Case metadata and decision stamping
+   - governance review orchestration and direct-evidence actions
+   - governance review record-page surfaces
+
 ## Typical Flow
 1. Authorize a Dev Hub org.
 2. Create each package once:

@@ -21,5 +21,6 @@ SELECT
   SystemModstamp AS crm_system_modstamp,
   'salesforce' AS source_system
 FROM pulse360_s4.bronze_salesforce.opportunity
+INNER JOIN pulse360_s4.silver_salesforce.crm_account account_anchor
+  ON AccountId = account_anchor.crm_account_id
 WHERE COALESCE(IsDeleted, false) = false;
-

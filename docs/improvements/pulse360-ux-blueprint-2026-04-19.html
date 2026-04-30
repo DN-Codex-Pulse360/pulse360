@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse360 UX Blueprint</title>
+  <style>
+    :root {
+      --ink: #10212d;
+      --muted: #5f7180;
+      --paper: #f4efe5;
+      --card: rgba(255, 255, 255, 0.92);
+      --line: rgba(16, 33, 45, 0.12);
+      --teal: #0b6e69;
+      --teal-soft: #d9f1ed;
+      --orange: #bf5b22;
+      --orange-soft: #fde7d8;
+      --blue: #19568c;
+      --blue-soft: #dfeefa;
+      --sand: #e7ddce;
+      --success: #1b7a46;
+      --warning: #9d5f00;
+      --shadow: 0 22px 55px rgba(16, 33, 45, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(11, 110, 105, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(191, 91, 34, 0.14), transparent 32%),
+        linear-gradient(180deg, #fbf7ef 0%, var(--paper) 100%);
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .hero-card,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 30px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 5vw, 4.5rem);
+      max-width: 10ch;
+    }
+
+    .lede {
+      margin: 18px 0 0;
+      font-size: 1.08rem;
+      line-height: 1.6;
+      max-width: 62ch;
+      color: var(--muted);
+    }
+
+    .hero-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 22px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .hero-list div {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(11, 110, 105, 0.07);
+      border: 1px solid rgba(11, 110, 105, 0.12);
+    }
+
+    .nav-card {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      background:
+        linear-gradient(180deg, rgba(25, 86, 140, 0.07), rgba(255, 255, 255, 0.9)),
+        var(--card);
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 10px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .nav-list a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0 0 28px;
+    }
+
+    .principle {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid var(--line);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 120px;
+    }
+
+    .principle strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.98rem;
+    }
+
+    .section {
+      margin-top: 34px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 64ch;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .surface-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .surface-card {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .surface-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .surface-layout {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 18px;
+    }
+
+    .wireframe {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .wireframe-top {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f9f7f2;
+    }
+
+    .wireframe-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .block {
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .block.summary {
+      background: var(--teal-soft);
+    }
+
+    .block.action {
+      background: var(--orange-soft);
+    }
+
+    .block.evidence {
+      background: var(--blue-soft);
+    }
+
+    .block h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .journey {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .journey-step {
+      padding: 12px 14px;
+      border-left: 4px solid var(--teal);
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      line-height: 1.5;
+    }
+
+    .tone-planner .wireframe-top {
+      background: rgba(25, 86, 140, 0.08);
+    }
+
+    .tone-seller .wireframe-top {
+      background: rgba(11, 110, 105, 0.08);
+    }
+
+    .tone-routing .wireframe-top {
+      background: rgba(191, 91, 34, 0.12);
+    }
+
+    .tone-renewal .wireframe-top {
+      background: rgba(157, 95, 0, 0.1);
+    }
+
+    .footer-note {
+      margin-top: 32px;
+      padding: 20px 22px;
+      border-radius: 20px;
+      background: rgba(16, 33, 45, 0.06);
+      border: 1px solid var(--line);
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1024px) {
+      .hero,
+      .surface-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .principles {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding: 20px 14px 48px;
+      }
+
+      .principles,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .nav-card,
+      .surface-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Pulse360 UX Blueprint</div>
+        <h1>Design the workflow before designing the payload.</h1>
+        <p class="lede">
+          This blueprint translates the revised Pulse360 proposition into four product surfaces that can be reviewed
+          before contracts, LWCs, or orchestration decisions are locked. The design standard is simple: the user should
+          understand what matters, why it matters, and what to do next without a presenter filling the gaps.
+        </p>
+        <div class="hero-list">
+          <div>Altitude 3 is a weighted summary, not a debug panel.</div>
+          <div>Altitude 2 is a comparative operating view, not just a richer account record.</div>
+          <div>Evidence, freshness, and uncertainty are visible before commitment.</div>
+        </div>
+      </div>
+      <aside class="hero-card nav-card">
+        <div class="eyebrow">Review Order</div>
+        <div class="nav-list">
+          <a href="#planner">Planner Workspace</a>
+          <a href="#seller">Seller Workspace</a>
+          <a href="#routing">Signal Routing Workspace</a>
+          <a href="#renewal">Renewal &amp; Risk Workspace</a>
+        </div>
+        <p style="margin:0; color:var(--muted); line-height:1.55;">
+          Use this page in design review sessions together with the markdown research, UX spec, and validation kit.
+        </p>
+      </aside>
+    </section>
+
+    <section class="principles">
+      <div class="principle"><strong>Weighted Summary First</strong>Users start with the most important signal, not the full graph.</div>
+      <div class="principle"><strong>Evidence Before Confidence</strong>Every critical recommendation reveals why the system believes it.</div>
+      <div class="principle"><strong>Action In Place</strong>Insights should end in a real action, not a deferred note.</div>
+      <div class="principle"><strong>Drill-Through, Not Overload</strong>Depth is available, but only on demand.</div>
+      <div class="principle"><strong>Shared Truth, Different Altitudes</strong>The same intelligence appears differently for planners, sellers, SDRs, and CSMs.</div>
+    </section>
+
+    <section class="section" id="planner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Surface 1</div>
+          <h2>Planner Workspace</h2>
+        </div>
+        <p>
+          Leadership needs a comparative planning surface that can change tiering, ownership, and coverage decisions.
+          This cannot be an account page stretched into a dashboard.
+        </p>
+      </div>
+      <div class="card surface-card tone-planner">
+        <div class="surface-meta">
+          <span class="badge">Altitude 2 Default</span>
+          <span class="badge">Persona: Sales VP / RevOps</span>
+          <span class="badge">Outcome: Reprioritize portfolio</span>
+        </div>
+        <div class="surface-layout">
+          <div class="wireframe">
+            <div class="wireframe-top">
+              <strong>Quarterly Coverage Review</strong>
+              <span>240 Accounts · 38 Coverage Gaps · 12 Tier Escalations</span>
+            </div>
+            <div class="wireframe-body">
+              <div class="block summary">
+                <h3>What changed in the book</h3>
+                12 strategic accounts now exceed current tiering because group revenue and subsidiary coverage were understated.
+              </div>
+              <div class="mini-grid">
+                <div class="block">
+                  <h3>Ranked group list</h3>
+                  Group value, ICP, risk, whitespace, coverage, owner.
+                </div>
+                <div class="block action">
+                  <h3>Planning actions</h3>
+                  Reclassify tier, assign owner, sponsor executive attention.
+                </div>
+              </div>
+              <div class="block evidence">
+                <h3>Why the rank moved</h3>
+                Group rollup, hierarchy completeness, uncovered subsidiaries, renewal concentration, freshness.
+              </div>
+            </div>
+          </div>
+          <div class="journey">
+            <div class="journey-step"><strong>Default view:</strong> one portfolio insight, ranked groups, clear action queue.</div>
+            <div class="journey-step"><strong>Drill-through:</strong> group profile, then account workspace, then evidence trail.</div>
+            <div class="journey-step"><strong>Proof of value:</strong> a planner can publish or justify a changed coverage decision without rebuilding slides.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="seller">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Surface 2</div>
+          <h2>Seller Workspace</h2>
+        </div>
+        <p>
+          The seller view must feel like pre-call clarity, not an enriched record. The default screen should answer:
+          what should I know, why does it matter now, and what should I do next?
+        </p>
+      </div>
+      <div class="card surface-card tone-seller">
+        <div class="surface-meta">
+          <span class="badge">Altitude 3 Default</span>
+          <span class="badge">Persona: AE / Relationship Manager</span>
+          <span class="badge">Outcome: Act before or after the call</span>
+        </div>
+        <div class="surface-layout">
+          <div class="wireframe">
+            <div class="wireframe-top">
+              <strong>Account 360</strong>
+              <span>3 Things To Know · 1 Top Move · 1 Committee Gap</span>
+            </div>
+            <div class="wireframe-body">
+              <div class="block summary">
+                <h3>Top three things to know</h3>
+                Group expansion, hidden revenue, and a missing stakeholder path are surfaced in one glance.
+              </div>
+              <div class="block action">
+                <h3>Top recommended move</h3>
+                Introduce Product X to Subsidiary Y, route specialist, or create opportunity with context attached.
+              </div>
+              <div class="mini-grid">
+                <div class="block evidence">
+                  <h3>Why now</h3>
+                  Three supporting facts with citations and freshness.
+                </div>
+                <div class="block">
+                  <h3>Buying committee gap</h3>
+                  Missing stakeholder, role, and outreach route.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="journey">
+            <div class="journey-step"><strong>Default view:</strong> narrative, recommendation, evidence, and action row above the fold.</div>
+            <div class="journey-step"><strong>Drill-through:</strong> hierarchy, whitespace matrix, committee coverage, source detail.</div>
+            <div class="journey-step"><strong>Proof of value:</strong> the seller reaches a credible next move in minutes, not after manual research.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="routing">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Surface 3</div>
+          <h2>Signal Routing Workspace</h2>
+        </div>
+        <p>
+          The proposition promises objective prioritization and routed action. The alert needs enough specificity to be
+          accepted, edited, rejected, or rerouted almost immediately.
+        </p>
+      </div>
+      <div class="card surface-card tone-routing">
+        <div class="surface-meta">
+          <span class="badge">Slack + Salesforce</span>
+          <span class="badge">Persona: SDR / Manager</span>
+          <span class="badge">Outcome: Convert alert to outbound action</span>
+        </div>
+        <div class="surface-layout">
+          <div class="wireframe">
+            <div class="wireframe-top">
+              <strong>Intent Alert</strong>
+              <span>Meridian crossed threshold for data integration</span>
+            </div>
+            <div class="wireframe-body">
+              <div class="block summary">
+                <h3>Why this fired</h3>
+                Third-party intent, first-party engagement, fit score, and territory ownership align.
+              </div>
+              <div class="mini-grid">
+                <div class="block">
+                  <h3>Who to target</h3>
+                  Named contacts, titles, owner, and route.
+                </div>
+                <div class="block action">
+                  <h3>What to do now</h3>
+                  Send, edit, reroute, or reject.
+                </div>
+              </div>
+              <div class="block evidence">
+                <h3>Trust and freshness</h3>
+                Source mix, signal age, routing confidence, and queue context.
+              </div>
+            </div>
+          </div>
+          <div class="journey">
+            <div class="journey-step"><strong>Default view:</strong> alert headline, reason, owner, targets, message preview.</div>
+            <div class="journey-step"><strong>Drill-through:</strong> account context, signal breakdown, territory queue.</div>
+            <div class="journey-step"><strong>Proof of value:</strong> the SDR can act without rebuilding context in Salesforce first.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="renewal">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Surface 4</div>
+          <h2>Renewal &amp; Risk Workspace</h2>
+        </div>
+        <p>
+          The renewal experience only works if it shows movement, drivers, and next intervention clearly enough for a
+          CSM to trust it and for leadership to act earlier than they do today.
+        </p>
+      </div>
+      <div class="card surface-card tone-renewal">
+        <div class="surface-meta">
+          <span class="badge">Account + Queue + Alert</span>
+          <span class="badge">Persona: CSM / CS Leader</span>
+          <span class="badge">Outcome: Launch save motion early</span>
+        </div>
+        <div class="surface-layout">
+          <div class="wireframe">
+            <div class="wireframe-top">
+              <strong>Renewal Monitor</strong>
+              <span>Risk up from 42 to 73 in 3 weeks</span>
+            </div>
+            <div class="wireframe-body">
+              <div class="block summary">
+                <h3>What changed</h3>
+                Support load rose, usage fell, and the champion departed. The user should grasp this immediately.
+              </div>
+              <div class="mini-grid">
+                <div class="block evidence">
+                  <h3>Top drivers</h3>
+                  Cited, time-stamped, and visually separated from weaker signals.
+                </div>
+                <div class="block action">
+                  <h3>Recommended save play</h3>
+                  Executive outreach, owner, deadline, and follow-through.
+                </div>
+              </div>
+              <div class="block">
+                <h3>Portfolio implication</h3>
+                Leadership can see whether risk is isolated or concentrated across the book.
+              </div>
+            </div>
+          </div>
+          <div class="journey">
+            <div class="journey-step"><strong>Default view:</strong> risk movement, top drivers, and top intervention.</div>
+            <div class="journey-step"><strong>Drill-through:</strong> usage, support, champion change, and risk history.</div>
+            <div class="journey-step"><strong>Proof of value:</strong> the CSM can explain and act on risk without calling the data team.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      This blueprint is intentionally surface-first. It should be reviewed before payload families, contracts, or
+      implementation decomposition are finalized. If a technical decision would materially weaken one of these workflows,
+      that disagreement should be documented explicitly instead of silently shrinking the UX.
+    </div>
+  </div>
+</body>
+</html>

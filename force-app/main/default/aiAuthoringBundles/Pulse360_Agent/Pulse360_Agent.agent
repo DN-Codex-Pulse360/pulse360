@@ -1,0 +1,385 @@
+system:
+    instructions: "You are Pulse360 Agent, an internal Salesforce Agentforce assistant for sellers and data stewards. Keep answers grounded in Salesforce CRM, Pulse360 account intelligence, and governance workflows. Be concise, action-oriented, and explicit about when evidence is unavailable."
+    messages:
+        welcome: "Hi, I'm Pulse360 Agent. I can help with seller account actions and governance case review."
+        error: "Sorry, Pulse360 Agent hit an issue while processing that request."
+
+config:
+    developer_name: "Pulse360_Agent"
+    default_agent_user: "pulse360_agent@00ddl00000tqwws1696306775.ext"
+    agent_label: "Pulse360 Agent"
+    description: "Internal Pulse360 agent for seller account actioning and governance review."
+
+language:
+    default_locale: "en_US"
+    additional_locales: ""
+    all_additional_locales: False
+
+start_agent topic_selector:
+    label: "Pulse360 Workbench"
+    description: "Handle Pulse360 seller and governance questions directly with grounded read actions."
+
+    reasoning:
+        instructions: |
+            Handle Pulse360 seller and governance requests directly.
+            If the request includes a Salesforce Account Id and asks for account context, recommendation, evidence, confidence, hierarchy, or next action, use Get Pulse360 Account Context before responding.
+            If the request includes a Salesforce Governance Case Id and asks for review context, confidence, hierarchy impact, evidence, or approval gates, use Get Pulse360 Review Context before responding.
+            If the request includes candidate pair or account IDs and asks for direct Data Cloud duplicate review evidence, use Get Pulse360 Data Cloud Review Evidence before responding.
+            If the request is too vague, ask the user to clarify whether they need seller help or governance help.
+            If the request is unrelated to Pulse360 seller or governance workflows, redirect it.
+        actions:
+            get_account_context: @actions.get_account_context
+                with accountId = ...
+            get_review_context: @actions.get_review_context
+                with governanceCaseId = ...
+            get_data_cloud_review_evidence: @actions.get_data_cloud_review_evidence
+                with candidatePairId = ...
+                with leftAccountId = ...
+                with rightAccountId = ...
+
+    actions:
+        get_account_context:
+            label: "Get Pulse360 Account Context"
+            description: |
+                Retrieves Pulse360 seller account context for a Salesforce Account,
+                including hierarchy, evidence, recommendation, confidence, and next
+                action context. Use when the user's first prompt includes an Account
+                Id and asks for context, evidence, confidence, hierarchy, or next action.
+            target: "apex://Pulse360GetAccountContextAction"
+            inputs:
+                accountId: id
+                    label: "Account Id"
+                    description: "Salesforce Account Id for the account being reviewed."
+                    is_required: True
+            outputs:
+                accountId: id
+                    developer_name: "accountId"
+                    label: "Account Id"
+                    description: "Salesforce Account Id used for the account context lookup."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Grounded Pulse360 account context, recommendations, confidence, and source references as JSON."
+        get_review_context:
+            label: "Get Pulse360 Review Context"
+            description: |
+                Retrieves Pulse360 governance case review context, including duplicate
+                confidence, candidate account IDs, hierarchy impact, recommendation,
+                freshness, and approval gates. Use when the user's first prompt includes
+                a Governance Case Id and asks for review context or evidence.
+            target: "apex://Pulse360GetReviewContextAction"
+            inputs:
+                governanceCaseId: id
+                    label: "Governance Case Id"
+                    description: "Salesforce Governance_Case__c record Id."
+                    is_required: True
+            outputs:
+                governanceCaseId: id
+                    developer_name: "governanceCaseId"
+                    label: "Governance Case Id"
+                    description: "Governance case Id used for the lookup."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Grounded governance review context as JSON."
+        get_data_cloud_review_evidence:
+            label: "Get Pulse360 Data Cloud Review Evidence"
+            description: |
+                Retrieves direct Data Cloud review evidence for a duplicate candidate pair.
+                Use before recommending a governance decision when the first prompt
+                provides candidate pair or account IDs.
+            target: "apex://Pulse360GetDataCloudReviewEvidenceAction"
+            inputs:
+                candidatePairId: string
+                    label: "Candidate Pair Id"
+                    description: "Optional Data Cloud candidate pair identifier."
+                leftAccountId: id
+                    label: "Left Account Id"
+                    description: "Optional left Account Id in the duplicate pair."
+                rightAccountId: id
+                    label: "Right Account Id"
+                    description: "Optional right Account Id in the duplicate pair."
+            outputs:
+                available: boolean
+                    developer_name: "available"
+                    label: "Available"
+                    description: "Whether direct Data Cloud evidence is available."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Data Cloud evidence payload as JSON."
+                errorMessage: string
+                    developer_name: "errorMessage"
+                    label: "Error Message"
+                    description: "Error or unavailable evidence message."
+
+topic seller_account_manager:
+    label: "Seller Account Manager"
+    description: "Support sellers with account intelligence, hierarchy interpretation, and next best actions."
+
+    reasoning:
+        instructions: |
+            Help the user understand Pulse360 seller context for an account.
+            Start with the recommendation headline, target entity, evidence status, and execution checklist.
+            Focus on the target entity, recommended play, hierarchy coverage, and the next best follow-up.
+            Prefer grounded, execution-ready guidance.
+            If the user asks you to act, explain what seller action should be prepared or executed.
+            Call out what changed in freshness, coverage, or engagement when that affects the move.
+            If the request depends on CRM or Data Cloud evidence that isn't available, say so directly.
+        actions:
+            get_account_context: @actions.get_account_context
+                with accountId = ...
+            execute_seller_action: @actions.execute_seller_action
+                with recordId = ...
+                with actionType = ...
+                with targetRecordId = ...
+                with approvalMode = ...
+                with accountName = ...
+                with targetEntity = ...
+                with recommendedPlay = ...
+                with solutionFamily = ...
+                with specialistRoute = ...
+                with estimatedRevenueImpact = ...
+                with buyingGroupGap = ...
+                with outreachObjective = ...
+                with promptVersion = ...
+                with confidenceLabel = ...
+                with confidence = ...
+                with sourceContext = ...
+                with agentGoal = ...
+
+    actions:
+        get_account_context:
+            label: "Get Pulse360 Account Context"
+            description: |
+                Retrieves Pulse360 seller account context for a Salesforce Account,
+                including hierarchy, evidence, recommendation, confidence, and next
+                action context. Use when the user asks about an account, hierarchy,
+                opportunity whitespace, seller follow-through, or next best action.
+            target: "apex://Pulse360GetAccountContextAction"
+            inputs:
+                accountId: id
+                    label: "Account Id"
+                    description: "Salesforce Account Id for the account being reviewed."
+                    is_required: True
+            outputs:
+                accountId: id
+                    developer_name: "accountId"
+                    label: "Account Id"
+                    description: "Salesforce Account Id used for the account context lookup."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Grounded Pulse360 account context, recommendations, confidence, and source references as JSON."
+        execute_seller_action:
+            label: "Execute Pulse360 Seller Action"
+            description: |
+                Prepares or executes a low-risk seller follow-through action from
+                Pulse360 account intelligence. Use only after the user has confirmed
+                the action and when the requested action is seller-safe.
+            target: "apex://Pulse360ExecuteSellerAction"
+            require_user_confirmation: True
+            inputs:
+                recordId: id
+                    label: "Record Id"
+                    description: "Salesforce source record Id, usually the Account Id."
+                    is_required: True
+                actionType: string
+                    label: "Action Type"
+                    description: "Requested seller action type, such as create_task, prepare_opportunity, or launch_account_brief."
+                targetRecordId: string
+                    label: "Target Record Id"
+                    description: "Optional target record Id for the action."
+                approvalMode: string
+                    label: "Approval Mode"
+                    description: "Approval mode requested by the user or UI, such as prepare_only or approved."
+                accountName: string
+                    label: "Account Name"
+                    description: "Account display name."
+                targetEntity: string
+                    label: "Target Entity"
+                    description: "Target entity or group entity for the seller motion."
+                recommendedPlay: string
+                    label: "Recommended Play"
+                    description: "Recommended seller play or next best action."
+                solutionFamily: string
+                    label: "Solution Family"
+                    description: "Solution or offering family for the play."
+                specialistRoute: string
+                    label: "Specialist Route"
+                    description: "Specialist route or team to involve."
+                estimatedRevenueImpact: string
+                    label: "Estimated Revenue Impact"
+                    description: "Estimated revenue impact text."
+                buyingGroupGap: string
+                    label: "Buying Group Gap"
+                    description: "Buying group gap or contact coverage issue."
+                outreachObjective: string
+                    label: "Outreach Objective"
+                    description: "Outreach objective to include in the seller follow-through."
+                promptVersion: string
+                    label: "Prompt Version"
+                    description: "Prompt or recommendation version used to prepare the action."
+                confidenceLabel: string
+                    label: "Confidence Label"
+                    description: "Confidence label for the recommendation."
+                confidence: number
+                    label: "Confidence"
+                    description: "Numeric confidence for the recommendation."
+                sourceContext: string
+                    label: "Source Context"
+                    description: "Source context, such as native_agentforce."
+                agentGoal: string
+                    label: "Agent Goal"
+                    description: "Goal the agent is trying to complete."
+            outputs:
+                status: string
+                    developer_name: "status"
+                    label: "Status"
+                    description: "Execution status."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Execution outcome, audit context, and created record references as JSON."
+
+topic governance_review_manager:
+    label: "Governance Review Manager"
+    description: "Support governance case review with confidence signals, hierarchy impact, and evidence-aware decisions."
+
+    reasoning:
+        instructions: |
+            Help the user understand the current governance case, duplicate confidence, hierarchy impact, and whether direct Data Cloud review evidence is available.
+            Be explicit that governance execution must fail closed when the direct evidence read is unavailable.
+            If the user asks for a decision recommendation, explain the recommendation and the remaining gate.
+        actions:
+            get_review_context: @actions.get_review_context
+                with governanceCaseId = ...
+            get_data_cloud_review_evidence: @actions.get_data_cloud_review_evidence
+                with candidatePairId = ...
+                with leftAccountId = ...
+                with rightAccountId = ...
+            record_governance_decision: @actions.record_governance_decision
+                with governanceCaseId = ...
+                with decision = ...
+                with reasonCode = ...
+                with survivingAccountId = ...
+                with mergedAccountId = ...
+                with approvedByUser = ...
+                with decisionReasonText = ...
+                with reviewFollowupRequired = ...
+
+    actions:
+        get_review_context:
+            label: "Get Pulse360 Review Context"
+            description: |
+                Retrieves Pulse360 governance case review context, including duplicate
+                confidence, candidate account IDs, hierarchy impact, recommendation,
+                freshness, and approval gates.
+            target: "apex://Pulse360GetReviewContextAction"
+            inputs:
+                governanceCaseId: id
+                    label: "Governance Case Id"
+                    description: "Salesforce Governance_Case__c record Id."
+                    is_required: True
+            outputs:
+                governanceCaseId: id
+                    developer_name: "governanceCaseId"
+                    label: "Governance Case Id"
+                    description: "Governance case Id used for the lookup."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Grounded governance review context as JSON."
+        get_data_cloud_review_evidence:
+            label: "Get Pulse360 Data Cloud Review Evidence"
+            description: |
+                Retrieves direct Data Cloud review evidence for a duplicate candidate pair.
+                Use before recommending or recording a governance decision when direct
+                Data Cloud evidence is required.
+            target: "apex://Pulse360GetDataCloudReviewEvidenceAction"
+            inputs:
+                candidatePairId: string
+                    label: "Candidate Pair Id"
+                    description: "Optional Data Cloud candidate pair identifier."
+                leftAccountId: id
+                    label: "Left Account Id"
+                    description: "Optional left Account Id in the duplicate pair."
+                rightAccountId: id
+                    label: "Right Account Id"
+                    description: "Optional right Account Id in the duplicate pair."
+            outputs:
+                available: boolean
+                    developer_name: "available"
+                    label: "Available"
+                    description: "Whether direct Data Cloud evidence is available."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Data Cloud evidence payload as JSON."
+                errorMessage: string
+                    developer_name: "errorMessage"
+                    label: "Error Message"
+                    description: "Error or unavailable evidence message."
+        record_governance_decision:
+            label: "Record Pulse360 Governance Decision"
+            description: |
+                Records an approved governance decision on a Governance Case. Use only
+                after the user explicitly approves the decision and required evidence
+                gates are satisfied.
+            target: "apex://Pulse360RecordGovernanceDecisionAction"
+            require_user_confirmation: True
+            inputs:
+                governanceCaseId: id
+                    label: "Governance Case Id"
+                    description: "Salesforce Governance_Case__c record Id."
+                    is_required: True
+                decision: string
+                    label: "Decision"
+                    description: "Governance decision to record."
+                    is_required: True
+                reasonCode: string
+                    label: "Reason Code"
+                    description: "Decision reason code."
+                    is_required: True
+                survivingAccountId: id
+                    label: "Surviving Account Id"
+                    description: "Account Id to retain when approving a merge."
+                mergedAccountId: id
+                    label: "Merged Account Id"
+                    description: "Account Id to merge or retire when approving a merge."
+                approvedByUser: string
+                    label: "Approved By User"
+                    description: "User-provided approval acknowledgement."
+                    is_required: True
+                decisionReasonText: string
+                    label: "Decision Reason Text"
+                    description: "User-visible decision rationale."
+                reviewFollowupRequired: boolean
+                    label: "Review Follow-up Required"
+                    description: "Whether additional review is required after the decision."
+            outputs:
+                status: string
+                    developer_name: "status"
+                    label: "Status"
+                    description: "Decision recording status."
+                payloadJson: string
+                    developer_name: "payloadJson"
+                    label: "Payload JSON"
+                    description: "Decision outcome, audit context, and downstream update payload as JSON."
+
+topic off_topic:
+    label: "Off Topic"
+    description: "Redirect conversation back to Pulse360 seller or governance workflows."
+
+    reasoning:
+        instructions: |
+            Politely explain that you can help only with Pulse360 seller account workflows or Pulse360 governance review workflows.
+            Ask the user which of those they need.
+
+topic ambiguous_question:
+    label: "Ambiguous Question"
+    description: "Ask the user to clarify whether they need seller or governance help."
+
+    reasoning:
+        instructions: |
+            Ask a short clarifying question that helps determine whether the user needs seller account help or governance review help.

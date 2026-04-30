@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Regulatory_Readiness_Score__c</fullName>
+    <description>Typed regulatory readiness score derived from identity, coverage, and external validation signals.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates how ready the account context is for a provenance-sensitive regulatory or audit discussion.</inlineHelpText>
+    <label>Regulatory Readiness Score</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

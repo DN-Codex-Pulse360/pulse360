@@ -1,0 +1,33 @@
+{
+  "name": "pulse360-salesforce-governance-feedback job",
+  "email_notifications": {
+    "on_failure": [
+      "dnortje@danielnortje.com"
+    ]
+  },
+  "timeout_seconds": 0,
+  "trigger": {
+    "pause_status": "UNPAUSED",
+    "periodic": {
+      "interval": 6,
+      "unit": "HOURS"
+    }
+  },
+  "tasks": [
+    {
+      "task_key": "pulse360-salesforce-governance-feedback_job",
+      "run_if": "ALL_SUCCESS",
+      "pipeline_task": {
+        "pipeline_id": "ec14746b-16ef-4f85-8ae9-ca54f39de944"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {
+        "on_failure": [
+          "dnortje@danielnortje.com"
+        ]
+      }
+    }
+  ],
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK"
+}

@@ -1,0 +1,130 @@
+:host {
+    --pulse-ink: #16303b;
+    --pulse-copy: #35515d;
+    display: block;
+    color: var(--pulse-ink);
+}
+
+.surface {
+    border-radius: 1.5rem;
+    border: 1px solid #d8d0c0;
+    background: #fffdf8;
+    box-shadow: 0 16px 36px rgba(22, 48, 59, 0.08);
+    padding: 1.5rem;
+}
+
+.section-title {
+    margin: 0.2rem 0 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+}
+
+.eyebrow,
+.detail-label,
+.metric-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.section-copy,
+.metric-help {
+    margin: 0;
+    color: var(--pulse-copy);
+    line-height: 1.5;
+}
+
+.summary-chip-row {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    margin-top: 1rem;
+}
+
+.summary-chip {
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid #d8d0c0;
+    background: linear-gradient(180deg, #fffdf8 0%, #f5f1e8 100%);
+}
+
+.summary-chip_warning {
+    background: linear-gradient(180deg, #fff6e8 0%, #fbebc9 100%);
+}
+
+.summary-chip_accent {
+    background: linear-gradient(180deg, #fff3ef 0%, #f7ddcf 100%);
+}
+
+.summary-chip_negative {
+    background: linear-gradient(180deg, #fff1f1 0%, #f3d4d4 100%);
+}
+
+.summary-chip_positive {
+    background: linear-gradient(180deg, #f4fbf7 0%, #dcefe6 100%);
+}
+
+.metric-value {
+    margin-top: 0.25rem;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.analytics-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    margin-top: 1rem;
+}
+
+.analytic-card {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: #f7f4ec;
+}
+
+.analytic-row + .analytic-row {
+    margin-top: 0.85rem;
+}
+
+.analytic-copy {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+}
+
+.analytic-bar {
+    height: 0.6rem;
+    border-radius: 999px;
+    background: rgba(22, 48, 59, 0.08);
+    overflow: hidden;
+}
+
+.analytic-bar span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+}
+
+.warning {
+    background: #d08a2b;
+}
+
+.accent {
+    background: #b85c38;
+}
+
+.negative {
+    background: #9f3131;
+}
+
+.soft {
+    background: #b8ad97;
+}
+
+.neutral {
+    background: #35515d;
+}

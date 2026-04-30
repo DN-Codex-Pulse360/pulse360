@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Buying_Group_Gap__c</fullName>
+    <description>Guidance about which buying-group roles appear missing for the matched seller play.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Buying Group Gap</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

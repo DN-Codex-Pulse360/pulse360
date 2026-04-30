@@ -1,0 +1,6 @@
+sql/databricks/csp_smart_city
+contracts/csp_smart_city_proposition_signal.schema.json
+data/samples/csp_smart_city_proposition_signal_sample.json
+docs/planning/pulse360-csp-smart-city-pivot-2026-04-27.md
+scripts/validate-databricks-csp-smart-city-pack.sh
+

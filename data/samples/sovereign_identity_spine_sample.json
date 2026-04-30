@@ -1,0 +1,45 @@
+{
+  "resolved_entity_id": "ent_ph_sec_as096003241",
+  "sovereign_identity_key": "PH|SEC|AS096-003241|CEBU CEMENT HOLDINGS INC",
+  "country_of_incorporation": "PH",
+  "national_id_type": "SEC",
+  "national_id_value": "AS096-003241",
+  "registered_legal_name": "Cebu Cement Holdings Inc.",
+  "normalized_legal_name": "CEBU CEMENT HOLDINGS INC",
+  "identity_resolution_method": "deterministic_sovereign_id",
+  "identity_confidence": 99.0,
+  "crm_account_ids": ["001Hx000003bQ9AIAU"],
+  "primary_crm_account_id": "001Hx000003bQ9AIAU",
+  "source_identifiers": [
+    {
+      "source_system": "national_registry_ph_sec",
+      "source_identifier_type": "SEC",
+      "source_identifier_value": "AS096-003241",
+      "is_identity_anchor": true,
+      "source_confidence": 99.0,
+      "last_refreshed_at": "2026-04-24T00:00:00Z",
+      "source_url": "https://example.invalid/ph-sec/company/AS096-003241"
+    },
+    {
+      "source_system": "salesforce_crm",
+      "source_identifier_type": "Account.Id",
+      "source_identifier_value": "001Hx000003bQ9AIAU",
+      "is_identity_anchor": false,
+      "source_confidence": 90.0,
+      "last_refreshed_at": "2026-04-24T00:00:00Z"
+    }
+  ],
+  "match_features": [
+    {
+      "feature_name": "registered_legal_name",
+      "feature_value": "exact_normalized_match",
+      "feature_weight": 0.35,
+      "feature_explanation": "CRM legal name matches the normalized registry legal name."
+    }
+  ],
+  "review_required_flag": false,
+  "review_reason": "",
+  "run_id": "run_20260424_identity_001",
+  "run_timestamp": "2026-04-24T00:00:00Z",
+  "model_version": "sovereign-identity-v1"
+}

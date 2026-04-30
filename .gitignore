@@ -4,3 +4,7 @@
 __pycache__/
 *.pyc
 build/
+.playwright-cli/
+.sf/
+.sfdx/
+output/

@@ -1,5 +1,5 @@
 canonical_account_id,product_id,master_product_id,bundle_product_id,brand_id,brand_name,relationship_type,is_active,run_id,run_timestamp,model_version
-acc_canon_001,prd_wm_001,mprd_wealth_platform,bndl_advisory_plus,brand_pacific,Pacific Capital,OWNED,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
-acc_canon_001,prd_trd_002,mprd_trading_suite,,brand_pacific,Pacific Capital,INSTALLED_BASE,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
-acc_canon_002,prd_adm_003,mprd_wealth_platform,,brand_pacific,Pacific Capital,INTERESTED,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
-acc_canon_003,prd_rsk_004,mprd_risk_engine,bndl_risk_controls,brand_pacific,Pacific Capital,PURCHASED,true,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_singtel_001,prd_sgt_001,mprd_group_connectivity,bndl_enterprise_fabric,brand_singtel,Singtel Enterprise,OWNED,true,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0
+acc_singtel_002,prd_ncs_002,mprd_data_ai_modernization,,brand_ncs,NCS,INSTALLED_BASE,true,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0
+acc_ayala_001,prd_aya_003,mprd_customer_data_cloud,,brand_ayala,Ayala Digital Ventures,INTERESTED,true,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0
+acc_jgs_001,prd_jgs_004,mprd_rewards_analytics,bndl_digital_growth,brand_gotyme,GoTyme,INTERESTED,true,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0

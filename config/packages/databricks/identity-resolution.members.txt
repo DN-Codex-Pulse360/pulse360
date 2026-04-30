@@ -1,0 +1,10 @@
+sql/databricks/identity_resolution
+contracts/sovereign_identity_spine.schema.json
+contracts/registry_identity_source.schema.json
+contracts/weighted_attribute_resolution.schema.json
+data/samples/registry_identity_source_sample.json
+data/samples/sovereign_identity_spine_sample.json
+data/samples/weighted_attribute_resolution_sample.json
+docs/planning/pulse360-revops-intelligence-feasible-architecture-decision-stack-2026-04-24.md
+docs/setup/databricks-identity-resolution-runbook.md
+scripts/validate-databricks-identity-resolution-pack.sh

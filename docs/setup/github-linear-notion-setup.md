@@ -28,3 +28,13 @@
    - 06 Decision Log and ADRs
    - 07 Security and Compliance
 4. Closure rule: each closed issue updates at least one Notion page.
+
+## Codex Hosted Connector Checks
+
+Before relying on GitHub, Linear, or Notion from Codex:
+
+1. Run `./scripts/check-codex-operator-health.sh`
+2. If Linear or Notion auth is stale, run:
+   - `./scripts/repair-hosted-mcp-auth.sh linear`
+   - `./scripts/repair-hosted-mcp-auth.sh notion`
+3. If Codex CLI auth is healthy but plugin-backed tools still fail, restart the Codex desktop app to refresh the hosted connector session

@@ -1,0 +1,167 @@
+{
+  "source_pack_id": "synthetic_pack_revops_foundation_20260426",
+  "scenario_id": "priority1_account_intelligence_cycle",
+  "synthetic_flag": true,
+  "generation_seed": "pulse360-priority1-seed-20260426",
+  "source_records": [
+    {
+      "source_record_id": "erp_invoice_apac_001",
+      "source_family": "erp",
+      "source_system_name": "Synthetic ERP Billing",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "invoice_posted",
+      "event_timestamp": "2026-04-20T09:15:00Z",
+      "business_object_id": "INV-APAC-10001",
+      "source_confidence": 0.94,
+      "source_payload": {
+        "billing_entity": "Global Medical Asia Pte Ltd",
+        "product_family": "Revenue Cloud",
+        "invoice_amount_usd": 185000,
+        "payment_status": "paid"
+      },
+      "edge_case_tags": [
+        "billing_entity_name_differs_from_crm_account"
+      ]
+    },
+    {
+      "source_record_id": "epm_forecast_apac_001",
+      "source_family": "epm",
+      "source_system_name": "Synthetic EPM Forecast",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "forecast_gap_detected",
+      "event_timestamp": "2026-04-21T03:00:00Z",
+      "business_object_id": "FCAST-APAC-Q2-10001",
+      "source_confidence": 0.9,
+      "source_payload": {
+        "territory": "APAC Health",
+        "plan_amount_usd": 1200000,
+        "forecast_amount_usd": 850000,
+        "coverage_gap_usd": 350000
+      },
+      "edge_case_tags": [
+        "coverage_gap_requires_cross_source_confirmation"
+      ]
+    },
+    {
+      "source_record_id": "support_case_apac_001",
+      "source_family": "support",
+      "source_system_name": "Synthetic Support Cloud",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "sla_breach",
+      "event_timestamp": "2026-04-22T14:30:00Z",
+      "business_object_id": "CASE-APAC-7788",
+      "source_confidence": 0.88,
+      "source_payload": {
+        "severity": "high",
+        "sla_breach_hours": 11,
+        "affected_product": "Service Cloud",
+        "renewal_risk_hint": "medium"
+      },
+      "edge_case_tags": [
+        "negative_signal_should_temper_expansion_action"
+      ]
+    },
+    {
+      "source_record_id": "contract_renewal_apac_001",
+      "source_family": "contracts",
+      "source_system_name": "Synthetic Contract Repository",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "renewal_window_open",
+      "event_timestamp": "2026-04-19T00:00:00Z",
+      "business_object_id": "CTR-APAC-2026-04",
+      "source_confidence": 0.93,
+      "source_payload": {
+        "renewal_date": "2026-07-31",
+        "contract_value_usd": 920000,
+        "auto_renewal": false,
+        "co_termination_candidate": true
+      },
+      "edge_case_tags": [
+        "renewal_action_depends_on_support_risk"
+      ]
+    },
+    {
+      "source_record_id": "telemetry_usage_apac_001",
+      "source_family": "product_telemetry",
+      "source_system_name": "Synthetic Product Telemetry",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "adoption_increase",
+      "event_timestamp": "2026-04-23T08:00:00Z",
+      "business_object_id": "USAGE-APAC-001",
+      "source_confidence": 0.91,
+      "source_payload": {
+        "active_users_30d": 640,
+        "active_users_delta_pct": 0.22,
+        "feature_family": "case deflection",
+        "feature_exposure_pct": 0.68
+      },
+      "edge_case_tags": [
+        "adoption_supports_expansion_but_not_without_contract_context"
+      ]
+    },
+    {
+      "source_record_id": "intent_campaign_apac_001",
+      "source_family": "marketing_intent",
+      "source_system_name": "Synthetic Marketing Intent",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "topic_surge",
+      "event_timestamp": "2026-04-24T05:00:00Z",
+      "business_object_id": "INTENT-APAC-AI-001",
+      "source_confidence": 0.77,
+      "source_payload": {
+        "topic": "AI service automation",
+        "engagement_score": 82,
+        "campaign_members": 6,
+        "buying_committee_hint": "service operations"
+      },
+      "edge_case_tags": [
+        "intent_signal_lower_reliability_than_system_of_record"
+      ]
+    },
+    {
+      "source_record_id": "hierarchy_internal_apac_001",
+      "source_family": "internal_hierarchy",
+      "source_system_name": "Synthetic Enterprise Master Data",
+      "entity_key": "acct_global_medical_asia",
+      "crm_account_id": "001dL00000SYN001QAA",
+      "event_type": "subsidiary_mapping",
+      "event_timestamp": "2026-04-18T00:00:00Z",
+      "business_object_id": "HIER-GLOBAL-MED-ASIA",
+      "source_confidence": 0.96,
+      "source_payload": {
+        "ultimate_parent": "Global Medical Holdings",
+        "regional_parent": "Global Medical Asia Pte Ltd",
+        "subsidiary_count": 4,
+        "crm_covered_subsidiary_count": 2
+      },
+      "edge_case_tags": [
+        "subsidiary_gap_should_create_stewardship_review"
+      ]
+    }
+  ],
+  "expected_ground_truth": {
+    "resolved_entity_id": "ent_global_medical_asia",
+    "crm_account_id": "001dL00000SYN001QAA",
+    "expected_signals": [
+      "renewal_risk_medium",
+      "expansion_propensity_high",
+      "coverage_gap_present",
+      "support_risk_present"
+    ],
+    "expected_activation_state": "review_required",
+    "known_edge_cases": [
+      "billing entity differs from CRM account name",
+      "positive usage and intent signals are offset by high-severity support risk",
+      "subsidiary gap requires stewardship before activation"
+    ]
+  },
+  "run_id": "synthetic_enterprise_source_pack_run_20260426000000",
+  "run_timestamp": "2026-04-26T00:00:00Z",
+  "model_version": "synthetic-enterprise-source-pack-v1"
+}

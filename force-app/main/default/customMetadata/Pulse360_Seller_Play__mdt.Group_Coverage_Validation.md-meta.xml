@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Group Coverage Validation</label>
+    <protected>false</protected>
+    <values>
+        <field>Match_Keyword__c</field>
+        <value xsi:type="xsd:string">group hierarchy</value>
+    </values>
+    <values>
+        <field>Target_Entity_Hint__c</field>
+        <value xsi:type="xsd:string">Group coverage review</value>
+    </values>
+    <values>
+        <field>Solution_Family__c</field>
+        <value xsi:type="xsd:string">Strategic Account Planning</value>
+    </values>
+    <values>
+        <field>Recommended_Play__c</field>
+        <value xsi:type="xsd:string">Validate hierarchy, ownership, and whitespace coverage</value>
+    </values>
+    <values>
+        <field>Specialist_Route__c</field>
+        <value xsi:type="xsd:string">Strategic Account Planning</value>
+    </values>
+    <values>
+        <field>Buying_Group_Gap__c</field>
+        <value xsi:type="xsd:string">Regional account owner, group sponsor, and planning lead</value>
+    </values>
+    <values>
+        <field>Outreach_Objective__c</field>
+        <value xsi:type="xsd:string">Confirm missing entities, owner coverage, and the next planning review needed to operationalize the group view.</value>
+    </values>
+    <values>
+        <field>Match_Priority__c</field>
+        <value xsi:type="xsd:double">60</value>
+    </values>
+</CustomMetadata>

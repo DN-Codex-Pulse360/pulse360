@@ -1,0 +1,93 @@
+version: 1
+target_org_alias: pulse360-agent-target
+default_capability_state: runtime_unproven
+fallback_surface: custom Salesforce LWC/Apex assistant and action panels
+official_references:
+  - name: Agentforce actions
+    url: https://developer.salesforce.com/docs/ai/agentforce/guide/ascript-ref-actions.html
+  - name: Citations in Apex
+    url: https://developer.salesforce.com/docs/einstein/genai/guide/citations.html
+  - name: Citation Apex classes
+    url: https://developer.salesforce.com/docs/einstein/genai/references/citations/citations-reference.html
+  - name: Einstein and Agentforce setup
+    url: https://developer.salesforce.com/docs/einstein/genai/guide/org-setup.html
+  - name: Models API Trust Layer routing
+    url: https://developer.salesforce.com/docs/ai/agentforce/guide/models-api.html
+  - name: Einstein Trust Layer
+    url: https://developer.salesforce.com/docs/ai/agentforce/guide/trust.html
+gates:
+  - gate: data_360_ready
+    required: true
+    acceptance_evidence: Data 360 provisioned and available for Trust Layer dependencies.
+    failure_behavior: Do not claim native Agentforce runtime.
+  - gate: einstein_enabled
+    required: true
+    acceptance_evidence: Einstein generative AI enabled in the target org.
+    failure_behavior: Use custom assistant panel only.
+  - gate: trust_layer_configured
+    required: true
+    acceptance_evidence: Trust Layer setup reviewed for masking, audit, grounding, and policy settings.
+    failure_behavior: Block generated response acceptance.
+  - gate: agent_metadata_deployed
+    required: true
+    acceptance_evidence: AiAuthoringBundle and agent metadata deployed to target org.
+    failure_behavior: Treat as source metadata only.
+  - gate: agent_user_bound
+    required: true
+    acceptance_evidence: default_agent_user exists, is active, and has intended permissions.
+    failure_behavior: Block runtime claim.
+  - gate: native_surface_visible
+    required: true
+    acceptance_evidence: Intended user sees native Agentforce surface in the target page or app.
+    failure_behavior: Use custom LWC assistant fallback.
+  - gate: actions_registered
+    required: true
+    acceptance_evidence: Apex, Flow, or prompt actions are registered and callable by the agent.
+    failure_behavior: Do not claim action-driving agent behavior.
+  - gate: citations_supported
+    required: true
+    acceptance_evidence: Native citation-capable action path is verified, or fallback source_refs are rendered.
+    failure_behavior: Mark native citations unavailable and show fallback source refs.
+  - gate: approval_policy_enforced
+    required: true
+    acceptance_evidence: Mutating actions require explicit confirmation or approval.
+    failure_behavior: Block mutating actions.
+  - gate: audit_artifacts_written
+    required: true
+    acceptance_evidence: User, model, prompt, source, approval, and audit event context is captured.
+    failure_behavior: Mark response not acceptance-ready.
+mutating_actions:
+  low_risk_auto_executable:
+    - create_task
+    - route_specialist
+  approval_required:
+    - open_opportunity
+    - create_opportunity
+    - record_governance_decision
+citation_required_fields:
+  - source_id
+  - source_name
+  - source_type
+  - source_object_api_name
+  - source_object_record_id
+  - source_url
+  - excerpt
+  - accessed_at
+  - document_date
+  - jurisdiction
+trust_audit_required_fields:
+  - user_id
+  - surface_context
+  - record_id
+  - action_type
+  - prompt_version
+  - model_id
+  - enrichment_run_id
+  - source_ids
+  - generated_at
+  - approval_required
+  - approval_state
+  - audit_event_id
+  - trust_layer_status
+  - masked_field_policy
+

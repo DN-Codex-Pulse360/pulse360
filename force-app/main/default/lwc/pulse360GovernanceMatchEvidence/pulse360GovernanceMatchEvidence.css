@@ -1,0 +1,73 @@
+.shell {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.account-pair-grid,
+.content-grid,
+.external-evidence-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.account-card,
+.section-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.9rem;
+    padding: 1rem;
+}
+
+.eyebrow {
+    color: #5c5c5c;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.account-name {
+    color: #032d60;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0.3rem;
+}
+
+.copy {
+    color: #3e3e3c;
+    margin: 0 0 0.5rem;
+    white-space: pre-wrap;
+}
+
+.detail-list dt {
+    width: 35%;
+    font-weight: 600;
+}
+
+.detail-list dd {
+    width: 65%;
+    margin-bottom: 0.4rem;
+}
+
+.section-header {
+    margin-bottom: 0.7rem;
+}
+
+.section-kicker {
+    color: #5c5c5c;
+    margin-top: 0.2rem;
+}
+
+@media (max-width: 768px) {
+    .account-pair-grid,
+    .content-grid,
+    .external-evidence-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-list dt,
+    .detail-list dd {
+        width: 100%;
+    }
+}

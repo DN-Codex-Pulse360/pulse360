@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/account_intelligence_governance_evidence",
+  "title": "Pulse360 Account Intelligence Governance Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "governance_evidence_id",
+    "source_product",
+    "source_record_id",
+    "resolved_entity_id",
+    "crm_activation_key",
+    "source_refs",
+    "freshness_status",
+    "confidence_score",
+    "confidence_components",
+    "model_id",
+    "prompt_version",
+    "enrichment_run_id",
+    "source_run_id",
+    "source_run_timestamp",
+    "activation_eligible_flag",
+    "activation_block_reasons",
+    "review_required_flag",
+    "lineage_status",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "governance_evidence_id": { "type": "string", "minLength": 1 },
+    "source_product": {
+      "type": "string",
+      "enum": [
+        "m1_account_hierarchy",
+        "firmographic_genai",
+        "firmographic_genai_runtime",
+        "account_intelligence_ai_synthetic",
+        "csp_smart_city_proposition_readiness"
+      ]
+    },
+    "source_record_id": { "type": "string", "minLength": 1 },
+    "resolved_entity_id": { "type": "string", "pattern": "^ent_[A-Za-z0-9_]+$" },
+    "crm_activation_key": {
+      "type": ["string", "null"],
+      "minLength": 15,
+      "maxLength": 18
+    },
+    "source_refs": { "type": "string", "minLength": 1 },
+    "freshness_status": {
+      "type": "string",
+      "enum": ["fresh", "stale", "expired", "unknown"]
+    },
+    "confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "confidence_components": { "type": "string", "minLength": 1 },
+    "model_id": { "type": "string", "minLength": 1 },
+    "prompt_version": { "type": ["string", "null"] },
+    "enrichment_run_id": { "type": "string", "minLength": 1 },
+    "source_run_id": { "type": "string", "minLength": 1 },
+    "source_run_timestamp": { "type": "string", "format": "date-time" },
+    "activation_eligible_flag": { "type": "boolean" },
+    "activation_block_reasons": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "review_required_flag": { "type": "boolean" },
+    "lineage_status": {
+      "type": "string",
+      "enum": ["source_bound", "lineage_pending", "blocked"]
+    },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,117 @@
+<template>
+    <lightning-card title="Match Evidence" icon-name="standard:account">
+        <div class="shell">
+            <template if:true={hasError}>
+                <div class="slds-text-color_error">{errorMessage}</div>
+            </template>
+            <template if:true={isLoaded}>
+                <template if:true={showDuplicateEvidence}>
+                    <div class="account-pair-grid">
+                        <article class="account-card">
+                            <div class="eyebrow">Left Account</div>
+                            <div class="account-name">
+                                <template if:true={leftAccountUrl}>
+                                    <lightning-formatted-url value={leftAccountUrl} label={leftAccountName} target="_blank"></lightning-formatted-url>
+                                </template>
+                                <template if:false={leftAccountUrl}>{leftAccountName}</template>
+                            </div>
+                        </article>
+                        <article class="account-card">
+                            <div class="eyebrow">Right Account</div>
+                            <div class="account-name">
+                                <template if:true={rightAccountUrl}>
+                                    <lightning-formatted-url value={rightAccountUrl} label={rightAccountName} target="_blank"></lightning-formatted-url>
+                                </template>
+                                <template if:false={rightAccountUrl}>{rightAccountName}</template>
+                            </div>
+                        </article>
+                    </div>
+                </template>
+
+                <template if:true={isCspReview}>
+                    <section class="section-card">
+                        <div class="section-header">
+                            <div class="eyebrow">CSP Smart City Proposition Evidence</div>
+                            <div class="section-kicker">{reviewPriority}</div>
+                        </div>
+                        <div class="content-grid">
+                            <article class="account-card">
+                                <div class="eyebrow">Target Proposition</div>
+                                <div class="account-name">{targetEntityName}</div>
+                                <p class="copy"><strong>Market:</strong> {cspMarket}</p>
+                                <p class="copy"><strong>Offering Family:</strong> {offeringFamily}</p>
+                                <p class="copy"><strong>Offer Bundle:</strong> {offerBundle}</p>
+                            </article>
+                            <article class="account-card">
+                                <div class="eyebrow">Target B2B Customers</div>
+                                <p class="copy">{targetB2bCustomerNames}</p>
+                                <p class="copy"><strong>Recommended Next Actions:</strong> {recommendedNextActions}</p>
+                                <p class="copy"><strong>Activation Blockers:</strong> {activationBlockReasons}</p>
+                            </article>
+                        </div>
+                    </section>
+                </template>
+
+                <dl class="slds-list_horizontal slds-wrap detail-list">
+                    <dt class="slds-item_label slds-truncate">Confidence</dt>
+                    <dd class="slds-item_detail">{duplicateConfidence}</dd>
+                    <dt class="slds-item_label slds-truncate">Confidence Band</dt>
+                    <dd class="slds-item_detail">{confidenceBand}</dd>
+                    <dt class="slds-item_label slds-truncate">Review Flag</dt>
+                    <dd class="slds-item_detail">{reviewFlagLabel}</dd>
+                </dl>
+
+                <div class="content-grid">
+                    <section class="section-card">
+                        <div class="eyebrow">Why Pulse360 Flagged This</div>
+                        <p class="copy"><strong>Top Match Features:</strong> {topMatchFeatures}</p>
+                        <p class="copy"><strong>Feature Explanations:</strong> {featureExplanations}</p>
+                        <p class="copy"><strong>Source Snapshot:</strong> {sourceSnapshotId}</p>
+                        <p class="copy"><strong>Model Version:</strong> {modelVersion}</p>
+                    </section>
+
+                    <section class="section-card">
+                        <div class="eyebrow">Trust and Hierarchy</div>
+                        <p class="copy"><strong>Attribute Trust:</strong> {attributeValidityPayload}</p>
+                        <p class="copy"><strong>Hierarchy Conflict:</strong> {hierarchyConflictLabel}</p>
+                        <p class="copy"><strong>Hierarchy Impact:</strong> {hierarchyImpactSummary}</p>
+                    </section>
+                </div>
+
+                <template if:true={hasExternalEvidence}>
+                    <section class="section-card">
+                        <div class="section-header">
+                            <div class="eyebrow">External Evidence</div>
+                            <div class="section-kicker">{registryMatchStatus}</div>
+                        </div>
+                        <div class="external-evidence-grid">
+                            <article class="account-card">
+                                <div class="eyebrow">Left Account Evidence</div>
+                                <div class="account-name">{leftExternalEvidence.accountName}</div>
+                                <p class="copy"><strong>External Legal Name:</strong> {leftExternalEvidence.legalName}</p>
+                                <p class="copy"><strong>Registration:</strong> {leftExternalEvidence.registration}</p>
+                                <p class="copy"><strong>Validation:</strong> {leftExternalEvidence.externallyValidated}</p>
+                                <p class="copy"><strong>Validity Score:</strong> {leftExternalEvidence.validityScore}</p>
+                                <p class="copy"><strong>Citations:</strong> {leftExternalEvidence.citationCount}</p>
+                                <p class="copy"><strong>Model:</strong> {leftExternalEvidence.modelId}</p>
+                            </article>
+                            <article class="account-card">
+                                <div class="eyebrow">Right Account Evidence</div>
+                                <div class="account-name">{rightExternalEvidence.accountName}</div>
+                                <p class="copy"><strong>External Legal Name:</strong> {rightExternalEvidence.legalName}</p>
+                                <p class="copy"><strong>Registration:</strong> {rightExternalEvidence.registration}</p>
+                                <p class="copy"><strong>Validation:</strong> {rightExternalEvidence.externallyValidated}</p>
+                                <p class="copy"><strong>Validity Score:</strong> {rightExternalEvidence.validityScore}</p>
+                                <p class="copy"><strong>Citations:</strong> {rightExternalEvidence.citationCount}</p>
+                                <p class="copy"><strong>Model:</strong> {rightExternalEvidence.modelId}</p>
+                            </article>
+                        </div>
+                    </section>
+                </template>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading match evidence"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

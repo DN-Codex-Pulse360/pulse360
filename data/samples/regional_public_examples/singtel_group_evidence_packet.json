@@ -1,0 +1,48 @@
+{
+  "entity": "Singtel Group",
+  "jurisdiction": "SG",
+  "legal_identity_packet": [
+    {
+      "source_id": "singtel_annual_report_fy2025",
+      "source_name": "Annual Report FY2025",
+      "source_type": "annual_report",
+      "source_url": "https://www.singtel.com/about-us/investor-relations/annual-report-fy2025",
+      "document_date": "2025-05-22",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Singtel publishes its FY2025 annual report through investor relations and uses it as the baseline public identity and performance source."
+    }
+  ],
+  "filing_packet": [
+    {
+      "source_id": "singtel_fy2025_results",
+      "source_name": "FY2025 Management Discussion and Analysis",
+      "source_type": "financial_results",
+      "source_url": "https://www.singtel.com/content/dam/singtel/investorRelations/stockExchange/2025/FY25-MDA.pdf",
+      "document_date": "2025-05-22",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Operating revenue remained stable for FY2025 and net profit increased to S$4.02 billion."
+    }
+  ],
+  "hierarchy_packet": [
+    {
+      "source_id": "singtel_ncs_context",
+      "source_name": "Singtel NCS Results Context",
+      "source_type": "financial_results",
+      "source_url": "https://www.singtel.com/content/dam/singtel/investorRelations/financialResults/2025/q2fy25/H1FY25-Group-MDA.pdf",
+      "document_date": "2024-11-12",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "NCS revenue and capability notes describe Data and AI strategy, GenAI, cloud, platforms, and cyber capabilities inside the group."
+    }
+  ],
+  "public_signal_packet": [
+    {
+      "source_id": "singtel_aida_jobs",
+      "source_name": "Singtel Jobs at Singtel - AIDA roles",
+      "source_type": "careers",
+      "source_url": "https://groupcareers.singtel.com/go/Jobs-at-Singtel/4567910/",
+      "document_date": "2026-02-15",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Public job postings included Data & AI Platform Engineer and AI Platform Operations Engineer roles in Singapore."
+    }
+  ]
+}

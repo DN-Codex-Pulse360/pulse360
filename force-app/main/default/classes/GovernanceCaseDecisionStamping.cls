@@ -17,7 +17,7 @@ public with sharing class GovernanceCaseDecisionStamping {
                 governanceCase.Decided_At__c = System.now();
 
                 if (governanceCase.Decision_Status__c == 'Approved'
-                    && String.isBlank(governanceCase.Merge_Execution_Status__c)) {
+                    && shouldPrepareApprovedMerge(governanceCase.Merge_Execution_Status__c)) {
                     governanceCase.Merge_Execution_Status__c = 'Ready for Merge';
                 } else if (governanceCase.Decision_Status__c != 'Approved'
                     && String.isBlank(governanceCase.Merge_Execution_Status__c)) {
@@ -38,5 +38,9 @@ public with sharing class GovernanceCaseDecisionStamping {
 
         Governance_Case__c oldRecord = oldMap.get(governanceCase.Id);
         return !isFinalDecision(oldRecord.Decision_Status__c);
+    }
+
+    private static Boolean shouldPrepareApprovedMerge(String mergeExecutionStatus) {
+        return String.isBlank(mergeExecutionStatus) || mergeExecutionStatus == 'Not Started';
     }
 }

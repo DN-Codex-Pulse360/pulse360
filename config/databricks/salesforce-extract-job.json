@@ -1,0 +1,33 @@
+{
+  "name": "pulse360-salesforce-extract job",
+  "email_notifications": {
+    "on_failure": [
+      "dnortje@danielnortje.com"
+    ]
+  },
+  "timeout_seconds": 0,
+  "trigger": {
+    "pause_status": "UNPAUSED",
+    "periodic": {
+      "interval": 6,
+      "unit": "HOURS"
+    }
+  },
+  "tasks": [
+    {
+      "task_key": "pulse360-salesforce-extract_job",
+      "run_if": "ALL_SUCCESS",
+      "pipeline_task": {
+        "pipeline_id": "b3f7f05a-2ba0-4f0b-b16a-66f72bd4fe1e"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {
+        "on_failure": [
+          "dnortje@danielnortje.com"
+        ]
+      }
+    }
+  ],
+  "max_concurrent_runs": 1,
+  "format": "MULTI_TASK"
+}

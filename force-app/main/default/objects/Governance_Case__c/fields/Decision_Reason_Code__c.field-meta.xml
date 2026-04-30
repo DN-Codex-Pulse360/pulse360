@@ -26,6 +26,10 @@
             <value><fullName>NEEDS_HIERARCHY_VALIDATION</fullName><default>false</default><label>Needs Hierarchy Validation</label></value>
             <value><fullName>NEEDS_DATA_REMEDIATION</fullName><default>false</default><label>Needs Data Remediation</label></value>
             <value><fullName>NEEDS_POLICY_DECISION</fullName><default>false</default><label>Needs Policy Decision</label></value>
+            <value><fullName>CSP_ACCOUNT_MAPPING_CONFIRMED</fullName><default>false</default><label>CSP Account Mapping Confirmed</label></value>
+            <value><fullName>CSP_PROPOSITION_QUALIFIED</fullName><default>false</default><label>CSP Proposition Qualified</label></value>
+            <value><fullName>CSP_GOVERNANCE_REVIEW_REQUIRED</fullName><default>false</default><label>CSP Governance Review Required</label></value>
+            <value><fullName>CSP_INSUFFICIENT_EVIDENCE</fullName><default>false</default><label>CSP Insufficient Evidence</label></value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

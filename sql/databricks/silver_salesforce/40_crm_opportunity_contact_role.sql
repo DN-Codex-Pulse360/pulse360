@@ -10,5 +10,8 @@ SELECT
   SystemModstamp AS crm_system_modstamp,
   'salesforce' AS source_system
 FROM pulse360_s4.bronze_salesforce.opportunitycontactrole
+INNER JOIN pulse360_s4.silver_salesforce.crm_opportunity opportunity_anchor
+  ON OpportunityId = opportunity_anchor.crm_opportunity_id
+INNER JOIN pulse360_s4.silver_salesforce.crm_contact contact_anchor
+  ON ContactId = contact_anchor.crm_contact_id
 WHERE COALESCE(IsDeleted, false) = false;
-

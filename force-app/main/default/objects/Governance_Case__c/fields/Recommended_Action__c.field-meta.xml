@@ -14,6 +14,9 @@
             <value><fullName>Approve Merge</fullName><default>false</default><label>Approve Merge</label></value>
             <value><fullName>Review</fullName><default>true</default><label>Review</label></value>
             <value><fullName>Reject Match</fullName><default>false</default><label>Reject Match</label></value>
+            <value><fullName>Map Account</fullName><default>false</default><label>Map Account</label></value>
+            <value><fullName>Qualify Proposition</fullName><default>false</default><label>Qualify Proposition</label></value>
+            <value><fullName>Governance Review</fullName><default>false</default><label>Governance Review</label></value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

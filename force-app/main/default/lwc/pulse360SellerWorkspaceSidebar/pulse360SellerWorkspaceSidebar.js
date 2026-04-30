@@ -1,14 +1,16 @@
 import { NavigationMixin } from 'lightning/navigation';
-import { encodeDefaultFieldValues } from 'lightning/pageReferenceUtils';
 import { LightningElement, api, wire } from 'lwc';
 import { MessageContext, publish, subscribe, unsubscribe, APPLICATION_SCOPE } from 'lightning/messageService';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import LightningConfirm from 'lightning/confirm';
 
 import getSellerWorkspace from '@salesforce/apex/Pulse360SellerWorkspaceService.getSellerWorkspace';
+import executePulse360SellerAction from '@salesforce/apex/Pulse360SellerOrchestratorService.executePulse360SellerAction';
 import SELLER_WORKSPACE_CONTEXT from '@salesforce/messageChannel/Pulse360SellerWorkspaceContext__c';
 import {
-    buildActionDescription,
-    buildAgentBrief,
-    normalizeActionContext
+    buildExecutionRequest,
+    normalizeActionContext,
+    requiresApproval
 } from 'c/pulse360SellerWorkspaceActionSupport';
 
 export default class Pulse360SellerWorkspaceSidebar extends NavigationMixin(LightningElement) {
@@ -100,7 +102,7 @@ export default class Pulse360SellerWorkspaceSidebar extends NavigationMixin(Ligh
     }
 
     handleWorkspaceMessage(message) {
-        const actionContext = message?.actionContext;
+        const actionContext = this.normalizeIncomingActionContext(message?.actionContext);
         if (!actionContext || actionContext.accountId !== this.recordId) {
             return;
         }
@@ -119,8 +121,8 @@ export default class Pulse360SellerWorkspaceSidebar extends NavigationMixin(Ligh
         });
     }
 
-    handleWorkspaceAction(event) {
-        const actionContext = event.detail;
+    async handleWorkspaceAction(event) {
+        const actionContext = this.normalizeIncomingActionContext(event.detail);
         if (!actionContext?.actionType) {
             return;
         }
@@ -132,26 +134,16 @@ export default class Pulse360SellerWorkspaceSidebar extends NavigationMixin(Ligh
             return;
         }
 
-        this.resolveAction(actionContext);
+        await this.resolveAction(actionContext);
     }
 
-    resolveAction(actionContext) {
+    async resolveAction(actionContext) {
         switch (actionContext.actionType) {
-            case 'open_opportunity':
-                this.openOpportunity(actionContext);
-                return;
-            case 'route_specialist':
-                this.createTask(actionContext, `Pulse360 Route: ${actionContext.specialistRoute || actionContext.recommendedPlay}`);
-                return;
-            case 'launch_agent':
-                this.createTask(actionContext, `Pulse360 Agent Brief: ${actionContext.targetEntity || actionContext.accountName}`, buildAgentBrief(actionContext));
-                return;
             case 'open_entity':
                 this.openEntity(actionContext);
                 return;
-            case 'create_task':
             default:
-                this.createTask(actionContext, `Pulse360: ${actionContext.recommendedPlay || actionContext.targetEntity}`);
+                await this.executeSellerAction(actionContext);
                 return;
         }
     }
@@ -169,37 +161,83 @@ export default class Pulse360SellerWorkspaceSidebar extends NavigationMixin(Ligh
         }
     }
 
-    openOpportunity(actionContext) {
+    async executeSellerAction(actionContext) {
+        const normalizedActionContext = this.normalizeIncomingActionContext(actionContext);
+        const previewRequest = buildExecutionRequest(
+            normalizedActionContext,
+            requiresApproval(normalizedActionContext.actionType) ? 'preview' : 'auto_prepare'
+        );
+
+        try {
+            let result = await executePulse360SellerAction({ request: previewRequest });
+
+            if (result?.status === 'ApprovalRequired') {
+                const confirmed = await LightningConfirm.open({
+                    label: 'Approve Pulse360 seller action',
+                    message: result.agentSummary,
+                    theme: 'warning'
+                });
+
+                if (!confirmed) {
+                    return;
+                }
+
+                result = await executePulse360SellerAction({
+                    request: buildExecutionRequest(normalizedActionContext, 'approved')
+                });
+            }
+
+            this.showToast(
+                'Pulse360 action executed',
+                `Created ${result.primaryObjectApiName || 'follow-up'} for ${normalizedActionContext.targetEntity || this.workspace.accountName}.`,
+                'success'
+            );
+            this.navigateToExecutionResult(result);
+        } catch (error) {
+            this.showToast(
+                'Pulse360 action failed',
+                error?.body?.message || 'Unable to execute the seller action.',
+                'error'
+            );
+        }
+    }
+
+    normalizeIncomingActionContext(actionContext) {
+        if (!actionContext) {
+            return actionContext;
+        }
+
+        return {
+            ...actionContext,
+            accountId: actionContext.accountId || this.recordId || this.workspace?.accountId || null,
+            accountName: actionContext.accountName || this.workspace?.accountName,
+            promptVersion: actionContext.promptVersion || this.workspace?.promptVersion,
+            targetEntity: actionContext.targetEntity || this.workspace?.accountName
+        };
+    }
+
+    navigateToExecutionResult(result) {
+        if (!result?.primaryRecordId || !result?.primaryObjectApiName) {
+            return;
+        }
+
         this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
+            type: 'standard__recordPage',
             attributes: {
-                objectApiName: 'Opportunity',
-                actionName: 'new'
-            },
-            state: {
-                defaultFieldValues: encodeDefaultFieldValues({
-                    Name: `${actionContext.targetEntity || this.workspace.accountName} - ${actionContext.recommendedPlay || 'Pulse360 opportunity'}`,
-                    AccountId: this.recordId,
-                    Description: buildActionDescription(actionContext)
-                })
+                recordId: result.primaryRecordId,
+                objectApiName: result.primaryObjectApiName,
+                actionName: 'view'
             }
         });
     }
 
-    createTask(actionContext, subject, descriptionOverride) {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
-            attributes: {
-                objectApiName: 'Task',
-                actionName: 'new'
-            },
-            state: {
-                defaultFieldValues: encodeDefaultFieldValues({
-                    Subject: subject,
-                    WhatId: this.recordId,
-                    Description: descriptionOverride || buildActionDescription(actionContext)
-                })
-            }
-        });
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant
+            })
+        );
     }
 }

@@ -56,7 +56,439 @@ child_revenue_rollup AS (
     ON h.child_account_id = child.crm_account_id
   WHERE parent_account_id IS NOT NULL
   GROUP BY parent_account_id
-)
+),
+crm_child_hierarchy_rollup AS (
+  SELECT
+    h.parent_account_id AS crm_account_id,
+    COUNT(DISTINCT h.child_account_id) AS crm_child_count,
+    collect_list(
+      named_struct(
+        'entity_id', concat('acc_', lower(child.crm_account_id)),
+        'crm_record_id', child.crm_account_id,
+        'name', child.crm_account_name,
+        'role', 'CRM-covered subsidiary',
+        'coverage_status', 'covered',
+        'in_crm', true,
+        'signal', 'Already represented in CRM and available for direct follow-through.',
+        'suggested_play', CAST(NULL AS STRING)
+      )
+    ) AS crm_children
+  FROM pulse360_s4.silver_salesforce.crm_account_hierarchy_edge h
+  INNER JOIN pulse360_s4.silver_salesforce.crm_account child
+    ON h.child_account_id = child.crm_account_id
+  WHERE h.parent_account_id IS NOT NULL
+  GROUP BY h.parent_account_id
+),
+crm_account_name_map AS (
+  SELECT
+    map_from_entries(
+      collect_list(
+        named_struct(
+          'key', crm_account_name,
+          'value', crm_account_id
+        )
+      )
+    ) AS crm_account_id_by_name
+  FROM (
+    SELECT
+      crm_account_name,
+      min(crm_account_id) AS crm_account_id
+    FROM pulse360_s4.silver_salesforce.crm_account
+    GROUP BY crm_account_name
+  )
+),
+-- Demo-safe overlay for public Singapore and Philippines examples so the
+-- Databricks export emits the same provenance-first GPT fields expected by
+-- the Account experience and Data Cloud mapping contract.
+regional_public_enrichment AS (
+  SELECT
+    'Singtel Group' AS crm_account_name,
+    'Singapore Telecommunications Limited' AS external_legal_name,
+    '' AS external_registration_number,
+    true AS is_externally_validated,
+    CAST(93 AS DOUBLE) AS validity_score_external,
+    1 AS external_subsidiaries_found,
+    'Singtel FY2025 public disclosures show stable group revenue and strong AI-oriented hiring in Singapore, but the CRM sample still under-represents its group coverage. FY2025 operating revenue reached S$14.146 billion while current CRM coverage only reflects the Singtel core plus one major technology subsidiary.' AS ai_narrative,
+    to_json(array(
+      named_struct(
+        'rank', 1,
+        'action_type', 'create_opportunity',
+        'target', 'NCS data and AI modernization program',
+        'target_record_id', '001SG0000000002AAA',
+        'reasoning', 'Official Singtel careers pages show active AI and data platform hiring while FY2025 disclosures highlight NCS and Optus as growth drivers.',
+        'estimated_revenue_impact', 'S$12M influenced pipeline',
+        'confidence', CAST(0.84 AS DOUBLE),
+        'source_ids', array('singtel_fy2025_results', 'singtel_aida_jobs')
+      )
+    )) AS ai_recommended_actions,
+    to_timestamp('2026-03-28T09:00:00Z') AS ai_narrative_generated_at,
+    'run_public_regional_20260328' AS enrichment_run_id,
+    CAST(72 AS DOUBLE) AS regulatory_readiness_score,
+    0 AS duplicate_exposure_count,
+    3 AS group_known_subsidiary_count,
+    2 AS crm_covered_subsidiary_count,
+    CAST(10400000000 AS DOUBLE) AS group_revenue_visible,
+    CAST(14146100000 AS DOUBLE) AS external_revenue_confirmed,
+    to_json(named_struct(
+      'group_id', 'grp_singtel',
+      'parent_account_id', CAST(NULL AS STRING),
+      'canonical_account_id', 'ent_sg_001',
+      'account_name', 'Singtel Group',
+      'children', array(
+        named_struct(
+          'entity_id', 'ent_sg_001',
+          'crm_record_id', '001SG0000000001AAA',
+          'name', 'Singtel Group',
+          'role', 'Current account anchor',
+          'coverage_status', 'covered',
+          'in_crm', true,
+          'signal', 'Core Singtel coverage exists in CRM, but the operating group is only partially represented.',
+          'suggested_play', CAST(NULL AS STRING)
+        ),
+        named_struct(
+          'entity_id', 'ent_sg_002',
+          'crm_record_id', '001SG0000000002AAA',
+          'name', 'NCS Pte. Ltd.',
+          'role', 'CRM-covered delivery subsidiary',
+          'coverage_status', 'covered',
+          'in_crm', true,
+          'signal', 'NCS is already represented in CRM and is the clearest data and AI expansion path in the group.',
+          'suggested_play', 'Data and AI modernization'
+        ),
+        named_struct(
+          'entity_id', 'ent_sg_003',
+          'crm_record_id', CAST(NULL AS STRING),
+          'name', 'Optus',
+          'role', 'Whitespace growth entity',
+          'coverage_status', 'uncovered',
+          'in_crm', false,
+          'signal', 'Public disclosures position Optus as a growth engine, but the seller cannot work it directly from CRM yet.',
+          'suggested_play', 'Group coverage follow-up'
+        )
+      )
+    )) AS hierarchy_payload,
+    'gpt-5.4' AS model_id,
+    'pulse360-public-regional-v1' AS prompt_version,
+    to_json(array(
+      named_struct(
+        'source_id', 'singtel_fy2025_results',
+        'source_name', 'Singtel FY2025 Financial Results',
+        'source_type', 'annual_report',
+        'source_url', 'https://www.singtel.com/content/dam/singtel/investorRelations/stockExchange/2025/FY25-MDA.pdf',
+        'document_date', '2025-05-22',
+        'accessed_at', '2026-03-28T00:00:00Z',
+        'excerpt', 'Operating revenue remained stable for FY2025 while underlying net profit rose 9.3% to S$2.47 billion.',
+        'jurisdiction', 'SG'
+      ),
+      named_struct(
+        'source_id', 'singtel_aida_jobs',
+        'source_name', 'Singtel AIDA Jobs',
+        'source_type', 'careers',
+        'source_url', 'https://groupcareers.singtel.com/go/Jobs-at-Singtel/4567910/',
+        'document_date', '2026-02-15',
+        'accessed_at', '2026-03-28T00:00:00Z',
+        'excerpt', 'Singtel advertised AIDA and AI platform engineering roles in Singapore.',
+        'jurisdiction', 'SG'
+      )
+    )) AS source_refs,
+    2 AS citation_count
+  UNION ALL
+  SELECT
+    'Ayala Corporation' AS crm_account_name,
+    'Ayala Corporation' AS external_legal_name,
+    '' AS external_registration_number,
+    true AS is_externally_validated,
+    CAST(92 AS DOUBLE) AS validity_score_external,
+    2 AS external_subsidiaries_found,
+    'Ayala''s 2024 Integrated Report and 2026 talent signals show a diversified Philippine group with meaningful digital and sustainability execution. CRM coverage in this sample still misses part of the operating footprint and understates the commercial room across listed and emerging businesses.' AS ai_narrative,
+    to_json(array(
+      named_struct(
+        'rank', 1,
+        'action_type', 'investigate_subsidiary',
+        'target', 'ACMobility and AC Logistics white-space review',
+        'target_record_id', '',
+        'reasoning', 'Ayala''s integrated report and portfolio disclosures show expansion in mobility and logistics while the CRM sample remains centered on legacy accounts.',
+        'estimated_revenue_impact', 'PHP 150M whitespace study',
+        'confidence', CAST(0.81 AS DOUBLE),
+        'source_ids', array('ayala_ir_2024', 'ayala_internship_2026')
+      ),
+      named_struct(
+        'rank', 2,
+        'action_type', 'create_task',
+        'target', 'Validate group hierarchy and budget owner map',
+        'target_record_id', '',
+        'reasoning', 'The Philippine group story is strong but current CRM coverage understates the breadth of the portfolio shown in the integrated report.',
+        'estimated_revenue_impact', 'Faster account planning cycle',
+        'confidence', CAST(0.77 AS DOUBLE),
+        'source_ids', array('ayala_ir_2024')
+      )
+    )) AS ai_recommended_actions,
+    to_timestamp('2026-03-28T09:00:00Z') AS ai_narrative_generated_at,
+    'run_public_regional_20260328' AS enrichment_run_id,
+    CAST(78 AS DOUBLE) AS regulatory_readiness_score,
+    1 AS duplicate_exposure_count,
+    4 AS group_known_subsidiary_count,
+    2 AS crm_covered_subsidiary_count,
+    CAST(184000000000 AS DOUBLE) AS group_revenue_visible,
+    CAST(325700000000 AS DOUBLE) AS external_revenue_confirmed,
+    to_json(named_struct(
+      'group_id', 'grp_ayala',
+      'parent_account_id', CAST(NULL AS STRING),
+      'canonical_account_id', 'ent_ph_001',
+      'account_name', 'Ayala Corporation',
+      'children', array(
+        named_struct(
+          'entity_id', 'ent_ph_001',
+          'crm_record_id', '001PH0000000001AAA',
+          'name', 'Ayala Corporation',
+          'role', 'Current account anchor',
+          'coverage_status', 'covered',
+          'in_crm', true,
+          'signal', 'This anchor account is in CRM, but the wider Ayala operating footprint is not fully action-ready.',
+          'suggested_play', CAST(NULL AS STRING)
+        ),
+        named_struct(
+          'entity_id', 'ent_ph_001_dup',
+          'crm_record_id', '001PH0000000002AAA',
+          'name', 'Ayala Corp.',
+          'role', 'Duplicate CRM variant',
+          'coverage_status', 'duplicate',
+          'in_crm', true,
+          'signal', 'A second CRM variant exists for the same commercial group, which can dilute seller trust and ownership clarity.',
+          'suggested_play', 'Resolve duplicate ownership'
+        ),
+        named_struct(
+          'entity_id', 'ent_ph_003',
+          'crm_record_id', CAST(NULL AS STRING),
+          'name', 'ACMobility',
+          'role', 'Mobility whitespace entity',
+          'coverage_status', 'uncovered',
+          'in_crm', false,
+          'signal', 'Ayala portfolio disclosures point to mobility expansion that is not represented as a seller-ready entity in CRM.',
+          'suggested_play', 'Mobility data platform whitespace'
+        ),
+        named_struct(
+          'entity_id', 'ent_ph_004',
+          'crm_record_id', CAST(NULL AS STRING),
+          'name', 'AC Logistics',
+          'role', 'Logistics whitespace entity',
+          'coverage_status', 'uncovered',
+          'in_crm', false,
+          'signal', 'Public portfolio evidence shows logistics expansion that is still absent from the current CRM coverage map.',
+          'suggested_play', 'Logistics planning and visibility review'
+        )
+      )
+    )) AS hierarchy_payload,
+    'gpt-5.4' AS model_id,
+    'pulse360-public-regional-v1' AS prompt_version,
+    to_json(array(
+      named_struct(
+        'source_id', 'ayala_ir_2024',
+        'source_name', 'Ayala Integrated Report 2024',
+        'source_type', 'annual_report',
+        'source_url', 'https://ayala.com/app/uploads/2025/04/Ayala_IR2024_Full-Report_1004.pdf',
+        'document_date', '2025-04-11',
+        'accessed_at', '2026-03-28T00:00:00Z',
+        'excerpt', 'Sale of goods and rendering services increased 12 percent to PHP 325.7 billion, while Ayala''s core net income reached PHP 45.0 billion.',
+        'jurisdiction', 'PH'
+      ),
+      named_struct(
+        'source_id', 'ayala_internship_2026',
+        'source_name', 'Ayala 2026 Internship Announcement',
+        'source_type', 'news',
+        'source_url', 'https://ayala.com/stories/',
+        'document_date', '2026-02-27',
+        'accessed_at', '2026-03-28T00:00:00Z',
+        'excerpt', 'Ayala highlighted investment in next-generation talent through its 2026 internship launch.',
+        'jurisdiction', 'PH'
+      )
+    )) AS source_refs,
+    2 AS citation_count
+  UNION ALL
+  SELECT
+    'JG Summit Holdings, Inc.' AS crm_account_name,
+    'JG Summit Holdings, Inc.' AS external_legal_name,
+    '' AS external_registration_number,
+    true AS is_externally_validated,
+    CAST(89 AS DOUBLE) AS validity_score_external,
+    3 AS external_subsidiaries_found,
+    'JG Summit''s 2024 annual report shows a broad Philippine portfolio, visible digital-transformation programs, and revenue of PHP 378.6 billion. The current CRM sample only covers a fraction of the group entities documented in the annual report and ecosystem disclosures.' AS ai_narrative,
+    to_json(array(
+      named_struct(
+        'rank', 1,
+        'action_type', 'create_opportunity',
+        'target', 'GoTyme and rewards analytics account review',
+        'target_record_id', '',
+        'reasoning', 'JG Summit''s annual report highlights digital banking and analytics ecosystem plays that are not fully represented in CRM.',
+        'estimated_revenue_impact', 'PHP 120M influenced expansion pipeline',
+        'confidence', CAST(0.79 AS DOUBLE),
+        'source_ids', array('jgs_ir_2024', 'jgs_digital_transformation_2024')
+      )
+    )) AS ai_recommended_actions,
+    to_timestamp('2026-03-28T09:00:00Z') AS ai_narrative_generated_at,
+    'run_public_regional_20260328' AS enrichment_run_id,
+    CAST(69 AS DOUBLE) AS regulatory_readiness_score,
+    2 AS duplicate_exposure_count,
+    4 AS group_known_subsidiary_count,
+    1 AS crm_covered_subsidiary_count,
+    CAST(126000000000 AS DOUBLE) AS group_revenue_visible,
+    CAST(378600000000 AS DOUBLE) AS external_revenue_confirmed,
+    to_json(named_struct(
+      'group_id', 'grp_jgs',
+      'parent_account_id', CAST(NULL AS STRING),
+      'canonical_account_id', 'ent_ph_002',
+      'account_name', 'JG Summit Holdings, Inc.',
+      'children', array(
+        named_struct(
+          'entity_id', 'ent_ph_002',
+          'crm_record_id', '001PH0000000003AAA',
+          'name', 'JG Summit Holdings, Inc.',
+          'role', 'Current account anchor',
+          'coverage_status', 'covered',
+          'in_crm', true,
+          'signal', 'The parent account is in CRM, but most of the commercial group is still outside the seller operating surface.',
+          'suggested_play', CAST(NULL AS STRING)
+        ),
+        named_struct(
+          'entity_id', 'ent_ph_003',
+          'crm_record_id', CAST(NULL AS STRING),
+          'name', 'Cebu Pacific',
+          'role', 'Travel and loyalty whitespace entity',
+          'coverage_status', 'uncovered',
+          'in_crm', false,
+          'signal', 'Travel and ecosystem signals create room for loyalty, customer data, and digital engagement plays.',
+          'suggested_play', 'Customer data and loyalty modernization'
+        ),
+        named_struct(
+          'entity_id', 'ent_ph_004',
+          'crm_record_id', CAST(NULL AS STRING),
+          'name', 'Universal Robina Corporation',
+          'role', 'Consumer analytics whitespace entity',
+          'coverage_status', 'uncovered',
+          'in_crm', false,
+          'signal', 'Consumer-scale group operations suggest an unmet analytics and planning opportunity outside the current CRM footprint.',
+          'suggested_play', 'Consumer demand and retail analytics'
+        ),
+        named_struct(
+          'entity_id', 'ent_ph_005',
+          'crm_record_id', CAST(NULL AS STRING),
+          'name', 'GoTyme Bank',
+          'role', 'Digital banking whitespace entity',
+          'coverage_status', 'uncovered',
+          'in_crm', false,
+          'signal', 'Annual report evidence ties the group to digital banking and rewards momentum, making GoTyme the clearest next commercial move.',
+          'suggested_play', 'Rewards analytics and digital banking growth'
+        )
+      )
+    )) AS hierarchy_payload,
+    'gpt-5.4' AS model_id,
+    'pulse360-public-regional-v1' AS prompt_version,
+    to_json(array(
+      named_struct(
+        'source_id', 'jgs_ir_2024',
+        'source_name', 'JG Summit 2024 Annual and Sustainability Report',
+        'source_type', 'annual_report',
+        'source_url', 'https://www.jgsummit.com.ph/annualreport2024/documents/JG%20Summit%202024%20Annual%20%26%20Sustainability%20Report%20%5BInteractive%20PDF%5D.pdf',
+        'document_date', '2024-12-31',
+        'accessed_at', '2026-03-28T00:00:00Z',
+        'excerpt', 'JG Summit reported 2024 revenues of PHP 378.6 billion and highlighted digital banking, analytics, and AI-adjacent ecosystem plays.',
+        'jurisdiction', 'PH'
+      ),
+      named_struct(
+        'source_id', 'jgs_digital_transformation_2024',
+        'source_name', 'JG Summit Digital Transformation and Customer Centricity',
+        'source_type', 'annual_report_section',
+        'source_url', 'https://www.jgsummit.com.ph/annualreport2024/strategic-enablers/digital-transformation-customer-centricity',
+        'document_date', '2024-12-31',
+        'accessed_at', '2026-03-28T00:00:00Z',
+        'excerpt', 'JG Summit highlighted GenAI, data science, customer-centricity, and Data Cloud work across the group in 2024.',
+        'jurisdiction', 'PH'
+      )
+    )) AS source_refs,
+    2 AS citation_count
+),
+firmographic_source_refs AS (
+  SELECT
+    resolved_entity_id,
+    to_json(
+      collect_list(
+        named_struct(
+          'source_id', source_id,
+          'source_name', document_title,
+          'source_type', source_type,
+          'source_url', COALESCE(source_url, ''),
+          'document_date', CAST(document_date AS STRING),
+          'accessed_at', CAST(accessed_at AS STRING),
+          'excerpt', source_excerpt,
+          'jurisdiction', account_candidate_country
+        )
+      )
+    ) AS source_refs,
+    COUNT(DISTINCT source_id) AS citation_count
+  FROM pulse360_s4.silver_firmographic.firmographic_fact
+  WHERE approval_status = 'approved_for_demo'
+  GROUP BY resolved_entity_id
+),
+genai_runtime_steward_decisions AS (
+  SELECT
+    data_cloud_source_record_id,
+    data_cloud_review_queue_id,
+    surviving_account_id,
+    decision_status,
+    downstream_update_status,
+    decided_at
+  FROM (
+    SELECT
+      g.*,
+      row_number() OVER (
+        PARTITION BY coalesce(g.data_cloud_source_record_id, g.data_cloud_review_queue_id)
+        ORDER BY coalesce(g.decided_at, g.crm_last_modified_at) DESC, g.crm_governance_case_id DESC
+      ) AS decision_rank
+    FROM pulse360_s4.silver_salesforce.crm_governance_case g
+    WHERE g.source_product = 'firmographic_genai_runtime'
+      AND g.decision_status = 'Approved'
+      AND g.surviving_account_id IS NOT NULL
+      AND coalesce(g.data_cloud_source_record_id, g.data_cloud_review_queue_id) IS NOT NULL
+      AND coalesce(g.downstream_update_status, 'Queued') IN ('Queued', 'Ready', 'Completed')
+  )
+  WHERE decision_rank = 1
+),
+eligible_genai_runtime AS (
+  SELECT
+    COALESCE(g.crm_account_id, g.stewarded_crm_account_id) AS crm_account_id,
+    g.resolved_entity_id,
+    g.ai_narrative,
+    g.ai_recommended_actions,
+    to_timestamp(g.run_timestamp) AS ai_narrative_generated_at,
+    g.run_id AS enrichment_run_id,
+    g.model_id,
+    g.prompt_version,
+    COALESCE(fs.source_refs, g.source_refs) AS source_refs,
+    COALESCE(fs.citation_count, size(from_json(g.source_refs, 'array<string>'))) AS citation_count
+    FROM (
+    SELECT
+      runtime.*,
+      d.surviving_account_id AS stewarded_crm_account_id,
+      row_number() OVER (
+        PARTITION BY COALESCE(runtime.crm_account_id, d.surviving_account_id)
+        ORDER BY to_timestamp(runtime.run_timestamp) DESC, runtime.run_id DESC
+      ) AS runtime_rank
+    FROM pulse360_s4.gold.account_genai_enrichment_output_runtime runtime
+    LEFT JOIN genai_runtime_steward_decisions d
+      ON d.data_cloud_source_record_id = runtime.genai_enrichment_id
+      OR d.data_cloud_review_queue_id = concat('gov_firmographic_genai_runtime_', runtime.resolved_entity_id)
+    WHERE (runtime.activation_eligible_flag = true OR d.surviving_account_id IS NOT NULL)
+      AND COALESCE(runtime.crm_account_id, d.surviving_account_id) IS NOT NULL
+      AND runtime.business_action_confidence >= 0.70
+      AND runtime.llm_result_confidence >= 0.80
+      AND COALESCE(runtime.unsupported_claim_count, 0) = 0
+      AND COALESCE(runtime.insufficient_evidence_flag, false) = false
+  ) g
+  LEFT JOIN firmographic_source_refs fs
+    ON g.resolved_entity_id = fs.resolved_entity_id
+  WHERE g.runtime_rank = 1
+),
+base_export AS (
 SELECT
   a.crm_account_id,
   concat('acc_', lower(a.crm_account_id)) AS canonical_account_id,
@@ -142,13 +574,125 @@ SELECT
     COALESCE(li.last_line_item_ts, CAST('1900-01-01' AS TIMESTAMP)),
     COALESCE(a.crm_last_modified_at, CAST('1900-01-01' AS TIMESTAMP))
   ) AS last_engagement_timestamp,
+  COALESCE(r.external_legal_name, a.crm_account_name) AS external_legal_name,
+  COALESCE(r.external_registration_number, '') AS external_registration_number,
+  COALESCE(r.is_externally_validated, false) AS is_externally_validated,
+  CAST(
+    COALESCE(
+      r.validity_score_external,
+      CASE
+        WHEN a.crm_website IS NOT NULL AND a.crm_duns_number IS NOT NULL THEN 93
+        WHEN a.crm_website IS NOT NULL THEN 88
+        WHEN a.crm_account_number IS NOT NULL THEN 82
+        ELSE 74
+      END
+    )
+    AS DOUBLE
+  ) AS validity_score_external,
+  COALESCE(r.external_subsidiaries_found, 0) AS external_subsidiaries_found,
+  COALESCE(
+    g.ai_narrative,
+    r.ai_narrative,
+    concat('Model-generated public-evidence summary is not configured for ', a.crm_account_name, '.')
+  ) AS ai_narrative,
+  COALESCE(g.ai_recommended_actions, r.ai_recommended_actions, '[]') AS ai_recommended_actions,
+  COALESCE(g.ai_narrative_generated_at, r.ai_narrative_generated_at, current_timestamp()) AS ai_narrative_generated_at,
+  COALESCE(
+    g.enrichment_run_id,
+    r.enrichment_run_id,
+    concat('run_default_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss'))
+  ) AS enrichment_run_id,
+  CAST(
+    COALESCE(
+      r.regulatory_readiness_score,
+      LEAST(
+        100,
+        45
+        + CASE WHEN a.crm_website IS NOT NULL THEN 15 ELSE 0 END
+        + CASE WHEN a.crm_duns_number IS NOT NULL THEN 15 ELSE 0 END
+        + CASE WHEN a.crm_annual_revenue IS NOT NULL THEN 10 ELSE 0 END
+        + CASE WHEN a.crm_parent_account_id IS NOT NULL THEN 5 ELSE 0 END
+      )
+    )
+    AS DOUBLE
+  ) AS regulatory_readiness_score,
+  COALESCE(r.duplicate_exposure_count, 0) AS duplicate_exposure_count,
+  COALESCE(r.group_known_subsidiary_count, 1 + COALESCE(chr.crm_child_count, 0)) AS group_known_subsidiary_count,
+  COALESCE(r.crm_covered_subsidiary_count, 1 + COALESCE(chr.crm_child_count, 0)) AS crm_covered_subsidiary_count,
+  CAST(COALESCE(r.group_revenue_visible, a.crm_annual_revenue, 0) AS DOUBLE) AS group_revenue_visible,
+  CAST(COALESCE(r.external_revenue_confirmed, a.crm_annual_revenue, 0) AS DOUBLE) AS external_revenue_confirmed,
+  CASE
+    WHEN r.hierarchy_payload IS NOT NULL THEN to_json(named_struct(
+      'group_id', COALESCE(a.crm_parent_account_id, concat('acc_', lower(a.crm_account_id))),
+      'parent_account_id', a.crm_parent_account_id,
+      'canonical_account_id', concat('acc_', lower(a.crm_account_id)),
+      'account_name', a.crm_account_name,
+      'children', transform(
+        from_json(
+          r.hierarchy_payload,
+          'struct<group_id:string,parent_account_id:string,canonical_account_id:string,account_name:string,children:array<struct<entity_id:string,crm_record_id:string,name:string,role:string,coverage_status:string,in_crm:boolean,signal:string,suggested_play:string>>>'
+        ).children,
+        child -> named_struct(
+          'entity_id', child.entity_id,
+          'crm_record_id', CASE
+            WHEN child.in_crm THEN element_at(nm.crm_account_id_by_name, child.name)
+            ELSE CAST(NULL AS STRING)
+          END,
+          'name', child.name,
+          'role', child.role,
+          'coverage_status', child.coverage_status,
+          'in_crm', child.in_crm,
+          'signal', child.signal,
+          'suggested_play', child.suggested_play
+        )
+      )
+    ))
+    ELSE to_json(named_struct(
+      'group_id', COALESCE(a.crm_parent_account_id, concat('acc_', lower(a.crm_account_id))),
+      'parent_account_id', a.crm_parent_account_id,
+      'canonical_account_id', concat('acc_', lower(a.crm_account_id)),
+      'account_name', a.crm_account_name,
+      'children', concat(
+        array(
+          named_struct(
+            'entity_id', concat('acc_', lower(a.crm_account_id)),
+            'crm_record_id', a.crm_account_id,
+            'name', a.crm_account_name,
+            'role', CASE
+              WHEN COALESCE(chr.crm_child_count, 0) > 0 THEN 'Current account anchor'
+              ELSE 'Current account'
+            END,
+            'coverage_status', 'covered',
+            'in_crm', true,
+            'signal', CASE
+              WHEN COALESCE(chr.crm_child_count, 0) > 0 THEN 'CRM already recognizes this group structure and the seller can open covered entities directly.'
+              ELSE CAST(NULL AS STRING)
+            END,
+            'suggested_play', CAST(NULL AS STRING)
+          )
+        ),
+        COALESCE(
+          chr.crm_children,
+          from_json(
+            '[]',
+            'array<struct<entity_id:string,crm_record_id:string,name:string,role:string,coverage_status:string,in_crm:boolean,signal:string,suggested_play:string>>'
+          )
+        )
+      )
+    ))
+  END AS hierarchy_payload,
+  COALESCE(g.model_id, r.model_id, 'gpt-5.4') AS model_id,
+  COALESCE(g.prompt_version, r.prompt_version, 'pulse360-default-v1') AS prompt_version,
+  COALESCE(g.source_refs, r.source_refs, '[]') AS source_refs,
+  COALESCE(g.citation_count, r.citation_count, 0) AS citation_count,
   current_timestamp() AS last_synced_timestamp,
   concat('Databricks CRM export refresh - ', CAST(current_date() AS STRING)) AS ingestion_metadata_label,
   concat('run_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss')) AS run_id,
   current_timestamp() AS run_ts,
   current_timestamp() AS run_timestamp,
-  'dc-canonical-v2.crm-keyed' AS model_version
+  'dc-canonical-v3.genai-runtime-gated' AS model_version
 FROM pulse360_s4.silver_salesforce.crm_account a
+CROSS JOIN crm_account_name_map nm
 LEFT JOIN contact_rollup c
   ON a.crm_account_id = c.crm_account_id
 LEFT JOIN opportunity_rollup o
@@ -158,4 +702,97 @@ LEFT JOIN line_item_rollup li
 LEFT JOIN brand_rollup br
   ON a.crm_account_id = br.crm_account_id
 LEFT JOIN child_revenue_rollup cr
-  ON a.crm_account_id = cr.crm_account_id;
+  ON a.crm_account_id = cr.crm_account_id
+LEFT JOIN crm_child_hierarchy_rollup chr
+  ON a.crm_account_id = chr.crm_account_id
+LEFT JOIN regional_public_enrichment r
+  ON a.crm_account_name = r.crm_account_name
+LEFT JOIN eligible_genai_runtime g
+  ON a.crm_account_id = g.crm_account_id
+)
+SELECT
+  base_export.*,
+  to_json(named_struct(
+    'routing_version', 'pulse360-intent-routing-v1',
+    'signal_score', CAST(
+      LEAST(
+        100,
+        base_export.cross_sell_propensity * 0.55
+        + base_export.engagement_intensity_score * 0.30
+        + CASE WHEN base_export.coverage_gap_flag THEN 12 ELSE 0 END
+        + CASE WHEN base_export.competitor_risk_signal >= 55 THEN 6 ELSE 0 END
+      )
+      AS DOUBLE
+    ),
+    'signal_label', CASE
+      WHEN base_export.cross_sell_propensity >= 80 AND base_export.engagement_intensity_score >= 70 THEN 'Route now'
+      WHEN base_export.coverage_gap_flag AND base_export.cross_sell_propensity >= 70 THEN 'Coverage-led review'
+      WHEN base_export.engagement_intensity_score >= 60 THEN 'Queue for review'
+      ELSE 'Monitor'
+    END,
+    'threshold_label', CASE
+      WHEN base_export.cross_sell_propensity >= 80 AND base_export.engagement_intensity_score >= 70 THEN 'Whitespace and engagement crossed the route-now threshold.'
+      WHEN base_export.coverage_gap_flag AND base_export.cross_sell_propensity >= 70 THEN 'Coverage gaps and commercial potential crossed the routed-review threshold.'
+      WHEN base_export.engagement_intensity_score >= 60 THEN 'Engagement is strong enough to justify proactive routed follow-up.'
+      ELSE 'The account is still building toward a routed signal and should remain visible in the queue.'
+    END,
+    'route_to', CASE
+      WHEN base_export.coverage_gap_flag THEN 'account_owner_plus_coverage'
+      ELSE 'account_owner'
+    END,
+    'routing_confidence', CAST(
+      LEAST(
+        0.95,
+        0.45
+        + (base_export.cross_sell_propensity / 200)
+        + (base_export.engagement_intensity_score / 300)
+        + CASE WHEN base_export.coverage_gap_flag THEN 0.08 ELSE 0 END
+        + CASE WHEN base_export.is_externally_validated THEN 0.05 ELSE 0 END
+      )
+      AS DOUBLE
+    ),
+    'why_now', CASE
+      WHEN base_export.coverage_gap_flag THEN concat(
+        base_export.account_name,
+        ' combines whitespace potential with a group coverage gap, so the routed follow-up should confirm who actually owns the next motion.'
+      )
+      WHEN base_export.cross_sell_propensity >= 80 THEN concat(
+        base_export.account_name,
+        ' is showing strong commercial room right now, and the routed alert should turn that momentum into a concrete seller follow-up.'
+      )
+      ELSE concat(
+        base_export.account_name,
+        ' has enough engagement and commercial context to justify a routed review rather than waiting for another manual account pass.'
+      )
+    END,
+    'drafted_outreach', concat(
+      'Pulse360 flagged ',
+      base_export.account_name,
+      ' because ',
+      CASE
+        WHEN base_export.coverage_gap_flag THEN 'coverage is incomplete across the commercial group and the next owner needs to be confirmed'
+        WHEN base_export.cross_sell_propensity >= 80 THEN 'the account is showing elevated whitespace potential'
+        ELSE 'engagement and account context justify a targeted follow-up'
+      END,
+      '. Lead with ',
+      COALESCE(base_export.primary_brand_name, 'the primary brand'),
+      ' and validate the next sponsor path.'
+    ),
+    'channel_readiness', 'salesforce_preview',
+    'top_drivers', array(
+      CASE
+        WHEN base_export.cross_sell_propensity >= 80 THEN 'Whitespace readiness is elevated.'
+        ELSE 'Commercial room exists but still needs qualification.'
+      END,
+      CASE
+        WHEN base_export.engagement_intensity_score >= 60 THEN 'Engagement context suggests the account can absorb routed follow-up now.'
+        ELSE 'Engagement is limited, so the first touch should validate timing.'
+      END,
+      CASE
+        WHEN base_export.coverage_gap_flag THEN 'Coverage is incomplete across the group, so route clarity needs review.'
+        ELSE 'Coverage is stable enough for a directed follow-up.'
+      END
+    ),
+    'generated_at', CAST(base_export.run_timestamp AS STRING)
+  )) AS intent_signal_payload
+FROM base_export;

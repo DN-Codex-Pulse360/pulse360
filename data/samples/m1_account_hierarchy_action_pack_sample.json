@@ -1,0 +1,24 @@
+{
+  "record_id": "001P360000AYALA",
+  "surface_context": "recommended_move",
+  "action_type": "route_specialist",
+  "target_entity": "Ayala uncovered operating entities",
+  "target_record_id": "",
+  "crm_safe_execution_key": "001P360000AYALA",
+  "recommended_play": "Assign owner to uncovered entities",
+  "reasoning": "The group has three externally visible entities that are not represented in CRM, creating a coverage gap before the next planning cycle.",
+  "confidence_label": "High confidence",
+  "freshness_label": "Fresh",
+  "evidence_refs": [
+    {
+      "source_id": "edge_registry_ayala_uncovered_operating_entities",
+      "source_name": "philippines_sec_registry_sample",
+      "source_type": "national_registry",
+      "source_url": "",
+      "excerpt": "Hierarchy relationship derived from Philippines registry sample evidence."
+    }
+  ],
+  "approval_required": false,
+  "expected_artifact": "Task"
+}
+

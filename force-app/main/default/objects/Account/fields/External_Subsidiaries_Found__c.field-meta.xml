@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>External_Subsidiaries_Found__c</fullName>
+    <description>Count of subsidiaries discovered through external evidence but not fully modeled in CRM.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Shows how many subsidiaries or group entities were discovered in public evidence outside the current CRM footprint.</inlineHelpText>
+    <label>External Subsidiaries Found</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

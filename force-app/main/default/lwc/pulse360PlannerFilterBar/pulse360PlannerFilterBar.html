@@ -1,0 +1,20 @@
+<template>
+    <section class="surface control-surface">
+        <div class="control-copy">
+            <p class="eyebrow">{eyebrow}</p>
+            <h2 class="section-title">{sectionTitle}</h2>
+            <p class="section-copy">{sectionCopy}</p>
+        </div>
+
+        <div class="filter-panel">
+            <lightning-combobox
+                name="plannerFilter"
+                label="Focus filter"
+                value={selectedFilter}
+                options={filterOptions}
+                onchange={handleFilterChange}>
+            </lightning-combobox>
+            <p class="filter-help">{currentFilterLabel} keeps {filteredGroupCount} groups in the working set.</p>
+        </div>
+    </section>
+</template>

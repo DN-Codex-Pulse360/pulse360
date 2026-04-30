@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Pulse360 Seller Workspace V2</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__Tab</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects>
+                <object>Account</object>
+            </objects>
+            <property
+                name="embeddedMode"
+                type="Boolean"
+                label="Embedded Mode"
+                description="Hide the standalone workspace header when this module is placed inside a larger Account page composition."
+                default="false" />
+        </targetConfig>
+        <targetConfig targets="lightning__AppPage">
+            <property
+                name="previewRecordId"
+                type="String"
+                label="Preview Account Id"
+                description="Optional Account Id to use as the default preview record when opening the Seller Workspace V2 on an app page." />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

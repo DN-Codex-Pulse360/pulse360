@@ -1,0 +1,92 @@
+<template>
+    <lightning-card title="Governance Snapshot" icon-name="standard:case">
+        <div class="shell">
+            <template if:true={hasError}>
+                <div class="slds-text-color_error">{errorMessage}</div>
+            </template>
+            <template if:true={isLoaded}>
+                <div class="summary-grid">
+                    <section class="summary-panel summary-panel_emphasis">
+                        <div class="eyebrow">Recommendation</div>
+                        <div class="headline">{recommendedAction}</div>
+                        <p class="copy">{recommendationSummary}</p>
+                    </section>
+                    <section class="summary-panel">
+                        <div class="eyebrow">Case State</div>
+                        <div class="state-grid">
+                            <div>
+                                <div class="label">Status</div>
+                                <div class="value">{status}</div>
+                            </div>
+                            <div>
+                                <div class="label">Priority</div>
+                                <div class="value">{priority}</div>
+                            </div>
+                            <div>
+                                <div class="label">Decision Owner</div>
+                                <div class="value">
+                                    <template if:true={decisionOwnerUrl}>
+                                        <lightning-formatted-url value={decisionOwnerUrl} label={decisionOwnerName} target="_blank"></lightning-formatted-url>
+                                    </template>
+                                    <template if:false={decisionOwnerUrl}>{decisionOwnerName}</template>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="label">Evidence Timestamp</div>
+                                <div class="value">{evidenceRunTimestamp}</div>
+                            </div>
+                        </div>
+                        <p class="copy">{caseHealthSummary}</p>
+                    </section>
+                </div>
+
+                <section class="agent-panel">
+                    <div class="agent-header">
+                        <div>
+                            <div class="eyebrow">{agentSubagentName}</div>
+                            <div class="agent-status">{reviewEvidenceStatus}</div>
+                        </div>
+                        <div class="agent-time">{directEvidenceTimestamp}</div>
+                    </div>
+                    <p class="copy">{reviewAgentSummary}</p>
+                    <template if:true={isCspReview}>
+                        <div class="agent-metrics">
+                            <div class="metric">
+                                <div class="label">CSP Proposition</div>
+                                <div class="metric-copy">{cspTargetSummary}</div>
+                            </div>
+                            <div class="metric">
+                                <div class="label">Market</div>
+                                <div class="metric-copy">{cspMarketSummary}</div>
+                            </div>
+                            <div class="metric">
+                                <div class="label">Target B2B Customers</div>
+                                <div class="metric-copy">{cspCustomersSummary}</div>
+                            </div>
+                            <div class="metric">
+                                <div class="label">Recommended Next Actions</div>
+                                <div class="metric-copy">{cspActionsSummary}</div>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <div class="label">Direct Validity</div>
+                            <div class="metric-copy">{directEvidenceSummary}</div>
+                        </div>
+                        <div class="metric">
+                            <div class="label">Hierarchy Impact</div>
+                            <div class="metric-copy">{directHierarchyImpact}</div>
+                        </div>
+                    </div>
+                    <template if:true={reviewEvidenceError}>
+                        <p class="copy slds-text-color_error">{reviewEvidenceError}</p>
+                    </template>
+                </section>
+            </template>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading governance snapshot"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-card>
+</template>

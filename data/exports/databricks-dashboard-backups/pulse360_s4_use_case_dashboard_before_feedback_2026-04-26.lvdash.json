@@ -1,0 +1,850 @@
+{
+  "datasets": [
+    {
+      "name": "kpi_summary",
+      "displayName": "KPI summary",
+      "queryLines": [
+        "WITH d1 AS (\n",
+        "  SELECT COUNT(*) AS duplicate_pairs, AVG(duplicate_confidence_score) AS avg_duplicate_confidence\n",
+        "  FROM pulse360_s4.intelligence.duplicate_candidate_pairs\n",
+        "),\n",
+        "d2 AS (\n",
+        "  SELECT SUM(cases_resolved) AS total_cases_resolved, AVG(quality_score) AS avg_governance_quality\n",
+        "  FROM pulse360_s4.intelligence.governance_ops_metrics\n",
+        "),\n",
+        "d3 AS (\n",
+        "  SELECT COUNT(DISTINCT child_entity_id) AS hierarchy_entities, MAX(hierarchy_depth) AS hierarchy_depth_max\n",
+        "  FROM pulse360_s4.identity_resolution.entity_hierarchy_edge\n",
+        "),\n",
+        "act AS (\n",
+        "  SELECT COUNT(*) AS activated_accounts, MAX(run_timestamp) AS latest_activation_ts\n",
+        "  FROM pulse360_s4.intelligence.datacloud_export_accounts\n",
+        "),\n",
+        "queue AS (\n",
+        "  SELECT COUNT(*) AS review_queue_records\n",
+        "  FROM pulse360_s4.gold.activation_eligibility_review_queue\n",
+        ")\n",
+        "SELECT duplicate_pairs, avg_duplicate_confidence, total_cases_resolved, avg_governance_quality, hierarchy_entities, hierarchy_depth_max, activated_accounts, latest_activation_ts, review_queue_records\n",
+        "FROM d1 CROSS JOIN d2 CROSS JOIN d3 CROSS JOIN act CROSS JOIN queue"
+      ]
+    },
+    {
+      "name": "ds01_duplicate_confidence",
+      "displayName": "DS-01 duplicate confidence",
+      "queryLines": [
+        "SELECT\n",
+        "  'DS-01' AS use_case,\n",
+        "  run_id,\n",
+        "  date_trunc('hour', run_timestamp) AS run_hour,\n",
+        "  confidence_band,\n",
+        "  COUNT(*) AS pair_count\n",
+        "FROM pulse360_s4.intelligence.duplicate_candidate_pairs\n",
+        "GROUP BY 1,2,3,4\n",
+        "ORDER BY run_hour, confidence_band"
+      ]
+    },
+    {
+      "name": "ds02_governance_trend",
+      "displayName": "DS-02 governance trend",
+      "queryLines": [
+        "SELECT\n",
+        "  'DS-02' AS use_case,\n",
+        "  date_trunc('day', metric_ts) AS metric_day,\n",
+        "  SUM(cases_resolved) AS cases_resolved,\n",
+        "  AVG(avg_resolution_minutes) AS avg_resolution_minutes,\n",
+        "  SUM(backlog_open) AS backlog_open,\n",
+        "  AVG(quality_score) AS quality_score\n",
+        "FROM pulse360_s4.intelligence.governance_ops_metrics\n",
+        "GROUP BY 1,2\n",
+        "ORDER BY metric_day"
+      ]
+    },
+    {
+      "name": "ds03_hierarchy_readiness",
+      "displayName": "DS-03 hierarchy readiness",
+      "queryLines": [
+        "SELECT\n",
+        "  'DS-03' AS use_case,\n",
+        "  run_id,\n",
+        "  MAX(hierarchy_depth) AS max_hierarchy_depth,\n",
+        "  COUNT(DISTINCT child_entity_id) AS entity_count,\n",
+        "  COUNT(DISTINCT parent_entity_id) AS parent_count,\n",
+        "  AVG(hierarchy_confidence) AS avg_validity_score\n",
+        "FROM pulse360_s4.identity_resolution.entity_hierarchy_edge\n",
+        "GROUP BY 1,2\n",
+        "ORDER BY run_id"
+      ]
+    },
+    {
+      "name": "activation_review_queue",
+      "displayName": "Activation review queue",
+      "queryLines": [
+        "SELECT\n",
+        "  source_product,\n",
+        "  resolved_entity_id,\n",
+        "  crm_activation_key,\n",
+        "  concat_ws(',', crm_activation_candidate_ids) AS candidate_ids,\n",
+        "  concat_ws(',', crm_activation_candidate_names) AS candidate_names,\n",
+        "  crm_activation_candidate_count,\n",
+        "  activation_resolution_hint,\n",
+        "  confidence_score,\n",
+        "  activation_eligible_flag,\n",
+        "  concat_ws(',', activation_block_reasons) AS block_reasons,\n",
+        "  lineage_status,\n",
+        "  run_timestamp\n",
+        "FROM pulse360_s4.gold.activation_eligibility_review_queue\n",
+        "ORDER BY source_product, resolved_entity_id"
+      ]
+    },
+    {
+      "name": "transition_checkpoints",
+      "displayName": "Transition checkpoints",
+      "queryLines": [
+        "WITH ds01 AS (\n",
+        "  SELECT run_id, MIN(run_timestamp) AS ds01_ts\n",
+        "  FROM pulse360_s4.intelligence.duplicate_candidate_pairs\n",
+        "  GROUP BY run_id\n",
+        "),\n",
+        "ds02 AS (\n",
+        "  SELECT run_id, MIN(metric_ts) AS ds02_ts\n",
+        "  FROM pulse360_s4.intelligence.governance_ops_metrics\n",
+        "  GROUP BY run_id\n",
+        "),\n",
+        "ds03 AS (\n",
+        "  SELECT run_id, MIN(run_timestamp) AS ds03_ts\n",
+        "  FROM pulse360_s4.identity_resolution.entity_hierarchy_edge\n",
+        "  GROUP BY run_id\n",
+        "),\n",
+        "activation AS (\n",
+        "  SELECT run_id, MIN(run_timestamp) AS activation_ts\n",
+        "  FROM pulse360_s4.intelligence.datacloud_export_accounts\n",
+        "  GROUP BY run_id\n",
+        ")\n",
+        "SELECT\n",
+        "  COALESCE(ds01.run_id, ds02.run_id, ds03.run_id, activation.run_id) AS run_id,\n",
+        "  ds01.ds01_ts,\n",
+        "  ds02.ds02_ts,\n",
+        "  ds03.ds03_ts,\n",
+        "  activation.activation_ts,\n",
+        "  TIMESTAMPDIFF(MINUTE, ds01.ds01_ts, activation.activation_ts) AS ds01_to_activation_minutes,\n",
+        "  TIMESTAMPDIFF(MINUTE, ds03.ds03_ts, activation.activation_ts) AS ds03_to_activation_minutes\n",
+        "FROM ds01\n",
+        "FULL OUTER JOIN ds02 ON ds01.run_id = ds02.run_id\n",
+        "FULL OUTER JOIN ds03 ON COALESCE(ds01.run_id, ds02.run_id) = ds03.run_id\n",
+        "FULL OUTER JOIN activation ON COALESCE(ds01.run_id, ds02.run_id, ds03.run_id) = activation.run_id\n",
+        "ORDER BY run_id DESC"
+      ]
+    },
+    {
+      "name": "activation_freshness",
+      "displayName": "Activation freshness",
+      "queryLines": [
+        "SELECT\n",
+        "  run_id,\n",
+        "  MAX(run_timestamp) AS last_synced_timestamp,\n",
+        "  COUNT(*) AS activated_account_count\n",
+        "FROM pulse360_s4.intelligence.datacloud_export_accounts\n",
+        "GROUP BY run_id\n",
+        "ORDER BY last_synced_timestamp DESC"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "s4_demo_readiness",
+      "displayName": "S4 Demo Readiness",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Pulse360 S4 Account Intelligence\n",
+                "Databricks evidence dashboard for DS-01 fragmentation, DS-02 governance, DS-03 Account 360, and activation readiness."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_duplicate_pairs",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "duplicate_pairs",
+                      "expression": "SUM(`duplicate_pairs`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "duplicate_pairs"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Duplicate Pairs"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_activated_accounts",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "activated_accounts",
+                      "expression": "SUM(`activated_accounts`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "activated_accounts"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Data Cloud Export Accounts"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_review_queue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "review_queue_records",
+                      "expression": "SUM(`review_queue_records`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "review_queue_records"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Stewardship Queue"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_duplicate_confidence",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds01_duplicate_confidence",
+                  "fields": [
+                    {
+                      "name": "confidence_band",
+                      "expression": "`confidence_band`"
+                    },
+                    {
+                      "name": "pair_count",
+                      "expression": "SUM(`pair_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "confidence_band",
+                  "displayName": "Confidence Band",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "pair_count",
+                  "displayName": "Pair Count",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "DS-01 Duplicate Confidence Distribution"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_hierarchy_readiness",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds03_hierarchy_readiness",
+                  "fields": [
+                    {
+                      "name": "run_id",
+                      "expression": "`run_id`"
+                    },
+                    {
+                      "name": "entity_count",
+                      "expression": "SUM(`entity_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "run_id",
+                  "displayName": "Run",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "entity_count",
+                  "displayName": "Hierarchy Entities",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "DS-03 Hierarchy Readiness"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 4,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "table_activation_review_queue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "activation_review_queue",
+                  "fields": [
+                    {
+                      "name": "source_product",
+                      "expression": "`source_product`"
+                    },
+                    {
+                      "name": "resolved_entity_id",
+                      "expression": "`resolved_entity_id`"
+                    },
+                    {
+                      "name": "candidate_ids",
+                      "expression": "`candidate_ids`"
+                    },
+                    {
+                      "name": "crm_activation_candidate_count",
+                      "expression": "`crm_activation_candidate_count`"
+                    },
+                    {
+                      "name": "activation_resolution_hint",
+                      "expression": "`activation_resolution_hint`"
+                    },
+                    {
+                      "name": "confidence_score",
+                      "expression": "`confidence_score`"
+                    },
+                    {
+                      "name": "block_reasons",
+                      "expression": "`block_reasons`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "source_product",
+                    "displayName": "Source Product",
+                    "title": "Source Product",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100000
+                  },
+                  {
+                    "fieldName": "resolved_entity_id",
+                    "displayName": "Resolved Entity",
+                    "title": "Resolved Entity",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100001
+                  },
+                  {
+                    "fieldName": "candidate_ids",
+                    "displayName": "Candidate CRM IDs",
+                    "title": "Candidate CRM IDs",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100002
+                  },
+                  {
+                    "fieldName": "crm_activation_candidate_count",
+                    "displayName": "Candidate Count",
+                    "title": "Candidate Count",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100003
+                  },
+                  {
+                    "fieldName": "activation_resolution_hint",
+                    "displayName": "Resolution Hint",
+                    "title": "Resolution Hint",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100004
+                  },
+                  {
+                    "fieldName": "confidence_score",
+                    "displayName": "Confidence",
+                    "title": "Confidence",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100005
+                  },
+                  {
+                    "fieldName": "block_reasons",
+                    "displayName": "Block Reasons",
+                    "title": "Block Reasons",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100006
+                  }
+                ]
+              },
+              "itemsPerPage": 25,
+              "condensed": true,
+              "frame": {
+                "showTitle": true,
+                "title": "Activation Review Queue"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 4
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "scenario_evidence",
+      "displayName": "Scenario Evidence",
+      "layout": [
+        {
+          "widget": {
+            "name": "scenario_title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Scenario Evidence\n",
+                "Validated Databricks datasets for governance trend, transition timing, and activation freshness."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "table_governance_trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ds02_governance_trend",
+                  "fields": [
+                    {
+                      "name": "metric_day",
+                      "expression": "`metric_day`"
+                    },
+                    {
+                      "name": "cases_resolved",
+                      "expression": "`cases_resolved`"
+                    },
+                    {
+                      "name": "backlog_open",
+                      "expression": "`backlog_open`"
+                    },
+                    {
+                      "name": "quality_score",
+                      "expression": "`quality_score`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "metric_day",
+                    "displayName": "Metric Day",
+                    "title": "Metric Day",
+                    "type": "timestamp",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100000
+                  },
+                  {
+                    "fieldName": "cases_resolved",
+                    "displayName": "Cases Resolved",
+                    "title": "Cases Resolved",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100001
+                  },
+                  {
+                    "fieldName": "backlog_open",
+                    "displayName": "Backlog Open",
+                    "title": "Backlog Open",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100002
+                  },
+                  {
+                    "fieldName": "quality_score",
+                    "displayName": "Quality Score",
+                    "title": "Quality Score",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100003
+                  }
+                ]
+              },
+              "itemsPerPage": 25,
+              "condensed": true,
+              "frame": {
+                "showTitle": true,
+                "title": "DS-02 Governance Trend"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "table_activation_freshness",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "activation_freshness",
+                  "fields": [
+                    {
+                      "name": "run_id",
+                      "expression": "`run_id`"
+                    },
+                    {
+                      "name": "last_synced_timestamp",
+                      "expression": "`last_synced_timestamp`"
+                    },
+                    {
+                      "name": "activated_account_count",
+                      "expression": "`activated_account_count`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "run_id",
+                    "displayName": "Run",
+                    "title": "Run",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100000
+                  },
+                  {
+                    "fieldName": "last_synced_timestamp",
+                    "displayName": "Last Synced",
+                    "title": "Last Synced",
+                    "type": "timestamp",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100001
+                  },
+                  {
+                    "fieldName": "activated_account_count",
+                    "displayName": "Accounts",
+                    "title": "Accounts",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100002
+                  }
+                ]
+              },
+              "itemsPerPage": 25,
+              "condensed": true,
+              "frame": {
+                "showTitle": true,
+                "title": "Activation Freshness"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "table_transition_checkpoints",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "transition_checkpoints",
+                  "fields": [
+                    {
+                      "name": "run_id",
+                      "expression": "`run_id`"
+                    },
+                    {
+                      "name": "ds01_ts",
+                      "expression": "`ds01_ts`"
+                    },
+                    {
+                      "name": "ds02_ts",
+                      "expression": "`ds02_ts`"
+                    },
+                    {
+                      "name": "ds03_ts",
+                      "expression": "`ds03_ts`"
+                    },
+                    {
+                      "name": "activation_ts",
+                      "expression": "`activation_ts`"
+                    },
+                    {
+                      "name": "ds01_to_activation_minutes",
+                      "expression": "`ds01_to_activation_minutes`"
+                    },
+                    {
+                      "name": "ds03_to_activation_minutes",
+                      "expression": "`ds03_to_activation_minutes`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "run_id",
+                    "displayName": "Run",
+                    "title": "Run",
+                    "type": "string",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100000
+                  },
+                  {
+                    "fieldName": "ds01_ts",
+                    "displayName": "DS-01",
+                    "title": "DS-01",
+                    "type": "timestamp",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100001
+                  },
+                  {
+                    "fieldName": "ds02_ts",
+                    "displayName": "DS-02",
+                    "title": "DS-02",
+                    "type": "timestamp",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100002
+                  },
+                  {
+                    "fieldName": "ds03_ts",
+                    "displayName": "DS-03",
+                    "title": "DS-03",
+                    "type": "timestamp",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100003
+                  },
+                  {
+                    "fieldName": "activation_ts",
+                    "displayName": "Activation",
+                    "title": "Activation",
+                    "type": "timestamp",
+                    "displayAs": "string",
+                    "visible": true,
+                    "order": 100004
+                  },
+                  {
+                    "fieldName": "ds01_to_activation_minutes",
+                    "displayName": "DS-01 to Activation",
+                    "title": "DS-01 to Activation",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100005
+                  },
+                  {
+                    "fieldName": "ds03_to_activation_minutes",
+                    "displayName": "DS-03 to Activation",
+                    "title": "DS-03 to Activation",
+                    "type": "number",
+                    "displayAs": "number",
+                    "visible": true,
+                    "order": 100006
+                  }
+                ]
+              },
+              "itemsPerPage": 25,
+              "condensed": true,
+              "frame": {
+                "showTitle": true,
+                "title": "Use Case to Activation Checkpoints"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 6,
+            "height": 4
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+<template>
+    <div class="seller-v2-shell">
+        <template if:true={hasError}>
+            <section class="notice notice_error">
+                <p>{errorMessage}</p>
+            </section>
+        </template>
+
+        <template if:true={hasWorkspace}>
+            <template if:true={showWorkspaceHeader}>
+                <section class="control-surface">
+                    <div>
+                        <p class="eyebrow">Pulse360 Seller Workspace V2</p>
+                        <h1 class="surface-title">Decision-ready seller view</h1>
+                        <p class="surface-copy">Keep the default view concise: what matters, why it matters, and what to do next.</p>
+                    </div>
+                    <template if:true={showPreviewSelector}>
+                        <lightning-combobox
+                            name="previewAccount"
+                            label="Preview account"
+                            value={activeAccountId}
+                            options={previewOptions}
+                            onchange={handlePreviewAccountChange}>
+                        </lightning-combobox>
+                    </template>
+                </section>
+            </template>
+
+            <section class="hero-surface">
+                <div class="hero-copy">
+                    <p class="eyebrow">Account focus</p>
+                    <h2 class="hero-title">{workspace.accountName}</h2>
+                    <p class="hero-summary">{workspace.aiNarrative}</p>
+                    <div class="badge-row">
+                        <span class={freshnessClass}>{workspace.freshnessLabel}</span>
+                        <span class="badge badge_soft">{coverageSummary}</span>
+                        <span class="badge badge_soft">{validationLabel}</span>
+                    </div>
+                </div>
+
+                <div class="hero-highlight">
+                    <div class="detail-label">Top recommended move</div>
+                    <div class="highlight-title">{primaryAction.recommendedPlay}</div>
+                    <p>{primaryAction.reasoning}</p>
+                    <div class="mini-grid">
+                        <div>
+                            <div class="detail-label">Target entity</div>
+                            <div class="detail-value">{primaryAction.targetEntity}</div>
+                        </div>
+                        <div>
+                            <div class="detail-label">Confidence</div>
+                            <div class="detail-value">{primaryAction.confidenceLabel}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="triage-strip">
+                <template for:each={topThingsToKnow} for:item="insight">
+                    <article class="triage-card" key={insight.key}>
+                        <div class="detail-label">{insight.label}</div>
+                        <div class="triage-value">{insight.value}</div>
+                        <p>{insight.copy}</p>
+                    </article>
+                </template>
+            </section>
+
+            <section class="workspace-grid">
+                <div class="surface move-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Execute now</p>
+                            <h2 class="section-title">Recommended move</h2>
+                        </div>
+                        <div class="chip-row">
+                            <span class="chip">{primaryAction.solutionFamily}</span>
+                            <span class="chip chip_alt">{primaryAction.specialistRoute}</span>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-grid">
+                        <div class="card-block">
+                            <div class="detail-label">Why now</div>
+                            <p>{primaryAction.reasoning}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Buying committee or sponsor gap</div>
+                            <p>{primaryAction.buyingGroupGap}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Outreach objective</div>
+                            <p>{primaryAction.outreachObjective}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Estimated impact</div>
+                            <p>{primaryAction.estimatedRevenueImpact}</p>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <lightning-button label="Create opportunity" variant="brand" onclick={handleCreateOpportunity}></lightning-button>
+                        <lightning-button label="Create task" variant="neutral" onclick={handleCreateTask}></lightning-button>
+                        <lightning-button label="Route specialist" variant="neutral" onclick={handleRouteSpecialist}></lightning-button>
+                        <lightning-button label="Open planner workspace" variant="base" onclick={handleOpenPlanner}></lightning-button>
+                    </div>
+                </div>
+
+                <aside class="surface sidebar-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Evidence</p>
+                            <h2 class="section-title">Why the seller should trust this</h2>
+                        </div>
+                    </div>
+
+                    <div class="evidence-stack">
+                        <div class="sidebar-block">
+                            <div class="detail-label">Freshness and model context</div>
+                            <p>{freshnessSummary}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">What is still uncertain</div>
+                            <p>{uncertaintySummary}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">Supporting facts</div>
+                            <template if:true={hasSupportingSources}>
+                                <ul class="source-list">
+                                    <template for:each={topSupportingSources} for:item="source">
+                                        <li key={source.sourceId}>
+                                            <strong>{source.sourceName}</strong>
+                                            <span>{source.documentDate}</span>
+                                            <p>{source.excerpt}</p>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+                            <template if:false={hasSupportingSources}>
+                                <p>No linked evidence is attached yet. The seller should rely on CRM and Data Cloud context plus the current recommendation summary.</p>
+                            </template>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="workspace-grid workspace-grid_secondary">
+                <div class="surface hierarchy-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Group context</p>
+                            <h2 class="section-title">Choose the right entity before the seller moves</h2>
+                        </div>
+                        <p class="section-copy">{workspace.hierarchyNote}</p>
+                    </div>
+
+                    <div class="entity-list">
+                        <template for:each={normalizedHierarchyEntities} for:item="entity">
+                            <article class={entity.className} key={entity.entityName}>
+                                <div class="entity-header">
+                                    <div>
+                                        <h3>{entity.entityName}</h3>
+                                        <p>{entity.entityRole}</p>
+                                    </div>
+                                    <span class={entity.badgeClass}>{entity.coverageLabel}</span>
+                                </div>
+                                <p>{entity.signal}</p>
+                                <template if:true={entity.suggestedPlay}>
+                                    <p class="entity-play">{entity.suggestedPlay}</p>
+                                </template>
+                                <div class="button-row">
+                                    <lightning-button
+                                        label={entity.focusLabel}
+                                        variant="neutral"
+                                        data-entity-name={entity.entityName}
+                                        onclick={handleFocusEntity}>
+                                    </lightning-button>
+                                    <lightning-button
+                                        label="Create task"
+                                        variant="base"
+                                        data-entity-name={entity.entityName}
+                                        onclick={handleEntityTask}>
+                                    </lightning-button>
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+                </div>
+
+                <aside class="surface alternatives-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Fallback moves</p>
+                            <h2 class="section-title">Keep one or two credible alternatives</h2>
+                        </div>
+                    </div>
+
+                    <template if:true={hasOtherMoves}>
+                        <div class="alt-list">
+                            <template for:each={otherMoves} for:item="action">
+                                <article class="alt-card" key={action.key}>
+                                    <div class="alt-topline">
+                                        <span class="chip">{action.solutionFamily}</span>
+                                        <span>{action.confidenceLabel}</span>
+                                    </div>
+                                    <h3>{action.recommendedPlay}</h3>
+                                    <p>{action.whyNotNow}</p>
+                                    <div class="button-row">
+                                        <lightning-button
+                                            label="Use this move"
+                                            variant="neutral"
+                                            data-rank={action.rank}
+                                            onclick={handleSelectSecondaryMove}>
+                                        </lightning-button>
+                                        <lightning-button
+                                            label="Create task"
+                                            variant="base"
+                                            data-rank={action.rank}
+                                            onclick={handleSecondaryTask}>
+                                        </lightning-button>
+                                    </div>
+                                </article>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:false={hasOtherMoves}>
+                        <div class="empty-state">
+                            <p>Pulse360 has not generated fallback moves for this account yet.</p>
+                        </div>
+                    </template>
+                </aside>
+            </section>
+        </template>
+    </div>
+</template>

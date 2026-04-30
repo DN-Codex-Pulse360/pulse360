@@ -20,8 +20,26 @@
         </itemInstances>
         <itemInstances>
             <componentInstance>
-                <componentName>c:governanceCaseReview</componentName>
-                <identifier>governance_case_review</identifier>
+                <componentName>c:pulse360GovernanceSnapshot</componentName>
+                <identifier>pulse360_governance_snapshot</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>c:pulse360GovernanceMatchEvidence</componentName>
+                <identifier>pulse360_governance_match_evidence</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>c:pulse360GovernanceDecisionWorkspace</componentName>
+                <identifier>pulse360_governance_decision_workspace</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>c:pulse360GovernanceAuditOutcome</componentName>
+                <identifier>pulse360_governance_audit_outcome</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>

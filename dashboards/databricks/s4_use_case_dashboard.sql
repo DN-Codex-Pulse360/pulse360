@@ -11,7 +11,7 @@
 SELECT
   'DS-01' AS use_case,
   run_id,
-  date_trunc('hour', run_ts) AS run_hour,
+  date_trunc('hour', run_timestamp) AS run_hour,
   CASE
     WHEN duplicate_confidence_score >= 95 THEN '95-100'
     WHEN duplicate_confidence_score >= 90 THEN '90-94'
@@ -39,16 +39,16 @@ SELECT
   'DS-03' AS use_case,
   run_id,
   MAX(hierarchy_depth) AS max_hierarchy_depth,
-  COUNT(DISTINCT entity_id) AS entity_count,
+  COUNT(DISTINCT child_entity_id) AS entity_count,
   COUNT(DISTINCT parent_entity_id) AS parent_count,
-  AVG(validity_score) AS avg_validity_score
-FROM pulse360_s4.intelligence.entity_hierarchy_graph
+  AVG(hierarchy_confidence) AS avg_validity_score
+FROM pulse360_s4.identity_resolution.entity_hierarchy_edge
 GROUP BY 1,2;
 
 -- 4) Cross-use-case transition checkpoints by run
 -- Assumes run metadata is persisted across gold tables.
 WITH ds01 AS (
-  SELECT run_id, MIN(run_ts) AS ds01_ts
+  SELECT run_id, MIN(run_timestamp) AS ds01_ts
   FROM pulse360_s4.intelligence.duplicate_candidate_pairs
   GROUP BY run_id
 ),
@@ -58,8 +58,8 @@ ds02 AS (
   GROUP BY run_id
 ),
 ds03 AS (
-  SELECT run_id, MIN(run_ts) AS ds03_ts
-  FROM pulse360_s4.intelligence.entity_hierarchy_graph
+  SELECT run_id, MIN(run_timestamp) AS ds03_ts
+  FROM pulse360_s4.identity_resolution.entity_hierarchy_edge
   GROUP BY run_id
 ),
 activation AS (
@@ -105,9 +105,9 @@ d2 AS (
 ),
 d3 AS (
   SELECT
-    COUNT(DISTINCT entity_id) AS hierarchy_entities,
+    COUNT(DISTINCT child_entity_id) AS hierarchy_entities,
     MAX(hierarchy_depth) AS hierarchy_depth_max
-  FROM pulse360_s4.intelligence.entity_hierarchy_graph
+  FROM pulse360_s4.identity_resolution.entity_hierarchy_edge
 ),
 act AS (
   SELECT
@@ -125,3 +125,28 @@ SELECT
   activated_accounts,
   latest_activation_ts
 FROM d1 CROSS JOIN d2 CROSS JOIN d3 CROSS JOIN act;
+
+-- 7) Closed-loop Salesforce stewardship feedback metrics
+SELECT
+  metric_id,
+  total_governance_cases,
+  resolved_decision_count,
+  pending_decision_count,
+  approved_count,
+  rejected_count,
+  deferred_count,
+  recommended_merge_count,
+  ready_for_merge_count,
+  merge_completed_count,
+  downstream_update_queued_count,
+  review_followup_required_count,
+  review_flagged_count,
+  high_confidence_case_count,
+  average_duplicate_confidence,
+  latest_decision_at,
+  latest_crm_system_modstamp,
+  lineage_status,
+  run_id,
+  run_timestamp,
+  model_version
+FROM pulse360_s4.intelligence.governance_case_metrics;

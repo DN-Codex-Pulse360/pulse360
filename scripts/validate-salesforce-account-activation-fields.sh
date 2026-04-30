@@ -15,6 +15,7 @@ required_fields=(
   "Unified_Profile_Id__c"
   "Identity_Confidence__c"
   "Group_Revenue_Rollup__c"
+  "Intent_Signal_Payload__c"
   "Health_Score__c"
   "Cross_Sell_Propensity__c"
   "Coverage_Gap_Flag__c"
@@ -25,6 +26,25 @@ required_fields=(
   "Open_Opportunity_Count__c"
   "Last_Engagement_Timestamp__c"
   "DataCloud_Last_Synced__c"
+  "External_Legal_Name__c"
+  "External_Registration_Number__c"
+  "Externally_Validated__c"
+  "Validity_Score_External__c"
+  "External_Subsidiaries_Found__c"
+  "AI_Narrative__c"
+  "AI_Recommended_Actions__c"
+  "AI_Narrative_Generated__c"
+  "Enrichment_Run_Id__c"
+  "Regulatory_Readiness_Score__c"
+  "Duplicate_Exposure_Count__c"
+  "Group_Known_Subsidiary_Count__c"
+  "CRM_Covered_Subsidiary_Count__c"
+  "Group_Revenue_Visible__c"
+  "External_Revenue_Confirmed__c"
+  "AI_Model_Id__c"
+  "AI_Prompt_Version__c"
+  "AI_Source_Refs__c"
+  "AI_Citation_Count__c"
 )
 
 for field in "${required_fields[@]}"; do
@@ -46,7 +66,7 @@ if [[ -n "${TARGET_ORG:-}" ]]; then
   developer_names_csv="$(IFS=,; echo "${developer_names[*]}")"
   query="SELECT DeveloperName FROM CustomField WHERE TableEnumOrId = 'Account' AND DeveloperName IN (${developer_names_csv})"
   actual_names="$("$SF_BIN" data query --use-tooling-api --target-org "$TARGET_ORG" --query "$query" --json \
-    | jq -r '.result.records[].DeveloperName' | sort)"
+    | jq -r '(.result.records // [])[].DeveloperName' | sort)"
   for field in "${required_fields[@]}"; do
     developer_name="${field%__c}"
     echo "$actual_names" | grep -qx "$developer_name" \

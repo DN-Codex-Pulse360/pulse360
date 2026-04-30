@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/agentforce_capability_gate",
+  "title": "Pulse360 Agentforce Capability Gate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target_org_alias",
+    "capability_state",
+    "native_runtime_verified",
+    "fallback_surface",
+    "gates",
+    "citation_policy",
+    "trust_audit_policy",
+    "mutating_action_policy",
+    "verified_at"
+  ],
+  "properties": {
+    "target_org_alias": { "type": "string", "minLength": 1 },
+    "capability_state": {
+      "type": "string",
+      "enum": ["metadata_ready", "runtime_unproven", "runtime_blocked", "runtime_verified"]
+    },
+    "native_runtime_verified": { "type": "boolean" },
+    "fallback_surface": { "type": "string", "minLength": 1 },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate", "status", "evidence", "failure_behavior"],
+        "properties": {
+          "gate": { "type": "string", "minLength": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["passed", "failed", "unproven", "not_applicable"]
+          },
+          "evidence": { "type": "string", "minLength": 1 },
+          "failure_behavior": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "citation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["native_citations_supported", "fallback_citation_surface", "required_fields"],
+      "properties": {
+        "native_citations_supported": { "type": "boolean" },
+        "fallback_citation_surface": { "type": "string", "minLength": 1 },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "trust_audit_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trust_layer_status", "audit_required", "required_fields"],
+      "properties": {
+        "trust_layer_status": {
+          "type": "string",
+          "enum": ["configured", "unproven", "blocked"]
+        },
+        "audit_required": { "type": "boolean" },
+        "required_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "mutating_action_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_required_for", "blocked_without_crm_safe_key", "blocked_without_evidence"],
+      "properties": {
+        "approval_required_for": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "blocked_without_crm_safe_key": { "type": "boolean" },
+        "blocked_without_evidence": { "type": "boolean" }
+      }
+    },
+    "verified_at": { "type": "string", "format": "date-time" }
+  }
+}
+

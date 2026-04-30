@@ -35,7 +35,32 @@ metrics:
   - name: primary_brand_name
     datatype: string
     formula: top_brand_by_revenue
-activation:
+  - name: regulatory_readiness_score
+    datatype: number
+    range: [0, 100]
+    formula: >
+      greatest(
+        0,
+        round(
+          100
+          - case when identity_confidence < 90 then 15 else 0 end
+          - case when is_externally_validated = false then 25 else 0 end
+          - case when duplicate_exposure_count > 0 then 20 else 0 end
+          - case when coverage_gap_flag = true then 15 else 0 end
+          - case
+              when group_known_subsidiary_count > 0 and crm_covered_subsidiary_count / group_known_subsidiary_count < 0.5
+              then 10
+              else 0
+            end
+          - case
+              when external_revenue_confirmed > 0 and group_revenue_visible / external_revenue_confirmed < 0.5
+              then 15
+              else 0
+            end,
+          0
+        )
+      )
+  activation:
   target: salesforce_account
   mode: near_real_time
   max_sync_latency_minutes: 5
@@ -53,6 +78,24 @@ activation:
     - open_opportunity_count
     - last_engagement_timestamp
     - last_synced_timestamp
+    - external_legal_name
+    - is_externally_validated
+    - validity_score_external
+    - external_subsidiaries_found
+    - ai_narrative
+    - ai_recommended_actions
+    - ai_narrative_generated_at
+    - enrichment_run_id
+    - regulatory_readiness_score
+    - duplicate_exposure_count
+    - group_known_subsidiary_count
+    - crm_covered_subsidiary_count
+    - group_revenue_visible
+    - external_revenue_confirmed
+    - model_id
+    - prompt_version
+    - source_refs
+    - citation_count
   recompute_trigger:
     - opportunity_created
     - governance_merge_approved

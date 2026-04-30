@@ -6,6 +6,8 @@
     <errorConditionFormula>
         ISPICKVAL(Decision_Status__c, "Approved")
         &amp;&amp;
+        ISPICKVAL(Recommended_Action__c, "Approve Merge")
+        &amp;&amp;
         NOT(
             OR(
                 Surviving_Account__c = Left_Account__c,

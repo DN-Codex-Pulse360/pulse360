@@ -1,0 +1,63 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasWorkspace}>
+        <section class="surface entity-surface">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Entity focus</p>
+                    <h2 class="section-title">Choose the right entity before the seller moves</h2>
+                    <p class="section-copy">{hierarchySummary}</p>
+                </div>
+                <div class="badge-row">
+                    <span class={readinessClass}>{hierarchyReadinessLabel}</span>
+                    <span class="badge badge_soft">{coverageSummary}</span>
+                </div>
+            </div>
+
+            <div class="entity-grid">
+                <template for:each={entityRows} for:item="entity">
+                    <article class="entity-card" key={entity.entityId}>
+                        <div class="entity-header">
+                            <div>
+                                <div class="detail-label">{entity.entityRole}</div>
+                                <template if:true={entity.crmRecordUrl}>
+                                    <lightning-formatted-url
+                                        value={entity.crmRecordUrl}
+                                        label={entity.entityName}
+                                        target="_self"
+                                        class="entity-link">
+                                    </lightning-formatted-url>
+                                </template>
+                                <template if:false={entity.crmRecordUrl}>
+                                    <div class="entity-name">{entity.entityName}</div>
+                                </template>
+                            </div>
+                            <template if:true={entity.isCurrentAccount}>
+                                <span class="badge badge_current">Current account</span>
+                            </template>
+                        </div>
+
+                        <div class="entity-meta">
+                            <span class={entity.coverageClass}>{entity.coverageLabel}</span>
+                            <template if:true={entity.signal}>
+                                <span class="badge badge_soft">{entity.signal}</span>
+                            </template>
+                        </div>
+
+                        <template if:true={entity.suggestedPlay}>
+                            <div class="card-block">
+                                <div class="detail-label">Suggested play</div>
+                                <p>{entity.suggestedPlay}</p>
+                            </div>
+                        </template>
+                    </article>
+                </template>
+            </div>
+        </section>
+    </template>
+</template>

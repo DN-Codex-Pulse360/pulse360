@@ -17,5 +17,8 @@ SELECT
   SystemModstamp AS crm_system_modstamp,
   'salesforce' AS source_system
 FROM pulse360_s4.bronze_salesforce.opportunitylineitem
+INNER JOIN pulse360_s4.silver_salesforce.crm_opportunity opportunity_anchor
+  ON OpportunityId = opportunity_anchor.crm_opportunity_id
+LEFT JOIN pulse360_s4.silver_salesforce.crm_product product_anchor
+  ON Product2Id = product_anchor.crm_product_id
 WHERE COALESCE(IsDeleted, false) = false;
-

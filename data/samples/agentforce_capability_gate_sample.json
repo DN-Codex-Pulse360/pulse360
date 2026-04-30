@@ -1,0 +1,79 @@
+{
+  "target_org_alias": "pulse360-agent-target",
+  "capability_state": "runtime_unproven",
+  "native_runtime_verified": false,
+  "fallback_surface": "custom Salesforce LWC/Apex assistant and action panels",
+  "gates": [
+    {
+      "gate": "data_360_ready",
+      "status": "unproven",
+      "evidence": "Data 360 dependency is documented, but runtime setup evidence is not attached to this source slice.",
+      "failure_behavior": "Do not claim native Agentforce runtime."
+    },
+    {
+      "gate": "agent_metadata_deployed",
+      "status": "passed",
+      "evidence": "Pulse360_Agent AiAuthoringBundle exists in source.",
+      "failure_behavior": "Treat as metadata-only if deployment evidence is missing."
+    },
+    {
+      "gate": "native_surface_visible",
+      "status": "unproven",
+      "evidence": "Native Agentforce side-panel/runtime has not been demonstrated for the intended Account page user.",
+      "failure_behavior": "Use custom LWC assistant fallback."
+    },
+    {
+      "gate": "approval_policy_enforced",
+      "status": "passed",
+      "evidence": "Pulse360SellerOrchestratorService requires approval for high-risk seller actions and governance execution requires explicit approval.",
+      "failure_behavior": "Block mutating actions."
+    }
+  ],
+  "citation_policy": {
+    "native_citations_supported": false,
+    "fallback_citation_surface": "source_refs rendered in Salesforce trust/governance surfaces",
+    "required_fields": [
+      "source_id",
+      "source_name",
+      "source_type",
+      "source_object_api_name",
+      "source_object_record_id",
+      "source_url",
+      "excerpt",
+      "accessed_at",
+      "document_date",
+      "jurisdiction"
+    ]
+  },
+  "trust_audit_policy": {
+    "trust_layer_status": "unproven",
+    "audit_required": true,
+    "required_fields": [
+      "user_id",
+      "surface_context",
+      "record_id",
+      "action_type",
+      "prompt_version",
+      "model_id",
+      "enrichment_run_id",
+      "source_ids",
+      "generated_at",
+      "approval_required",
+      "approval_state",
+      "audit_event_id",
+      "trust_layer_status",
+      "masked_field_policy"
+    ]
+  },
+  "mutating_action_policy": {
+    "approval_required_for": [
+      "open_opportunity",
+      "create_opportunity",
+      "record_governance_decision"
+    ],
+    "blocked_without_crm_safe_key": true,
+    "blocked_without_evidence": true
+  },
+  "verified_at": "2026-04-24T07:35:00Z"
+}
+

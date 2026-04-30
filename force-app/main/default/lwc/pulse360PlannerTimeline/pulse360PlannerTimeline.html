@@ -1,0 +1,41 @@
+<template>
+    <aside class="surface">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">{eyebrow}</p>
+                <h2 class="section-title">{sectionTitle}</h2>
+            </div>
+        </div>
+
+        <template if:true={hasItems}>
+            <div class="timeline-list">
+                <template for:each={visibleItems} for:item="item">
+                    <article class={item.cardClass} key={item.key}>
+                        <div class="timeline-meta">
+                            <span class={item.badgeClass}>{item.typeLabel}</span>
+                            <span class="timeline-age">{item.relativeLabel}</span>
+                        </div>
+                        <h3>{item.title}</h3>
+                        <p class="timeline-account">{item.accountName}</p>
+                        <p class="timeline-detail">{item.detail}</p>
+                        <div class="timeline-footer">
+                            <span>{item.eventDateLabel}</span>
+                            <lightning-button
+                                label="Open account"
+                                variant="base"
+                                data-account-id={item.accountId}
+                                onclick={handleOpenAccount}>
+                            </lightning-button>
+                        </div>
+                    </article>
+                </template>
+            </div>
+        </template>
+
+        <template if:false={hasItems}>
+            <div class="empty-state">
+                <p>Timeline activity will appear once refresh, validation, or risk events are available.</p>
+            </div>
+        </template>
+    </aside>
+</template>

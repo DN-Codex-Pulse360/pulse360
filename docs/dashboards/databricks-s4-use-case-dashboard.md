@@ -5,6 +5,7 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions as executed in Databricks
 
 ## Source Query Pack
 - `dashboards/databricks/s4_use_case_dashboard.sql`
+- `dashboards/databricks/pulse360_s4_use_case_dashboard.lvdash.json`
 
 ## Recommended Lakeview Layout
 1. KPI cards
@@ -35,21 +36,31 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions as executed in Databricks
 - last synced timestamp and activated account count by run
 - chart: table + time series
 
+7. Closed loop feedback panel
+- Salesforce governance case decisions ingested back into Databricks
+- KPI cards for total cases, resolved decisions, ready-for-merge count, queued downstream updates, and average duplicate confidence
+- table: approved/rejected/deferred/merge-completed counts with latest decision timestamp and lineage status
+
 ## Deployment Steps (Databricks SQL)
-1. Create a new Lakeview dashboard.
-2. Add datasets by pasting each query block from `s4_use_case_dashboard.sql`.
+1. Import or create the AI/BI dashboard from `pulse360_s4_use_case_dashboard.lvdash.json`.
+2. If building manually, create a new Lakeview dashboard and add datasets by pasting each query block from `s4_use_case_dashboard.sql`.
 3. Build visuals per layout above.
-4. Add filters:
+4. Add filters if needed:
 - `run_id`
-- date range (`run_ts`/`metric_ts`)
+- date range (`run_timestamp`/`metric_ts`)
 5. Save as `Pulse360 S4 - Use Case & Transition Dashboard`.
-6. Keep dataset references fully qualified to `pulse360_s4.intelligence.*`.
+6. Keep dataset references fully qualified to the `pulse360_s4` Unity Catalog objects named below.
+
+## Current Draft
+- Workspace path: `/Shared/pulse360/Pulse360 S4 - Use Case & Transition Dashboard.lvdash.json`
+- Dashboard ID: `01f14106fbcf1dea8543a28217628f38`
 
 ## Table Dependencies
 - `pulse360_s4.intelligence.duplicate_candidate_pairs`
 - `pulse360_s4.intelligence.governance_ops_metrics`
-- `pulse360_s4.intelligence.entity_hierarchy_graph`
+- `pulse360_s4.identity_resolution.entity_hierarchy_edge`
 - `pulse360_s4.intelligence.datacloud_export_accounts`
+- `pulse360_s4.intelligence.governance_case_metrics`
 
 ## Acceptance Mapping
 - DS-01 evidence: duplicate confidence distribution.
@@ -57,3 +68,4 @@ Visualize DS-01, DS-02, DS-03 evidence and transitions as executed in Databricks
 - DS-03 evidence: hierarchy depth and rollup readiness.
 - Transition evidence: run-level timing from use case outputs to activation.
 - Last synced evidence: activation freshness dataset for Account 360.
+- Closed-loop feedback: Salesforce `Governance_Case__c` stewardship outcomes summarized back in Databricks.

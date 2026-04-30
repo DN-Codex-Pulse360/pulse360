@@ -3,9 +3,14 @@ import {
     getRecord,
     getFieldDisplayValue,
     getFieldValue,
-    updateRecord
+    notifyRecordUpdateAvailable
 } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import LightningConfirm from 'lightning/confirm';
+import USER_ID from '@salesforce/user/Id';
+import getPulse360ReviewContext from '@salesforce/apex/Pulse360AgentOrchestratorService.getPulse360ReviewContext';
+import getPulse360DataCloudReviewEvidence from '@salesforce/apex/Pulse360AgentOrchestratorService.getPulse360DataCloudReviewEvidence';
+import recordPulse360GovernanceDecision from '@salesforce/apex/Pulse360AgentOrchestratorService.recordPulse360GovernanceDecision';
 
 import STATUS_FIELD from '@salesforce/schema/Governance_Case__c.Status__c';
 import PRIORITY_FIELD from '@salesforce/schema/Governance_Case__c.Priority__c';
@@ -37,6 +42,12 @@ import MERGE_EXECUTION_STATUS_FIELD from '@salesforce/schema/Governance_Case__c.
 import MERGE_EXECUTED_BY_FIELD from '@salesforce/schema/Governance_Case__c.Merge_Executed_By__c';
 import MERGE_EXECUTED_AT_FIELD from '@salesforce/schema/Governance_Case__c.Merge_Executed_At__c';
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
+import ACCOUNT_EXTERNAL_LEGAL_NAME_FIELD from '@salesforce/schema/Account.External_Legal_Name__c';
+import ACCOUNT_EXTERNAL_REGISTRATION_FIELD from '@salesforce/schema/Account.External_Registration_Number__c';
+import ACCOUNT_EXTERNALLY_VALIDATED_FIELD from '@salesforce/schema/Account.Externally_Validated__c';
+import ACCOUNT_EXTERNAL_VALIDITY_SCORE_FIELD from '@salesforce/schema/Account.Validity_Score_External__c';
+import ACCOUNT_AI_CITATION_COUNT_FIELD from '@salesforce/schema/Account.AI_Citation_Count__c';
+import ACCOUNT_AI_MODEL_ID_FIELD from '@salesforce/schema/Account.AI_Model_Id__c';
 import USER_NAME_FIELD from '@salesforce/schema/User.Name';
 
 const CASE_FIELDS = [
@@ -71,6 +82,16 @@ const CASE_FIELDS = [
     MERGE_EXECUTED_AT_FIELD
 ];
 
+const ACCOUNT_FIELDS = [
+    ACCOUNT_NAME_FIELD,
+    ACCOUNT_EXTERNAL_LEGAL_NAME_FIELD,
+    ACCOUNT_EXTERNAL_REGISTRATION_FIELD,
+    ACCOUNT_EXTERNALLY_VALIDATED_FIELD,
+    ACCOUNT_EXTERNAL_VALIDITY_SCORE_FIELD,
+    ACCOUNT_AI_CITATION_COUNT_FIELD,
+    ACCOUNT_AI_MODEL_ID_FIELD
+];
+
 const DECISION_REASON_OPTIONS = [
     { label: 'Clear Duplicate Match', value: 'CLEAR_DUPLICATE_MATCH' },
     { label: 'Legal Entity Match Confirmed', value: 'LEGAL_ENTITY_MATCH_CONFIRMED' },
@@ -98,9 +119,14 @@ export default class GovernanceCaseReview extends LightningElement {
     survivingAccountId;
     mergedAccountId;
     isSaving = false;
+    isLoadingEvidence = false;
     record;
     error;
     hasWireResolved = false;
+    reviewContext;
+    reviewEvidence;
+    reviewEvidenceError;
+    lastLoadedAgentRecordId;
 
     @wire(getRecord, { recordId: '$recordId', optionalFields: CASE_FIELDS })
     wiredRecord({ data, error }) {
@@ -113,22 +139,23 @@ export default class GovernanceCaseReview extends LightningElement {
             this.reviewFollowupRequired = Boolean(this.fieldValue(REVIEW_FOLLOWUP_REQUIRED_FIELD));
             this.survivingAccountId = this.fieldValue(SURVIVING_ACCOUNT_FIELD);
             this.mergedAccountId = this.fieldValue(MERGED_ACCOUNT_FIELD);
+            this.loadAgentReviewState();
         } else if (error) {
             this.error = error;
             this.record = undefined;
         }
     }
 
-    @wire(getRecord, { recordId: '$leftAccountId', fields: [ACCOUNT_NAME_FIELD] })
+    @wire(getRecord, { recordId: '$leftAccountId', fields: ACCOUNT_FIELDS })
     leftAccountRecord;
 
-    @wire(getRecord, { recordId: '$rightAccountId', fields: [ACCOUNT_NAME_FIELD] })
+    @wire(getRecord, { recordId: '$rightAccountId', fields: ACCOUNT_FIELDS })
     rightAccountRecord;
 
-    @wire(getRecord, { recordId: '$survivingAccountId', fields: [ACCOUNT_NAME_FIELD] })
+    @wire(getRecord, { recordId: '$survivingAccountId', fields: ACCOUNT_FIELDS })
     survivingAccountRecord;
 
-    @wire(getRecord, { recordId: '$mergedAccountId', fields: [ACCOUNT_NAME_FIELD] })
+    @wire(getRecord, { recordId: '$mergedAccountId', fields: ACCOUNT_FIELDS })
     mergedAccountRecord;
 
     @wire(getRecord, { recordId: '$decisionOwnerId', fields: [USER_NAME_FIELD] })
@@ -251,6 +278,9 @@ export default class GovernanceCaseReview extends LightningElement {
     }
 
     get mergeSelectionHelp() {
+        if (!this.canCommitDecision) {
+            return 'Direct Data Cloud evidence must be available before the steward can commit a decision.';
+        }
         if (this.recommendedAction === 'Approve Merge') {
             return 'Confirm the surviving and merged accounts, then approve the case.';
         }
@@ -259,6 +289,44 @@ export default class GovernanceCaseReview extends LightningElement {
 
     get caseHealthSummary() {
         return `${this.confidenceBand || 'Unknown'} confidence, ${this.reviewFlagLabel.toLowerCase()}, ${this.hierarchyConflictLabel.toLowerCase()}.`;
+    }
+
+    get agentSubagentName() {
+        return this.reviewContext?.subagentName || 'Governance Review Manager';
+    }
+
+    get reviewAgentSummary() {
+        return this.reviewContext?.reasoning || 'Pulse360 is preparing the governance explanation.';
+    }
+
+    get reviewEvidenceStatus() {
+        if (this.isLoadingEvidence) {
+            return 'Loading direct Data Cloud evidence';
+        }
+        if (this.reviewEvidence?.available) {
+            return 'Direct Data Cloud evidence ready';
+        }
+        return 'Direct Data Cloud evidence unavailable';
+    }
+
+    get directEvidenceSummary() {
+        return this.reviewEvidence?.attributeValidity || 'No direct Data Cloud validity summary is available.';
+    }
+
+    get directHierarchyImpact() {
+        return this.reviewEvidence?.hierarchyImpact || 'No direct Data Cloud hierarchy summary is available.';
+    }
+
+    get directEvidenceTimestamp() {
+        return this.reviewEvidence?.evidenceTimestamp || 'Not available';
+    }
+
+    get canCommitDecision() {
+        return this.reviewEvidence?.available === true;
+    }
+
+    get decisionDisabled() {
+        return this.isSaving || !this.canCommitDecision;
     }
 
     get topMatchFeatures() {
@@ -287,6 +355,33 @@ export default class GovernanceCaseReview extends LightningElement {
 
     get hierarchyImpactSummary() {
         return this.fieldValue(HIERARCHY_IMPACT_FIELD) || 'No hierarchy impact summary available.';
+    }
+
+    get hasExternalEvidence() {
+        return this.leftExternalEvidence.hasEvidence || this.rightExternalEvidence.hasEvidence;
+    }
+
+    get leftExternalEvidence() {
+        return this.externalEvidence(this.leftAccountRecord, this.leftAccountName);
+    }
+
+    get rightExternalEvidence() {
+        return this.externalEvidence(this.rightAccountRecord, this.rightAccountName);
+    }
+
+    get registryMatchStatus() {
+        const leftEvidence = this.leftExternalEvidence;
+        const rightEvidence = this.rightExternalEvidence;
+        if (!leftEvidence.hasEvidence || !rightEvidence.hasEvidence) {
+            return 'Not enough public evidence to confirm a shared entity yet.';
+        }
+        if (leftEvidence.registration && rightEvidence.registration && leftEvidence.registration === rightEvidence.registration) {
+            return 'Shared registration or filing reference detected.';
+        }
+        if (leftEvidence.legalName && rightEvidence.legalName && leftEvidence.legalName === rightEvidence.legalName) {
+            return 'Matching external legal names detected.';
+        }
+        return 'External evidence differs across the two records.';
     }
 
     get decisionStatus() {
@@ -345,6 +440,31 @@ export default class GovernanceCaseReview extends LightningElement {
         this.persistDecision('Deferred');
     }
 
+    async loadAgentReviewState() {
+        if (!this.recordId || this.lastLoadedAgentRecordId === this.recordId || !this.record) {
+            return;
+        }
+
+        this.lastLoadedAgentRecordId = this.recordId;
+        this.isLoadingEvidence = true;
+        this.reviewEvidenceError = undefined;
+
+        try {
+            this.reviewContext = await getPulse360ReviewContext({ governanceCaseId: this.recordId });
+            this.reviewEvidence = await getPulse360DataCloudReviewEvidence({
+                candidatePairId: this.reviewContext?.candidatePairId,
+                leftAccountId: this.reviewContext?.leftAccountId,
+                rightAccountId: this.reviewContext?.rightAccountId
+            });
+            this.reviewEvidenceError = this.reviewEvidence?.errorMessage;
+        } catch (error) {
+            this.reviewEvidence = undefined;
+            this.reviewEvidenceError = error?.body?.message || 'Unable to load direct Data Cloud review evidence.';
+        } finally {
+            this.isLoadingEvidence = false;
+        }
+    }
+
     handleReasonChange(event) {
         this.decisionReasonCode = event.detail.value;
     }
@@ -381,11 +501,43 @@ export default class GovernanceCaseReview extends LightningElement {
         return label || fallbackId || emptyLabel;
     }
 
+    accountFieldValue(accountRecord, fieldRef) {
+        return accountRecord?.data ? getFieldValue(accountRecord.data, fieldRef) : null;
+    }
+
+    externalEvidence(accountRecord, fallbackName) {
+        const legalName = this.accountFieldValue(accountRecord, ACCOUNT_EXTERNAL_LEGAL_NAME_FIELD);
+        const registration = this.accountFieldValue(accountRecord, ACCOUNT_EXTERNAL_REGISTRATION_FIELD);
+        const externallyValidated = this.accountFieldValue(accountRecord, ACCOUNT_EXTERNALLY_VALIDATED_FIELD);
+        const validityScore = this.accountFieldValue(accountRecord, ACCOUNT_EXTERNAL_VALIDITY_SCORE_FIELD);
+        const citationCount = this.accountFieldValue(accountRecord, ACCOUNT_AI_CITATION_COUNT_FIELD);
+        const modelId = this.accountFieldValue(accountRecord, ACCOUNT_AI_MODEL_ID_FIELD);
+
+        return {
+            accountName: fallbackName,
+            legalName: legalName || 'Not available',
+            registration: registration || 'Not available',
+            externallyValidated: externallyValidated ? 'Validated' : 'Not validated',
+            validityScore: validityScore || 'Not available',
+            citationCount: citationCount || 0,
+            modelId: modelId || 'Not available',
+            hasEvidence: Boolean(legalName || registration || validityScore || citationCount || externallyValidated)
+        };
+    }
+
     recordUrl(recordId) {
         return recordId ? `/lightning/r/${recordId}/view` : null;
     }
 
     validateDecision(decisionStatus) {
+        if (!this.canCommitDecision) {
+            this.showToast(
+                'Direct Data Cloud evidence required',
+                this.reviewEvidenceError || 'Governance decisions are blocked until the live Data Cloud evidence read succeeds.',
+                'error'
+            );
+            return false;
+        }
         if (!this.decisionReasonCode) {
             this.showToast('Decision reason required', 'Select a decision reason code before saving.', 'error');
             return false;
@@ -429,21 +581,33 @@ export default class GovernanceCaseReview extends LightningElement {
             return;
         }
 
+        const confirmed = await LightningConfirm.open({
+            label: 'Approve governance decision',
+            message: `${decisionStatus} will be recorded with direct Data Cloud evidence and queued for downstream processing.`,
+            theme: 'warning'
+        });
+
+        if (!confirmed) {
+            return;
+        }
+
         this.isSaving = true;
-        const fields = {
-            Id: this.recordId,
-            Decision_Status__c: decisionStatus,
-            Decision_Reason_Code__c: this.decisionReasonCode,
-            Decision_Reason_Text__c: this.decisionReasonText || null,
-            Review_Followup_Required__c: this.reviewFollowupRequired,
-            Surviving_Account__c: this.survivingAccountId || null,
-            Merged_Account__c: this.mergedAccountId || null,
-            Status__c: decisionStatus
-        };
 
         try {
-            await updateRecord({ fields });
-            this.showToast('Governance case updated', `${decisionStatus} decision saved.`, 'success');
+            const result = await recordPulse360GovernanceDecision({
+                governanceCaseId: this.recordId,
+                decision: decisionStatus,
+                reasonCode: this.decisionReasonCode,
+                survivingAccountId: this.survivingAccountId || null,
+                approvedByUser: USER_ID,
+                decisionReasonText: this.decisionReasonText || null,
+                reviewFollowupRequired: this.reviewFollowupRequired,
+                mergedAccountId: this.mergedAccountId || null
+            });
+            await notifyRecordUpdateAvailable([{ recordId: this.recordId }]);
+            this.lastLoadedAgentRecordId = null;
+            this.loadAgentReviewState();
+            this.showToast('Governance case updated', result.agentSummary, 'success');
             this.dispatchDecisionEvent(decisionStatus.toLowerCase());
         } catch (error) {
             this.showToast('Save failed', error.body?.message || 'Unable to save governance decision.', 'error');

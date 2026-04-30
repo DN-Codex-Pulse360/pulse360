@@ -1,0 +1,65 @@
+<template>
+    <lightning-card title="Group Revenue Reveal" icon-name="utility:moneybag">
+        <div class="shell">
+            <div class="hero">
+                <div class="hero-copy">Your sellers currently see a partial group picture.</div>
+                <div class="hero-value">
+                    <lightning-formatted-number
+                        value={hiddenRevenue}
+                        format-style="currency"
+                        currency-code={currencyCode}>
+                    </lightning-formatted-number>
+                </div>
+                <div class="hero-subcopy">in public, externally confirmed revenue still sits outside visible CRM coverage.</div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Public Group Revenue</div>
+                    <lightning-formatted-number
+                        value={totalRevenue}
+                        format-style="currency"
+                        currency-code={currencyCode}>
+                    </lightning-formatted-number>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">CRM Visible Revenue</div>
+                    <lightning-formatted-number
+                        value={visibleRevenue}
+                        format-style="currency"
+                        currency-code={currencyCode}>
+                    </lightning-formatted-number>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Known Group Entities</div>
+                    <div class="metric-value">{knownSubsidiaryCount}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Externally Found</div>
+                    <div class="metric-value">{externalSubsidiariesFound}</div>
+                </div>
+            </div>
+
+            <section class="bar-panel">
+                <div class="bar-label-row">
+                    <span>Revenue visibility</span>
+                    <span>{visiblePercent}%</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style={visibleBarStyle}></div>
+                </div>
+            </section>
+
+            <section class="bar-panel">
+                <div class="bar-label-row">
+                    <span>CRM group coverage</span>
+                    <span>{coveragePercent}%</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill bar-fill_alt" style={coverageBarStyle}></div>
+                </div>
+                <p class="footnote">{crmCoveredSubsidiaryCount} of {knownSubsidiaryCount} known entities are represented in CRM.</p>
+            </section>
+        </div>
+    </lightning-card>
+</template>

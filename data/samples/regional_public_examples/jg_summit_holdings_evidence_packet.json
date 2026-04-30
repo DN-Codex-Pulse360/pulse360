@@ -1,0 +1,48 @@
+{
+  "entity": "JG Summit Holdings, Inc.",
+  "jurisdiction": "PH",
+  "legal_identity_packet": [
+    {
+      "source_id": "jgs_corporate_structure_2024",
+      "source_name": "JG Summit Corporate Structure",
+      "source_type": "portfolio",
+      "source_url": "https://www.jgsummit.com.ph/annualreport2024/investment-portfolio/corporate-structure",
+      "document_date": "2024-12-31",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "JG Summit's 2024 corporate structure discloses group stakes across financial technology, logistics, infrastructure, technology, power distribution, real estate, communications, and banking."
+    }
+  ],
+  "filing_packet": [
+    {
+      "source_id": "jgs_ir_2024",
+      "source_name": "JG Summit 2024 Annual and Sustainability Report",
+      "source_type": "annual_report",
+      "source_url": "https://www.jgsummit.com.ph/annualreport2024/documents/JG%20Summit%202024%20Annual%20%26%20Sustainability%20Report%20%5BInteractive%20PDF%5D.pdf",
+      "document_date": "2024-12-31",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "JG Summit reported 2024 revenues of PHP 378.6 billion and described growth in travel, consumer, petrochemical, and ecosystem businesses."
+    }
+  ],
+  "hierarchy_packet": [
+    {
+      "source_id": "jgs_digital_transformation_2024",
+      "source_name": "JG Summit Digital Transformation and Customer Centricity",
+      "source_type": "annual_report_section",
+      "source_url": "https://www.jgsummit.com.ph/annualreport2024/strategic-enablers/digital-transformation-customer-centricity",
+      "document_date": "2024-12-31",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "JG Summit highlighted in-house GenAI, data science, innovation programs, Data Cloud work, and a digital office within its public 2024 report."
+    }
+  ],
+  "public_signal_packet": [
+    {
+      "source_id": "jgs_at_a_glance_2024",
+      "source_name": "JG Summit 2024 At a Glance",
+      "source_type": "annual_report_section",
+      "source_url": "https://www.jgsummit.com.ph/annualreport2024/at-a-glance",
+      "document_date": "2024-12-31",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "JG Summit disclosed 2024 financial highlights, employee headcount, and sustainability metrics through its annual report microsite."
+    }
+  ]
+}

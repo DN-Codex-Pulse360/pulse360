@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Group_Known_Subsidiary_Count__c</fullName>
+    <description>Count of known public group entities or subsidiaries in the Pulse360 model.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Represents the number of known public group entities in scope for this account story.</inlineHelpText>
+    <label>Group Known Subsidiary Count</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

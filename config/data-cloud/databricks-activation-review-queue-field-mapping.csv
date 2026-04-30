@@ -1,0 +1,35 @@
+source_field,data_cloud_field_api_name,data_type,required,notes
+review_queue_id,review_queue_id__c,Text,true,Primary key for Data Cloud review rows.
+source_product,source_product__c,Text,true,Required to distinguish M1 hierarchy firmographic GenAI runtime and synthetic account-intelligence rows.
+source_record_id,source_record_id__c,Text,true,Databricks source record key for traceability.
+resolved_entity_id,resolved_entity_id__c,Text,true,Databricks resolved entity identifier.
+crm_activation_key,crm_activation_key__c,Text,false,CRM-safe Account Id when known.
+source_refs,source_refs__c,Text,true,Serialized source reference IDs.
+crm_activation_candidate_ids,crm_activation_candidate_ids__c,Text,false,Serialized candidate Account IDs for stewardship.
+crm_activation_candidate_names,crm_activation_candidate_names__c,Text,false,Serialized candidate Account names for stewardship.
+crm_activation_candidate_count,crm_activation_candidate_count__c,Number,true,Candidate count used for activation resolution hints.
+activation_resolution_hint,activation_resolution_hint__c,Text,true,Machine-readable stewardship hint.
+confidence_score,confidence_score__c,Number,true,Overall confidence score.
+confidence_components,confidence_components__c,Text,true,Serialized confidence component object.
+target_entity_name,target_entity_name__c,Text,false,CSP smart-city target city agency or locality name.
+country_code,country_code__c,Text,false,Two-character country code for CSP smart-city propositions.
+market,market__c,Text,false,Market name for CSP smart-city propositions.
+offering_family,offering_family__c,Text,false,CSP smart-city offering family such as intelligent_parking or urban_data_brokerage.
+offer_bundle,offer_bundle__c,Text,false,Human-readable smart-city proposition bundle.
+target_b2b_customer_ids,target_b2b_customer_ids__c,Text,false,Serialized B2B target customer fixture IDs for CSP smart-city review.
+target_b2b_customer_names,target_b2b_customer_names__c,Text,false,Serialized B2B target customer names for CSP smart-city review.
+recommended_next_actions,recommended_next_actions__c,Text,false,Serialized recommended next actions for CSP smart-city review.
+review_priority,review_priority__c,Text,false,Action-routing priority for CSP smart-city review rows.
+freshness_status,freshness_status__c,Text,true,Freshness indicator.
+activation_eligible_flag,activation_eligible_flag__c,Boolean,true,True only when row is eligible for activation.
+activation_block_reasons,activation_block_reasons__c,Text,true,Serialized block reasons.
+lineage_status,lineage_status__c,Text,true,source_bound lineage_pending or blocked.
+model_id,model_id__c,Text,true,Model or fixture identifier.
+prompt_version,prompt_version__c,Text,false,Prompt or evidence contract version.
+enrichment_run_id,enrichment_run_id__c,Text,true,Databricks enrichment run ID.
+source_run_timestamp,source_run_timestamp__c,DateTime,true,Source run timestamp.
+ingestion_metadata_label,ingestion_metadata_label__c,Text,true,Human-readable ingestion freshness label.
+run_id,run_id__c,Text,true,Databricks handoff run ID.
+run_timestamp,run_timestamp__c,DateTime,true,Databricks handoff run timestamp.
+run_ts,run_ts__c,DateTime,false,Compatibility alias for existing Data Cloud mapping.
+model_version,model_version__c,Text,true,Contract/model version.

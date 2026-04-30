@@ -20,6 +20,8 @@ Run the files in this order:
 - the downstream table name `pulse360_s4.intelligence.datacloud_export_accounts` is preserved
 - `pulse360_s4.intelligence.datacloud_export_accounts` is intentionally materialized as a table because that object already exists as a managed Delta table in the workspace
 - activation fields expected by Data Cloud and Salesforce Account mapping are exposed directly on the export view
+- Claude/LLM firmographic runtime rows may override Account export AI fields only when either `activation_eligible_flag = true` with a CRM-safe `crm_account_id`, or a Salesforce `Governance_Case__c` stewardship decision approves the review row and selects a surviving Account; confidence thresholds and unsupported/insufficient-evidence guards still have to pass
+- unanchored or blocked LLM runtime rows belong in `pulse360_s4.gold.activation_eligibility_review_queue`, not in the Account activation export
 
 ## Notes
 - This is a prototype-safe derived export built from live CRM bronze and silver layers.

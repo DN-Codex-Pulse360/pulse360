@@ -1,0 +1,33 @@
+{
+  "api": "anthropic_messages",
+  "provider": "anthropic",
+  "models": {
+    "narrative_reasoning": "claude-sonnet-4-20250514",
+    "action_ranking": "claude-sonnet-4-20250514",
+    "high_volume_extraction": "claude-3-5-haiku-20241022"
+  },
+  "prompt_version": "pulse360-public-regional-v1",
+  "structured_outputs_required": true,
+  "secret_scope": "pulse360-ai",
+  "secret_key": "anthropic-api-key",
+  "contract_rules": {
+    "bind_all_citations_to_source_ids": true,
+    "allow_free_form_citation_text": false,
+    "require_document_date": true,
+    "require_source_url": true,
+    "require_accessed_at": true
+  },
+  "response_contract": {
+    "narrative_field": "ai_narrative",
+    "actions_field": "ai_recommended_actions",
+    "source_refs_field": "source_refs",
+    "model_id_field": "model_id",
+    "prompt_version_field": "prompt_version",
+    "citation_count_field": "citation_count"
+  },
+  "official_docs": {
+    "models": "https://developers.openai.com/api/docs/models",
+    "gpt_5_4": "https://developers.openai.com/api/docs/models/gpt-5.4",
+    "gpt_5_4_nano": "https://developers.openai.com/api/docs/models/gpt-5.4-nano"
+  }
+}

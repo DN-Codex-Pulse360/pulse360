@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/m1_account_hierarchy_operational_profile",
+  "title": "Pulse360 M1 Account Hierarchy Operational Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "operational_profile_id",
+    "group_entity_id",
+    "primary_anchor_account_id",
+    "crm_anchor_account_ids",
+    "unified_profile_id",
+    "identity_confidence",
+    "hierarchy_confidence",
+    "validity_score_external",
+    "group_revenue_rollup",
+    "group_revenue_visible",
+    "group_known_subsidiary_count",
+    "crm_covered_subsidiary_count",
+    "external_subsidiaries_found",
+    "coverage_gap_flag",
+    "hierarchy_payload",
+    "source_refs",
+    "freshness_status",
+    "last_synced_timestamp",
+    "enrichment_run_id",
+    "model_id",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "operational_profile_id": { "type": "string", "minLength": 1 },
+    "group_entity_id": { "type": "string", "minLength": 1 },
+    "primary_anchor_account_id": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "CRM-safe Salesforce Account.Id when a covered account anchor exists; null for uncovered registry-only groups."
+    },
+    "crm_anchor_account_ids": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "unified_profile_id": { "type": "string", "minLength": 1 },
+    "identity_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+    "hierarchy_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+    "validity_score_external": { "type": "number", "minimum": 0, "maximum": 100 },
+    "group_revenue_rollup": { "type": "number", "minimum": 0 },
+    "group_revenue_visible": { "type": "number", "minimum": 0 },
+    "group_known_subsidiary_count": { "type": "integer", "minimum": 0 },
+    "crm_covered_subsidiary_count": { "type": "integer", "minimum": 0 },
+    "external_subsidiaries_found": { "type": "integer", "minimum": 0 },
+    "coverage_gap_flag": { "type": "boolean" },
+    "hierarchy_payload": { "type": "string", "minLength": 1 },
+    "source_refs": { "type": "string", "minLength": 1 },
+    "freshness_status": {
+      "type": "string",
+      "enum": ["fresh", "stale", "expired", "unknown"]
+    },
+    "last_synced_timestamp": { "type": "string", "format": "date-time" },
+    "enrichment_run_id": { "type": "string", "minLength": 1 },
+    "model_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}

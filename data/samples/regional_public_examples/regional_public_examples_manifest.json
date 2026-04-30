@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-03-28T00:00:00Z",
+  "dataset_version": "pulse360-public-regional-v1",
+  "entities": [
+    {
+      "entity_key": "singtel_group",
+      "display_name": "Singtel Group",
+      "jurisdiction": "SG",
+      "industry": "Telecommunications",
+      "evidence_file": "singtel_group_evidence_packet.json"
+    },
+    {
+      "entity_key": "ayala_corporation",
+      "display_name": "Ayala Corporation",
+      "jurisdiction": "PH",
+      "industry": "Conglomerate",
+      "evidence_file": "ayala_corporation_evidence_packet.json"
+    },
+    {
+      "entity_key": "jg_summit_holdings",
+      "display_name": "JG Summit Holdings, Inc.",
+      "jurisdiction": "PH",
+      "industry": "Conglomerate",
+      "evidence_file": "jg_summit_holdings_evidence_packet.json"
+    }
+  ]
+}

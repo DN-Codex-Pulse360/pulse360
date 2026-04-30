@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Target_Entity_Hint__c</fullName>
+    <description>Target legal entity or subsidiary to highlight when the seller play matches.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Target Entity Hint</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

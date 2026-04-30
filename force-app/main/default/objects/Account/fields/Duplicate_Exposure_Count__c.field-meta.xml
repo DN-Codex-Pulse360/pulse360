@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Duplicate_Exposure_Count__c</fullName>
+    <description>Count of currently open duplicate exposures tied to this account.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates how many duplicate pairs remain open for this account or its group context.</inlineHelpText>
+    <label>Duplicate Exposure Count</label>
+    <precision>8</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

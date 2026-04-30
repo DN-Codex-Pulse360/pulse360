@@ -14,16 +14,17 @@ Run the files in this order:
 7. `60_crm_opportunity_line_item.sql`
 8. `70_crm_account_contact_bridge.sql`
 9. `80_crm_account_hierarchy_edge.sql`
+10. `90_crm_governance_case.sql`
 
 ## Notes
 - These are `CREATE OR REPLACE VIEW` definitions, not materialized tables.
 - The views preserve CRM IDs unchanged from `pulse360_s4.bronze_salesforce`.
 - `crm_account_id` is the required match key for downstream activation-safe exports.
 - `crm_opportunity_contact_role` and `crm_opportunity_line_item` are included even if the current source org has no business rows yet.
+- `crm_governance_case` brings Salesforce stewardship decisions back into Databricks without ingesting the Data Cloud review DMO into a circular feedback loop.
 
 ## Next Step
 After these views exist in Databricks:
 - refactor gold exports so `source_account_id = crm_account_id`
 - rebuild `gold.datacloud_export_accounts`
 - re-run Data Cloud mapping and activation
-

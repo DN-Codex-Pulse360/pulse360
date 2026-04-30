@@ -1,0 +1,143 @@
+<template>
+    <div class="renewal-shell">
+        <template if:true={hasError}>
+            <section class="notice notice_error">
+                <p>{errorMessage}</p>
+            </section>
+        </template>
+
+        <template if:true={hasWorkspace}>
+            <template if:true={showWorkspaceHeader}>
+                <section class="control-surface">
+                    <div>
+                        <p class="eyebrow">Pulse360 Renewal &amp; Risk Workspace</p>
+                        <h1 class="surface-title">Explain the risk, then make the next save move obvious</h1>
+                        <p class="surface-copy">This parallel slice turns current health, risk, and coverage signals into a risk-oriented intervention view.</p>
+                    </div>
+                    <template if:true={showPreviewSelector}>
+                        <lightning-combobox
+                            name="previewAccount"
+                            label="Preview account"
+                            value={activeAccountId}
+                            options={previewOptions}
+                            onchange={handlePreviewAccountChange}>
+                        </lightning-combobox>
+                    </template>
+                </section>
+            </template>
+
+            <section class="hero-surface">
+                <div class="hero-copy">
+                    <p class="eyebrow">Account risk focus</p>
+                    <h2 class="hero-title">{workspace.accountName}</h2>
+                    <p class="hero-summary">{riskNarrative}</p>
+                    <div class="badge-row">
+                        <span class={riskBadgeClass}>{riskLevelLabel}</span>
+                        <span class={freshnessBadgeClass}>{workspace.freshnessLabel}</span>
+                        <span class="badge badge_soft">{validationLabel}</span>
+                    </div>
+                </div>
+
+                <div class="hero-highlight">
+                    <div class="detail-label">Recommended save play</div>
+                    <div class="highlight-title">{recommendedSavePlay.title}</div>
+                    <p>{recommendedSavePlay.copy}</p>
+                    <div class="mini-grid">
+                        <div>
+                            <div class="detail-label">Health score</div>
+                            <div class="detail-value">{workspace.healthScore}</div>
+                        </div>
+                        <div>
+                            <div class="detail-label">Competitor risk</div>
+                            <div class="detail-value">{workspace.competitorRiskSignal}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="driver-strip">
+                <template for:each={topDrivers} for:item="driver">
+                    <article class="driver-card" key={driver.key}>
+                        <div class="detail-label">{driver.label}</div>
+                        <div class="driver-value">{driver.value}</div>
+                        <p>{driver.copy}</p>
+                    </article>
+                </template>
+            </section>
+
+            <section class="workspace-grid">
+                <div class="surface intervention-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Intervention</p>
+                            <h2 class="section-title">What should happen next</h2>
+                        </div>
+                    </div>
+
+                    <div class="intervention-grid">
+                        <div class="card-block">
+                            <div class="detail-label">Why risk changed</div>
+                            <p>{riskChangeExplanation}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Renewal or save objective</div>
+                            <p>{recommendedSavePlay.copy}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Coverage and sponsor readiness</div>
+                            <p>{coverageRiskCopy}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Commercial consequence</div>
+                            <p>{commercialImpactCopy}</p>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <lightning-button label="Create save plan task" variant="brand" onclick={handleCreateSavePlan}></lightning-button>
+                        <lightning-button label="Create executive outreach" variant="neutral" onclick={handleCreateExecutiveOutreach}></lightning-button>
+                        <lightning-button label="Route specialist" variant="neutral" onclick={handleRouteSpecialist}></lightning-button>
+                        <lightning-button label="Open seller v2" variant="base" onclick={handleOpenSellerV2}></lightning-button>
+                    </div>
+                </div>
+
+                <aside class="surface evidence-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Evidence and trust</p>
+                            <h2 class="section-title">What is grounded versus what is uncertain</h2>
+                        </div>
+                    </div>
+
+                    <div class="evidence-stack">
+                        <div class="sidebar-block">
+                            <div class="detail-label">Signal freshness</div>
+                            <p>{freshnessSummary}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">Uncertainty</div>
+                            <p>{uncertaintySummary}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">Top evidence</div>
+                            <template if:true={hasSupportingSources}>
+                                <ul class="source-list">
+                                    <template for:each={topSupportingSources} for:item="source">
+                                        <li key={source.sourceId}>
+                                            <strong>{source.sourceName}</strong>
+                                            <span>{source.documentDate}</span>
+                                            <p>{source.excerpt}</p>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+                            <template if:false={hasSupportingSources}>
+                                <p>No linked sources were attached to the current risk view. The user should treat this as a directional signal, not a fully evidenced renewal case.</p>
+                            </template>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+        </template>
+    </div>
+</template>

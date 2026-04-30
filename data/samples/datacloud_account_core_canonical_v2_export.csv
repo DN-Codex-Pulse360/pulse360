@@ -1,4 +1,5 @@
 canonical_account_id,ssot_id,source_account_id,deterministic_key,account_name,parent_account_id,industry,country_code,identity_confidence,validity_score,run_id,run_timestamp,model_version
-acc_canon_001,001xx00000SSOT01,sf_acc_1001,PACIFIC_HOLDINGS_SG_UEN_88997766,Pacific Holdings Group,,Financial Services,SG,96,91,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
-acc_canon_002,001xx00000SSOT02,sf_acc_1002,PACIFIC_CAPITAL_SG_UEN_11223344,Pacific Capital Singapore,acc_canon_001,Financial Services,SG,91,88,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
-acc_canon_003,001xx00000SSOT03,sf_acc_2001,PACIFIC_SECURITIES_SG_UEN_55667788,Pacific Capital Securities,acc_canon_001,Capital Markets,SG,89,79,run_20260308_03,2026-03-08T12:45:00Z,dc-canonical-v2.0.0
+acc_singtel_001,001xx00000SG0001,sf_acc_sg_001,SINGTEL_GROUP_SG_FY2025,Singtel Group,,Telecommunications,SG,97,94,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0
+acc_singtel_002,001xx00000SG0002,sf_acc_sg_002,NCS_PTE_LTD_SG_FY2025,NCS Pte. Ltd.,acc_singtel_001,Technology Services,SG,93,90,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0
+acc_ayala_001,001xx00000PH0001,sf_acc_ph_001,AYALA_CORPORATION_PH_IR2024,Ayala Corporation,,Conglomerate,PH,95,91,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0
+acc_jgs_001,001xx00000PH0002,sf_acc_ph_002,JG_SUMMIT_HOLDINGS_PH_ASR2024,"JG Summit Holdings, Inc.",,Conglomerate,PH,92,87,run_public_regional_20260328,2026-03-28T09:00:00Z,dc-canonical-v2.1.0

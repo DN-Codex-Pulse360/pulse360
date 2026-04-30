@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/sovereign_identity_spine",
+  "title": "Pulse360 Sovereign Identity Spine",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "resolved_entity_id",
+    "sovereign_identity_key",
+    "country_of_incorporation",
+    "national_id_type",
+    "national_id_value",
+    "registered_legal_name",
+    "identity_resolution_method",
+    "identity_confidence",
+    "crm_account_ids",
+    "source_identifiers",
+    "review_required_flag",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "resolved_entity_id": {
+      "type": "string",
+      "pattern": "^ent_[A-Za-z0-9_]+$"
+    },
+    "sovereign_identity_key": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Deterministic key built from country, national ID type, national ID value, and registered legal name."
+    },
+    "country_of_incorporation": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 2,
+      "description": "ISO 3166-1 alpha-2 country code."
+    },
+    "national_id_type": {
+      "type": "string",
+      "minLength": 1,
+      "examples": ["SEC", "TIN", "UEN", "SSM", "NIB"]
+    },
+    "national_id_value": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registered_legal_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "normalized_legal_name": {
+      "type": "string"
+    },
+    "identity_resolution_method": {
+      "type": "string",
+      "enum": [
+        "deterministic_sovereign_id",
+        "strong_probabilistic",
+        "weak_candidate_review",
+        "crm_safe_fallback",
+        "rejected"
+      ]
+    },
+    "identity_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "crm_account_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 15,
+        "maxLength": 18
+      }
+    },
+    "primary_crm_account_id": {
+      "type": "string",
+      "minLength": 15,
+      "maxLength": 18
+    },
+    "source_identifiers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_system",
+          "source_identifier_type",
+          "source_identifier_value",
+          "is_identity_anchor",
+          "source_confidence",
+          "last_refreshed_at"
+        ],
+        "properties": {
+          "source_system": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_identifier_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_identifier_value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "is_identity_anchor": {
+            "type": "boolean"
+          },
+          "source_confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "last_refreshed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "contract_reference": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "match_features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["feature_name", "feature_value", "feature_weight"],
+        "properties": {
+          "feature_name": { "type": "string", "minLength": 1 },
+          "feature_value": { "type": "string" },
+          "feature_weight": { "type": "number", "minimum": 0, "maximum": 1 },
+          "feature_explanation": { "type": "string" }
+        }
+      }
+    },
+    "review_required_flag": {
+      "type": "boolean"
+    },
+    "review_reason": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

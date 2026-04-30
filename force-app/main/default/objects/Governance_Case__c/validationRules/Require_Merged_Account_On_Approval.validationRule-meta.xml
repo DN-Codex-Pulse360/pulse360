@@ -9,6 +9,8 @@
             ISPICKVAL(Status__c, "Approved")
         )
         &amp;&amp;
+        ISPICKVAL(Recommended_Action__c, "Approve Merge")
+        &amp;&amp;
         ISBLANK(Merged_Account__c)
     </errorConditionFormula>
     <errorDisplayField>Merged_Account__c</errorDisplayField>

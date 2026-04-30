@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Intent_Signal_Payload__c</fullName>
+    <description>Serialized JSON of the routed intent signal used by the Pulse360 signal routing workspace.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>JSON payload containing routed signal score, threshold reason, channel readiness, and drafted follow-up context.</inlineHelpText>
+    <label>Intent Signal Payload</label>
+    <length>32768</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

@@ -1,0 +1,54 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasWorkspace}>
+        <section class="surface trust-surface">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Evidence and trust</p>
+                    <h2 class="section-title">What is grounded versus what is uncertain</h2>
+                    <p class="section-copy">{trustSummary}</p>
+                </div>
+            </div>
+
+            <div class="trust-grid">
+                <article class="card-block">
+                    <div class="detail-label">Freshness and provenance</div>
+                    <p>{freshnessSummary}</p>
+                </article>
+                <article class="card-block">
+                    <div class="detail-label">Model and run trace</div>
+                    <p>{traceabilitySummary}</p>
+                </article>
+                <article class="card-block">
+                    <div class="detail-label">Confidence cues</div>
+                    <p>{confidenceSummary}</p>
+                </article>
+            </div>
+
+            <div class="source-section">
+                <div class="detail-label">Top supporting sources</div>
+                <template if:true={hasSources}>
+                    <ul class="source-list">
+                        <template for:each={topSources} for:item="source">
+                            <li key={source.sourceId}>
+                                <div class="source-header">
+                                    <strong>{source.sourceName}</strong>
+                                    <span>{source.documentDate}</span>
+                                </div>
+                                <p>{source.excerpt}</p>
+                            </li>
+                        </template>
+                    </ul>
+                </template>
+                <template if:false={hasSources}>
+                    <p class="empty-state">No supporting sources are attached to the current account narrative yet.</p>
+                </template>
+            </div>
+        </section>
+    </template>
+</template>

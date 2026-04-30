@@ -1,0 +1,22 @@
+{
+  "registry_source_id": "national_registry_ph_sec:AS096-003241",
+  "source_system": "national_registry_ph_sec",
+  "country_of_incorporation": "PH",
+  "national_id_type": "SEC",
+  "national_id_value": "AS096-003241",
+  "registered_legal_name": "Ayala Corporation",
+  "normalized_legal_name": "AYALA CORPORATION",
+  "source_confidence": 96.0,
+  "last_refreshed_at": "2026-03-28T00:00:00Z",
+  "source_refs": [
+    {
+      "source_id": "ayala_home_2026",
+      "source_name": "Ayala Corporate Site",
+      "source_type": "corporate_profile",
+      "source_url": "https://ayala.com/",
+      "document_date": "2026-03-28",
+      "accessed_at": "2026-03-28T00:00:00Z",
+      "excerpt": "Ayala describes itself as a Philippine group with a broad portfolio across multiple industries and emerging businesses."
+    }
+  ]
+}

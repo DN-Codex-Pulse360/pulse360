@@ -1,0 +1,39 @@
+<template>
+    <aside class="surface">
+        <div class="section-header">
+            <div>
+                <p class="eyebrow">{eyebrow}</p>
+                <h2 class="section-title">{sectionTitle}</h2>
+            </div>
+        </div>
+
+        <template if:true={hasQueue}>
+            <div class="queue-list">
+                <template for:each={queue} for:item="action">
+                    <article class={action.className} key={action.accountId}>
+                        <div class="queue-header">
+                            <div>
+                                <h3>{action.accountName}</h3>
+                                <p>{action.actionLabel}</p>
+                            </div>
+                            <span class={action.priorityClass}>{action.priorityLabel}</span>
+                        </div>
+                        <p class="queue-reason">{action.reason}</p>
+                        <lightning-button
+                            label="Open account"
+                            variant="base"
+                            data-account-id={action.accountId}
+                            onclick={handleOpenAccount}>
+                        </lightning-button>
+                    </article>
+                </template>
+            </div>
+        </template>
+
+        <template if:false={hasQueue}>
+            <div class="empty-state">
+                <p>Planning actions will appear once ranked groups are available.</p>
+            </div>
+        </template>
+    </aside>
+</template>

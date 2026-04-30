@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Data_Cloud_Source_Record_Id__c</fullName>
+    <description>Databricks source record ID used to fetch direct Data Cloud review evidence.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Matches source_record_id__c on Pulse360_Activation_Review_Queue__dlm.</inlineHelpText>
+    <label>Data Cloud Source Record Id</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

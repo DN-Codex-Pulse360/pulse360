@@ -1,0 +1,119 @@
+<template>
+    <lightning-card title="Pulse360 Health Scan" icon-name="utility:scan">
+        <div class="shell">
+            <div class="header-row">
+                <p class="summary">Run a provenance-first GPT summary for this account.</p>
+                <lightning-button
+                    label="Run Health Scan"
+                    variant="brand"
+                    onclick={handleRunScan}
+                    disabled={isLoading}>
+                </lightning-button>
+            </div>
+
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Running Pulse360 health scan"></lightning-spinner>
+            </template>
+
+            <template if:true={hasError}>
+                <p class="error-text">{errorMessage}</p>
+            </template>
+
+            <template if:true={hasResult}>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Health Score</div>
+                        <div class="metric-value">{scanResult.healthScore}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Regulatory Readiness</div>
+                        <div class="metric-value">{scanResult.regulatoryReadinessScore}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Duplicate Exposure</div>
+                        <div class="metric-value">{scanResult.duplicateExposureCount}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">External Validation</div>
+                        <div class="metric-value">{scanResult.externallyValidated}</div>
+                    </div>
+                </div>
+
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Confirmed Group Revenue</div>
+                        <lightning-formatted-number
+                            value={scanResult.groupRevenueRollup}
+                            format-style="currency"
+                            currency-code={currencyCode}>
+                        </lightning-formatted-number>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">CRM Visible Revenue</div>
+                        <lightning-formatted-number
+                            value={scanResult.groupRevenueVisible}
+                            format-style="currency"
+                            currency-code={currencyCode}>
+                        </lightning-formatted-number>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Hidden Revenue</div>
+                        <lightning-formatted-number
+                            value={hiddenRevenue}
+                            format-style="currency"
+                            currency-code={currencyCode}>
+                        </lightning-formatted-number>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Group Coverage</div>
+                        <div class="metric-copy">{visibleCoverageLabel}</div>
+                    </div>
+                </div>
+
+                <section class="panel">
+                    <div class="panel-label">AI Assessment</div>
+                    <p class="panel-copy">{scanResult.aiNarrative}</p>
+                    <div class="meta-row">
+                        <span>Model: {scanResult.modelId}</span>
+                        <span>Prompt: {scanResult.promptVersion}</span>
+                        <span>Citations: {scanResult.citationCount}</span>
+                        <span>Generated: {scanResult.aiNarrativeGeneratedAt}</span>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-label">Recommended Actions</div>
+                    <template for:each={actions} for:item="action">
+                        <article class="action-card" key={action.rank}>
+                            <div class="action-header">
+                                <span class="action-rank">#{action.rank}</span>
+                                <span class="action-type">{action.actionType}</span>
+                            </div>
+                            <div class="action-target">{action.target}</div>
+                            <p class="panel-copy">{action.reasoning}</p>
+                            <div class="meta-row">
+                                <span>Impact: {action.estimatedRevenueImpact}</span>
+                                <span>Confidence: {action.confidence}</span>
+                                <span>Sources: {action.sourceIds}</span>
+                            </div>
+                        </article>
+                    </template>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-label">Citations</div>
+                    <template for:each={sourceRefs} for:item="source">
+                        <article class="source-card" key={source.sourceId}>
+                            <div class="source-header">
+                                <strong>{source.sourceName}</strong>
+                                <span>{source.documentDate}</span>
+                            </div>
+                            <p class="panel-copy">{source.excerpt}</p>
+                            <lightning-formatted-url value={source.sourceUrl} label={source.sourceUrl} target="_blank"></lightning-formatted-url>
+                        </article>
+                    </template>
+                </section>
+            </template>
+        </div>
+    </lightning-card>
+</template>

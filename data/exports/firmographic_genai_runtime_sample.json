@@ -1,0 +1,54 @@
+{
+  "activation_eligible_flag": false,
+  "ai_narrative": "Ayala Corporation has a coverage gap because governed firmographic evidence shows external group scale while the current CRM-safe anchor is not yet available for this group profile. The revenue and group coverage statements are limited to supplied source facts and should stay in review until a Salesforce Account anchor or approved External ID is established.",
+  "ai_recommended_actions": [
+    {
+      "action_type": "flag_hierarchy_review",
+      "confidence": 0.74,
+      "estimated_revenue_impact": "Improved group coverage accuracy before seller activation",
+      "rank": 1,
+      "reasoning": "Route to stewardship before CRM activation because the evidence packet is source-bound but activation is not fully safe.",
+      "source_ids": [
+        "src_neutral_firmographic_ayala_group_hint",
+        "src_neutral_firmographic_ayala_revenue_2024"
+      ],
+      "target": "ent_ph_sec_as096_003241 coverage gap review",
+      "target_record_id": null
+    }
+  ],
+  "business_action_confidence": 0.6991,
+  "confidence_components": {
+    "actionability_score": 0.8,
+    "citation_binding_score": 1.0,
+    "conflict_penalty": 0.1,
+    "corroboration_score": 0.75,
+    "crm_anchor_score": 0.2,
+    "evidence_coverage_score": 0.5,
+    "extraction_certainty_score": 0.84,
+    "freshness_score": 0.9,
+    "policy_safety_score": 1.0,
+    "schema_validation_score": 1.0,
+    "source_reliability_score": 0.875
+  },
+  "crm_account_id": null,
+  "evidence_packet_id": "firmographic_packet_ent_ph_sec_as096_003241",
+  "genai_enrichment_id": "genai_firmographic_ent_ph_sec_as096_003241",
+  "generation_mode": "source_bound_fixture",
+  "insufficient_evidence_flag": false,
+  "llm_cost_estimate": 0,
+  "llm_input_hash": "sha256:47518e39ddbb46733492f10d0b4bfbb231e49868cf205bf3009159a6ddc402e9",
+  "llm_output_hash": "sha256:e0fb8dcbf96d9cc43ea0243f275dc3891513ccd5738a548883e6c51e25dc29ed",
+  "llm_result_confidence": 0.6985,
+  "llm_run_id": "llm_source_bound_fixture_530de5a2e6a540c28c83138338c7cb1c",
+  "model_id": "genai-design-placeholder",
+  "model_version": "genai-firmographic-enrichment-runtime-v1",
+  "prompt_version": "pulse360-public-regional-v1",
+  "resolved_entity_id": "ent_ph_sec_as096_003241",
+  "run_id": "genai_firmographic_source_bound_fixture_20260426045057",
+  "run_timestamp": "2026-04-26T04:50:57Z",
+  "source_refs": [
+    "src_neutral_firmographic_ayala_group_hint",
+    "src_neutral_firmographic_ayala_revenue_2024"
+  ],
+  "unsupported_claim_count": 0
+}

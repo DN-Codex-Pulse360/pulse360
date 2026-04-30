@@ -1,0 +1,29 @@
+{
+  "operational_profile_id": "m1_hierarchy_profile_001",
+  "group_entity_id": "ent_ph_sec_as096_003241",
+  "primary_anchor_account_id": "001P360000AYALA",
+  "crm_anchor_account_ids": [
+    "001P360000AYALA",
+    "001P360000AYALA_BANK"
+  ],
+  "unified_profile_id": "pulse360_m1_group:ent_ph_sec_as096_003241",
+  "identity_confidence": 96,
+  "hierarchy_confidence": 89,
+  "validity_score_external": 89,
+  "group_revenue_rollup": 176300000000,
+  "group_revenue_visible": 176300000000,
+  "group_known_subsidiary_count": 5,
+  "crm_covered_subsidiary_count": 2,
+  "external_subsidiaries_found": 3,
+  "coverage_gap_flag": true,
+  "hierarchy_payload": "{\"group_entity_id\":\"ent_ph_sec_as096_003241\",\"children\":[{\"entity_id\":\"ent_crm_001p360000ayala_bank\",\"crm_record_id\":\"001P360000AYALA_BANK\",\"relationship_type\":\"CRM_PARENT_ACCOUNT\",\"coverage_status\":\"covered\",\"confidence\":90},{\"entity_id\":\"ent_ph_ayala_uncovered_operating_entities\",\"crm_record_id\":null,\"relationship_type\":\"PUBLIC_PORTFOLIO_ENTITY\",\"coverage_status\":\"uncovered\",\"confidence\":78}]}",
+  "source_refs": "[{\"source_id\":\"edge_crm_001p360000ayala_001p360000ayala_bank\",\"source_name\":\"crm_account_hierarchy_edge\",\"source_type\":\"crm\"},{\"source_id\":\"edge_registry_ayala_uncovered_operating_entities\",\"source_name\":\"philippines_sec_registry_sample\",\"source_type\":\"national_registry\"}]",
+  "freshness_status": "fresh",
+  "last_synced_timestamp": "2026-04-24T08:00:00Z",
+  "enrichment_run_id": "hierarchy_rollup_run_20260424080000",
+  "model_id": "entity-hierarchy-rollup-v1",
+  "run_id": "m1_data_cloud_profile_run_20260424080000",
+  "run_timestamp": "2026-04-24T08:00:00Z",
+  "model_version": "m1-data-cloud-operational-profile-v1"
+}
+

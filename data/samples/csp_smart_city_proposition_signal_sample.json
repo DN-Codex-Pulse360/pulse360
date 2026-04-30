@@ -1,0 +1,484 @@
+{
+  "signal_pack_id": "csp_smart_city_asean_foundation_20260427",
+  "scenario_id": "asean_smart_city_proposition_readiness",
+  "market_region": "ASEAN",
+  "synthetic_flag": true,
+  "target_entities": [
+    {
+      "target_entity_id": "city_singapore_smart_nation",
+      "target_entity_name": "Singapore Smart Nation Urban Mobility",
+      "country_code": "SG",
+      "market": "Singapore",
+      "target_entity_type": "city",
+      "crm_account_id": null
+    },
+    {
+      "target_entity_id": "city_kuala_lumpur_mobility",
+      "target_entity_name": "Kuala Lumpur Urban Mobility",
+      "country_code": "MY",
+      "market": "Malaysia",
+      "target_entity_type": "city",
+      "crm_account_id": null
+    },
+    {
+      "target_entity_id": "city_amata_chonburi",
+      "target_entity_name": "AMATA City Chonburi",
+      "country_code": "TH",
+      "market": "Thailand",
+      "target_entity_type": "industrial_zone",
+      "crm_account_id": null
+    },
+    {
+      "target_entity_id": "city_hcmc_iot_locality",
+      "target_entity_name": "Ho Chi Minh City IoT Locality",
+      "country_code": "VN",
+      "market": "Vietnam",
+      "target_entity_type": "city",
+      "crm_account_id": null
+    },
+    {
+      "target_entity_id": "city_metro_manila_iot",
+      "target_entity_name": "Metro Manila IoT Platform Opportunity",
+      "country_code": "PH",
+      "market": "Philippines",
+      "target_entity_type": "city",
+      "crm_account_id": null
+    }
+  ],
+  "associated_b2b_customers": [
+    {
+      "b2b_customer_id": "b2b_sg_lta_mobility_data_office",
+      "b2b_customer_name": "Singapore Land Transport Authority Mobility Data Office",
+      "country_code": "SG",
+      "market": "Singapore",
+      "customer_type": "transport_authority",
+      "relationship_to_target": "Public transport and urban mobility data stakeholder for Singapore Smart Nation propositions.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["urban_data_brokerage", "intelligent_parking"]
+    },
+    {
+      "b2b_customer_id": "b2b_my_kl_parking_operator",
+      "b2b_customer_name": "Kuala Lumpur Integrated Parking Operator",
+      "country_code": "MY",
+      "market": "Malaysia",
+      "customer_type": "parking_operator",
+      "relationship_to_target": "Candidate operator for parking compliance, occupancy, and curbside intelligence.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["intelligent_parking"]
+    },
+    {
+      "b2b_customer_id": "b2b_th_amata_estate_operator",
+      "b2b_customer_name": "AMATA Industrial Estate Operations",
+      "country_code": "TH",
+      "market": "Thailand",
+      "customer_type": "industrial_estate_operator",
+      "relationship_to_target": "Industrial-zone operator for private 5G and connected city IoT platform expansion.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["connected_city_iot_platform"]
+    },
+    {
+      "b2b_customer_id": "b2b_vn_hcmc_parking_management",
+      "b2b_customer_name": "Ho Chi Minh City Parking Management Authority",
+      "country_code": "VN",
+      "market": "Vietnam",
+      "customer_type": "municipal_agency",
+      "relationship_to_target": "Municipal buyer for NB-IoT smart parking, environmental monitoring, and district pilot operations.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["intelligent_parking"]
+    },
+    {
+      "b2b_customer_id": "b2b_ph_mmda_mobility_office",
+      "b2b_customer_name": "Metro Manila Development Authority Mobility Office",
+      "country_code": "PH",
+      "market": "Philippines",
+      "customer_type": "transport_authority",
+      "relationship_to_target": "Metro Manila transport stakeholder for congestion, curbside, and multimodal data propositions.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["intelligent_parking", "urban_data_brokerage"]
+    },
+    {
+      "b2b_customer_id": "b2b_ph_manila_parking_operator",
+      "b2b_customer_name": "Manila Central Parking Operator",
+      "country_code": "PH",
+      "market": "Philippines",
+      "customer_type": "parking_operator",
+      "relationship_to_target": "Commercial parking operator for occupancy, payment, enforcement, and curbside intelligence pilots.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["intelligent_parking"]
+    },
+    {
+      "b2b_customer_id": "b2b_ph_ayala_property_group",
+      "b2b_customer_name": "Ayala Urban Property Group",
+      "country_code": "PH",
+      "market": "Philippines",
+      "customer_type": "property_group",
+      "relationship_to_target": "Private-sector venue and district owner for IoT platform, parking, and mobility data monetization.",
+      "candidate_crm_account_id": null,
+      "priority_offering_families": ["connected_city_iot_platform", "intelligent_parking", "urban_data_brokerage"]
+    }
+  ],
+  "proposition_signals": [
+    {
+      "signal_id": "sg_parking_smart_nation_public_001",
+      "target_entity_id": "city_singapore_smart_nation",
+      "offering_family": "intelligent_parking",
+      "offer_bundle": "Intelligent Parking and Curbside Intelligence",
+      "source_family": "municipal_open_data",
+      "source_system_name": "Singapore Smart Nation Public Reference",
+      "source_reference": {
+        "source_id": "smartnation_smart_city_solutions",
+        "source_uri": "https://www.smartnation.gov.sg/initiatives/smart-city-solutions/",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "public_smart_parking_reference",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.88,
+      "weighting_rationale": "Public smart-city reference explicitly includes smart parking, digital payments, and real-time guidance.",
+      "evidence_summary": "Singapore positions smart parking as part of a broader smart-city solution set.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Map mobility and parking stakeholders before proposing a CSP data-and-IoT extension.",
+      "source_payload": {
+        "smart_city_domain": "mobility",
+        "parking_signal": true,
+        "data_product_potential": true
+      }
+    },
+    {
+      "signal_id": "sg_dataspark_mobility_001",
+      "target_entity_id": "city_singapore_smart_nation",
+      "offering_family": "urban_data_brokerage",
+      "offer_bundle": "Aggregated Mobility Insights and Data Brokerage",
+      "source_family": "mobility_data",
+      "source_system_name": "Singtel DataSpark Public Reference",
+      "source_reference": {
+        "source_id": "singtel_dataspark_annual_report_2015",
+        "source_uri": "https://cdn.aws.singtel.com/annualreport/2015/business-review/group-digital-life/dataspark.html",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "anonymized_mobility_intelligence",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.84,
+      "weighting_rationale": "Public reference describes anonymized mobility analysis for commuter planning.",
+      "evidence_summary": "Telco-derived mobility intelligence is a credible smart-city data product pattern.",
+      "consent_privacy_classification": "aggregated_anonymized",
+      "recommended_next_action": "Require privacy and data-governance review before activation.",
+      "source_payload": {
+        "data_product": "mobility_intelligence",
+        "requires_privacy_review": true
+      }
+    },
+    {
+      "signal_id": "my_tmone_smart_city_001",
+      "target_entity_id": "city_kuala_lumpur_mobility",
+      "offering_family": "connected_city_iot_platform",
+      "offer_bundle": "Smart City IoT Platform and Integrated Operations",
+      "source_family": "partner_ecosystem",
+      "source_system_name": "TM One Smart City Public Reference",
+      "source_reference": {
+        "source_id": "tmone_smart_city",
+        "source_uri": "https://www.tmone.com.my/smart-services/smart-city/",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "multi_domain_smart_city_portfolio",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.87,
+      "weighting_rationale": "Portfolio references smart mobility, energy, surveillance, waste, infrastructure, environment, and digital governance.",
+      "evidence_summary": "Malaysia market shows a multi-domain smart-city platform pattern.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Position connected-city IoT platform first, then attach parking and data-brokerage modules.",
+      "source_payload": {
+        "domains": ["mobility", "energy", "surveillance", "waste", "environment"],
+        "platform_motion": true
+      }
+    },
+    {
+      "signal_id": "my_maxis_ai_urban_mobility_001",
+      "target_entity_id": "city_kuala_lumpur_mobility",
+      "offering_family": "intelligent_parking",
+      "offer_bundle": "AI Urban Mobility and Parking Compliance",
+      "source_family": "public_sector_trigger",
+      "source_system_name": "Maxis Smart City Expo Public Reference",
+      "source_reference": {
+        "source_id": "maxis_smart_city_expo_2025",
+        "source_uri": "https://www.maxis.com.my/en/about-maxis/newsroom/2025/september/maxis-powers-smarter-and-safer-cities-with-ai-urban-solutions-at-smart-city-expo-2025.html",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "parking_and_access_regulation_signal",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.82,
+      "weighting_rationale": "Reference includes urban mobility and automated vehicle identification for traffic, access, and parking regulation.",
+      "evidence_summary": "AI urban mobility is a live CSP proposition pattern in Malaysia.",
+      "consent_privacy_classification": "restricted_review_required",
+      "recommended_next_action": "Route through privacy review because automated identification can raise citizen-data concerns.",
+      "source_payload": {
+        "automated_identification": true,
+        "parking_regulation": true,
+        "privacy_review_required": true
+      }
+    },
+    {
+      "signal_id": "th_ais_amata_5g_iot_001",
+      "target_entity_id": "city_amata_chonburi",
+      "offering_family": "connected_city_iot_platform",
+      "offer_bundle": "Private 5G and Industrial Smart City IoT Platform",
+      "source_family": "csp_network",
+      "source_system_name": "AIS Business Public Reference",
+      "source_reference": {
+        "source_id": "ais_5g_iot_business",
+        "source_uri": "https://www.ais.th/en/business/enterprise/technology-and-solution/5G-and-iot",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "5g_iot_foundation",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.9,
+      "weighting_rationale": "AIS positions 5G and IoT across NB-IoT, eMTC, LTE, fiber, and high-performance 5G use cases.",
+      "evidence_summary": "Thailand market supports a connectivity-led smart-city and industrial-zone proposition.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Prioritize IoT platform and industrial-zone use cases before consumer city data products.",
+      "source_payload": {
+        "network_capabilities": ["5G", "NB-IoT", "eMTC", "fiber"],
+        "industrial_zone_fit": true
+      }
+    },
+    {
+      "signal_id": "vn_viettel_nb_iot_smart_parking_001",
+      "target_entity_id": "city_hcmc_iot_locality",
+      "offering_family": "intelligent_parking",
+      "offer_bundle": "NB-IoT Smart Parking and Environmental Monitoring",
+      "source_family": "csp_network",
+      "source_system_name": "Viettel Public Reference",
+      "source_reference": {
+        "source_id": "viettel_hcmc_nb_iot",
+        "source_uri": "https://international.viettel.vn/news-detail/viettel-builds-hcm-city-the-first-iot-based-locality-in-vietnam",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "nb_iot_smart_parking_readiness",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.91,
+      "weighting_rationale": "Reference describes NB-IoT coverage and use cases including smart parking, air quality, tracking, and metering.",
+      "evidence_summary": "Vietnam has direct CSP-linked smart parking and IoT readiness evidence.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Rank intelligent parking and air-quality monitoring as first use cases.",
+      "source_payload": {
+        "nb_iot_coverage": true,
+        "smart_parking": true,
+        "air_quality": true,
+        "metering": true
+      }
+    },
+    {
+      "signal_id": "ph_pldt_iot_platform_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "connected_city_iot_platform",
+      "offer_bundle": "City IoT Platform with Visualization and Analytics",
+      "source_family": "iot_telemetry",
+      "source_system_name": "PLDT Enterprise Public Reference",
+      "source_reference": {
+        "source_id": "pldt_enterprise_smart_city",
+        "source_uri": "https://pldtenterprise.com/enterprise/products/internet-of-things/smart-city",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "iot_platform_cloud_analytics",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.86,
+      "weighting_rationale": "Reference describes installed devices uploading data to cloud visualization, monitoring, and analytics through an IoT platform.",
+      "evidence_summary": "Philippines market supports city device ingestion, visualization, monitoring, and analytics propositions.",
+      "consent_privacy_classification": "customer_permissioned",
+      "recommended_next_action": "Map connected-device estate and prioritize platform consolidation.",
+      "source_payload": {
+        "device_ingestion": true,
+        "visualization": true,
+        "monitoring": true,
+        "analytics": true
+      }
+    },
+    {
+      "signal_id": "ph_manila_parking_open_data_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "intelligent_parking",
+      "offer_bundle": "Metro Manila Intelligent Parking and Curbside Intelligence",
+      "source_family": "municipal_open_data",
+      "source_system_name": "Synthetic Metro Manila Parking Open Dataset",
+      "source_reference": {
+        "source_id": "synthetic_metro_manila_parking_open_data",
+        "source_uri": "synthetic://asean/philippines/metro-manila/parking-open-data",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "curbside_pressure_and_parking_demand",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.81,
+      "weighting_rationale": "Synthetic parking pressure and occupancy indicators support an intelligent parking proposition but need operator confirmation.",
+      "evidence_summary": "Metro Manila has a realistic parking and curbside intelligence opportunity anchored in synthetic open-data indicators.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Map MMDA and Manila Central Parking Operator stakeholders before CRM activation.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_mmda_mobility_office", "b2b_ph_manila_parking_operator"],
+        "parking_hotspots": 24,
+        "peak_occupancy_pct": 0.89,
+        "curbside_pressure": "high"
+      }
+    },
+    {
+      "signal_id": "ph_manila_parking_partner_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "intelligent_parking",
+      "offer_bundle": "Metro Manila Intelligent Parking and Curbside Intelligence",
+      "source_family": "partner_ecosystem",
+      "source_system_name": "Synthetic Manila Partner Coverage",
+      "source_reference": {
+        "source_id": "synthetic_manila_parking_partner_map",
+        "source_uri": "synthetic://asean/philippines/metro-manila/parking-partner-coverage",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "parking_operator_partner_available",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.8,
+      "weighting_rationale": "Partner coverage improves feasibility but requires commercial validation before activation.",
+      "evidence_summary": "A target parking operator and property group can support a pilot route into Manila parking propositions.",
+      "consent_privacy_classification": "customer_permissioned",
+      "recommended_next_action": "Qualify Manila Central Parking Operator and Ayala Urban Property Group as pilot stakeholders.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_manila_parking_operator", "b2b_ph_ayala_property_group"],
+        "pilot_partner_count": 2,
+        "operator_route_available": true
+      }
+    },
+    {
+      "signal_id": "ph_manila_mobility_trigger_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "intelligent_parking",
+      "offer_bundle": "Metro Manila Intelligent Parking and Curbside Intelligence",
+      "source_family": "public_sector_trigger",
+      "source_system_name": "Synthetic Metro Manila Mobility Program Tracker",
+      "source_reference": {
+        "source_id": "synthetic_metro_manila_mobility_program",
+        "source_uri": "synthetic://asean/philippines/metro-manila/mobility-program-trigger",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "mobility_improvement_program",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.79,
+      "weighting_rationale": "Public-sector trigger supports timing, but final pursuit should wait for account mapping and stakeholder validation.",
+      "evidence_summary": "Metro Manila mobility pressure creates a plausible trigger for intelligent parking and curbside optimization.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Route to review for account mapping and public-sector stakeholder validation.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_mmda_mobility_office"],
+        "program_domain": "urban_mobility",
+        "parking_kpi_present": true
+      }
+    },
+    {
+      "signal_id": "ph_metro_manila_mobility_data_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "urban_data_brokerage",
+      "offer_bundle": "Metro Manila Mobility Insights and Data Brokerage",
+      "source_family": "mobility_data",
+      "source_system_name": "Synthetic Metro Manila Aggregated Mobility Dataset",
+      "source_reference": {
+        "source_id": "synthetic_metro_manila_mobility_data",
+        "source_uri": "synthetic://asean/philippines/metro-manila/aggregated-mobility-data",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "aggregated_mobility_insight_available",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.8,
+      "weighting_rationale": "Aggregated mobility signals are commercially useful but must remain governed and non-personal.",
+      "evidence_summary": "Metro Manila can support a governed mobility-insights product for transport and property stakeholders.",
+      "consent_privacy_classification": "aggregated_anonymized",
+      "recommended_next_action": "Prepare a governed data-product review with aggregation and retention constraints.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_mmda_mobility_office", "b2b_ph_ayala_property_group"],
+        "data_product": "mobility_insights",
+        "requires_privacy_review": true
+      }
+    },
+    {
+      "signal_id": "ph_metro_manila_data_marketplace_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "urban_data_brokerage",
+      "offer_bundle": "Metro Manila Mobility Insights and Data Brokerage",
+      "source_family": "data_marketplace",
+      "source_system_name": "Synthetic Philippines Urban Data Catalog",
+      "source_reference": {
+        "source_id": "synthetic_ph_urban_data_catalog",
+        "source_uri": "synthetic://asean/philippines/metro-manila/data-marketplace-catalog",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "data_product_catalog_candidate",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.78,
+      "weighting_rationale": "Marketplace readiness is promising but requires consent, access, and buyer-use policy checks.",
+      "evidence_summary": "Metro Manila has candidate mobility and parking data products suitable for a governed CSP data-brokerage proposition.",
+      "consent_privacy_classification": "restricted_review_required",
+      "recommended_next_action": "Keep in governance review until data-product permissions and use cases are approved.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_mmda_mobility_office", "b2b_ph_ayala_property_group"],
+        "dataset_count": 9,
+        "consent_policy_required": true
+      }
+    },
+    {
+      "signal_id": "ph_metro_manila_iot_network_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "connected_city_iot_platform",
+      "offer_bundle": "City IoT Platform with Visualization and Analytics",
+      "source_family": "csp_network",
+      "source_system_name": "Synthetic CSP Network Readiness",
+      "source_reference": {
+        "source_id": "synthetic_ph_csp_network_readiness",
+        "source_uri": "synthetic://asean/philippines/metro-manila/csp-network-readiness",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "iot_connectivity_ready",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.82,
+      "weighting_rationale": "CSP network readiness plus IoT platform evidence supports a platform consolidation motion.",
+      "evidence_summary": "Metro Manila has enough synthetic CSP network readiness to evaluate a connected-city IoT platform offer.",
+      "consent_privacy_classification": "customer_permissioned",
+      "recommended_next_action": "Assess candidate device estates for MMDA and Ayala Urban Property Group.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_mmda_mobility_office", "b2b_ph_ayala_property_group"],
+        "network_capabilities": ["5G", "NB-IoT", "fiber"],
+        "device_estate_candidate": true
+      }
+    },
+    {
+      "signal_id": "ph_metro_manila_iot_program_trigger_001",
+      "target_entity_id": "city_metro_manila_iot",
+      "offering_family": "connected_city_iot_platform",
+      "offer_bundle": "City IoT Platform with Visualization and Analytics",
+      "source_family": "public_sector_trigger",
+      "source_system_name": "Synthetic Metro Manila IoT Program Tracker",
+      "source_reference": {
+        "source_id": "synthetic_ph_iot_program_trigger",
+        "source_uri": "synthetic://asean/philippines/metro-manila/iot-program-trigger",
+        "retrieved_at": "2026-04-27T00:00:00Z"
+      },
+      "signal_type": "platform_consolidation_trigger",
+      "signal_timestamp": "2026-04-27T00:00:00Z",
+      "signal_confidence": 0.79,
+      "weighting_rationale": "A program trigger makes the platform motion timely but still requires account mapping.",
+      "evidence_summary": "Metro Manila platform readiness should be reviewed as a multi-stakeholder B2B pursuit.",
+      "consent_privacy_classification": "public",
+      "recommended_next_action": "Create review queue item for connected-city IoT platform stakeholder mapping.",
+      "source_payload": {
+        "target_b2b_customer_ids": ["b2b_ph_mmda_mobility_office", "b2b_ph_ayala_property_group"],
+        "platform_consolidation": true
+      }
+    }
+  ],
+  "expected_ground_truth": {
+    "primary_target_entity_id": "city_hcmc_iot_locality",
+    "priority_offering_family": "intelligent_parking",
+    "expected_activation_state": "review_required",
+    "known_edge_cases": [
+      "public references are useful evidence but not customer permission",
+      "data brokerage requires aggregated or consented data classification",
+      "automated vehicle identification should route through restricted review"
+    ]
+  },
+  "run_id": "csp_smart_city_signal_pack_run_20260427000000",
+  "run_timestamp": "2026-04-27T00:00:00Z",
+  "model_version": "csp-smart-city-proposition-v1"
+}

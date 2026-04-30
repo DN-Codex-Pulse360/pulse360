@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Access required to review and manage Pulse360 Governance Cases.</description>
+    <classAccesses>
+        <apexClass>Pulse360AgentOrchestratorService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Pulse360GetReviewContextAction</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Pulse360GetDataCloudReviewEvidenceAction</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Pulse360RecordGovernanceDecisionAction</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <fieldPermissions><editable>false</editable><field>Account.Competitor_Risk_Signal__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.Coverage_Gap_Flag__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.Cross_Sell_Propensity__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.DataCloud_Last_Synced__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.AI_Citation_Count__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.AI_Model_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.External_Legal_Name__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.External_Registration_Number__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Externally_Validated__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.Group_Revenue_Rollup__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.Health_Score__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.Identity_Confidence__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.Unified_Profile_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Account.Validity_Score_External__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Attribute_Validity_Payload__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Audit_Event_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Candidate_Pair_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Confidence_Band__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Activation_Block_Reasons__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Country_Code__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Data_Cloud_Review_Queue_Id__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Data_Cloud_Source_Record_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Decided_At__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Decided_By__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Decision_Owner__c</field><readable>true</readable></fieldPermissions>
@@ -27,19 +53,28 @@
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Hierarchy_Conflict_Flag__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Hierarchy_Impact_Summary__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Left_Account__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Market__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Merge_Executed_At__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Merge_Executed_By__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Merge_Execution_Status__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Merged_Account__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Model_Version__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Offer_Bundle__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Offering_Family__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Priority__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Recommended_Action__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Recommended_Next_Actions__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Review_Flag__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Review_Followup_Required__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Review_Priority__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Right_Account__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Source_Product__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Source_Snapshot_Id__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Status__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>true</editable><field>Governance_Case__c.Surviving_Account__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Target_B2B_Customer_Ids__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Target_B2B_Customer_Names__c</field><readable>true</readable></fieldPermissions>
+    <fieldPermissions><editable>false</editable><field>Governance_Case__c.Target_Entity_Name__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Governance_Case__c.Top_Match_Features__c</field><readable>true</readable></fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Governance Case Steward</label>
@@ -50,7 +85,7 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>Governance_Case__c</object>
-        <viewAllRecords>false</viewAllRecords>
+        <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
         <allowCreate>false</allowCreate>

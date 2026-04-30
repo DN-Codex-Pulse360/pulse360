@@ -1,0 +1,32 @@
+<template>
+    <lightning-card title="Next Best Actions" icon-name="utility:checkin">
+        <div class="shell">
+            <template if:true={hasActions}>
+                <template for:each={actions} for:item="action">
+                    <article class="action-card" key={action.index}>
+                        <div class="top-row">
+                            <span class="rank">#{action.rank}</span>
+                            <span class="type-tag">{action.action_type}</span>
+                        </div>
+                        <div class="target">{action.target}</div>
+                        <p class="reasoning">{action.reasoning}</p>
+                        <div class="meta-row">
+                            <span>Impact: {action.estimated_revenue_impact}</span>
+                            <span>Confidence: {action.confidence}</span>
+                            <span>Sources: {action.sourceSummary}</span>
+                        </div>
+                        <lightning-button
+                            data-index={action.index}
+                            label={action.buttonLabel}
+                            variant="brand-outline"
+                            onclick={handleActionClick}>
+                        </lightning-button>
+                    </article>
+                </template>
+            </template>
+            <template if:false={hasActions}>
+                <p class="empty-copy">No GPT actions are available for this account yet.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

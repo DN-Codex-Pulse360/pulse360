@@ -19,85 +19,111 @@ for f in "$account_csv" "$product_csv" "$engagement_csv"; do
 done
 pass "Canonical export files exist"
 
-# 1) Referential integrity: product/engagement account IDs must exist in account export.
-account_ids_file="$(mktemp)"
-awk -F',' 'NR>1 {print $1}' "$account_csv" | sort -u > "$account_ids_file"
+python3 - "$account_csv" "$product_csv" "$engagement_csv" <<'PY'
+import csv
+import sys
+from pathlib import Path
 
-if ! awk -F',' 'NR>1 {print $1}' "$product_csv" | sort -u | comm -23 - "$account_ids_file" | awk 'NF{exit 1}'; then
-  rm -f "$account_ids_file"
-  fail "Product export references canonical_account_id values that do not exist in account core export"
-fi
 
-if ! awk -F',' 'NR>1 {print $1}' "$engagement_csv" | sort -u | comm -23 - "$account_ids_file" | awk 'NF{exit 1}'; then
-  rm -f "$account_ids_file"
-  fail "Engagement export references canonical_account_id values that do not exist in account core export"
-fi
-pass "Cross-file canonical_account_id references are valid"
+def fail(message: str) -> None:
+    print(f"[FAIL] {message}", file=sys.stderr)
+    raise SystemExit(1)
 
-# 2) Batch metadata consistency: run_id/run_timestamp/model_version must match across all files.
-collect_batch_values() {
-  local file="$1"
-  local run_id_col="$2"
-  local run_ts_col="$3"
-  local model_col="$4"
-  awk -F',' -v r="$run_id_col" -v t="$run_ts_col" -v m="$model_col" 'NR>1 {print $r"|"$t"|"$m}' "$file" | sort -u
-}
 
-account_batch="$(collect_batch_values "$account_csv" 11 12 13)"
-product_batch="$(collect_batch_values "$product_csv" 9 10 11)"
-engagement_batch="$(collect_batch_values "$engagement_csv" 10 11 12)"
+def pass_(message: str) -> None:
+    print(f"[PASS] {message}")
 
-[[ -n "$account_batch" ]] || fail "Account core export has no data rows"
-[[ -n "$product_batch" ]] || fail "Product brand export has no data rows"
-[[ -n "$engagement_batch" ]] || fail "Engagement export has no data rows"
 
-if [[ "$(echo "$account_batch" | wc -l | tr -d ' ')" -ne 1 ]]; then
-  rm -f "$account_ids_file"
-  fail "Account core export contains multiple run_id/run_timestamp/model_version combinations"
-fi
-if [[ "$(echo "$product_batch" | wc -l | tr -d ' ')" -ne 1 ]]; then
-  rm -f "$account_ids_file"
-  fail "Product brand export contains multiple run_id/run_timestamp/model_version combinations"
-fi
-if [[ "$(echo "$engagement_batch" | wc -l | tr -d ' ')" -ne 1 ]]; then
-  rm -f "$account_ids_file"
-  fail "Engagement export contains multiple run_id/run_timestamp/model_version combinations"
-fi
+def read_rows(path: str) -> list[dict[str, str]]:
+    with Path(path).open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
 
-[[ "$account_batch" == "$product_batch" ]] || { rm -f "$account_ids_file"; fail "Product brand export batch metadata does not match account core export"; }
-[[ "$account_batch" == "$engagement_batch" ]] || { rm -f "$account_ids_file"; fail "Engagement export batch metadata does not match account core export"; }
-pass "Batch metadata is consistent across canonical exports"
 
-# 3) Product/brand linkage from engagement must resolve when populated.
-product_ids_file="$(mktemp)"
-brand_ids_file="$(mktemp)"
-awk -F',' 'NR>1 {print $2}' "$product_csv" | sort -u > "$product_ids_file"
-awk -F',' 'NR>1 {print $5}' "$product_csv" | sort -u > "$brand_ids_file"
+account_csv, product_csv, engagement_csv = sys.argv[1:4]
+account_rows = read_rows(account_csv)
+product_rows = read_rows(product_csv)
+engagement_rows = read_rows(engagement_csv)
 
-if ! awk -F',' 'NR>1 && $6 != "" {print $6}' "$engagement_csv" | sort -u | comm -23 - "$product_ids_file" | awk 'NF{exit 1}'; then
-  rm -f "$account_ids_file" "$product_ids_file" "$brand_ids_file"
-  fail "Engagement export contains related_product_id values not found in product brand export"
-fi
+if not account_rows:
+    fail("Account core export has no data rows")
+if not product_rows:
+    fail("Product brand export has no data rows")
+if not engagement_rows:
+    fail("Engagement export has no data rows")
 
-if ! awk -F',' 'NR>1 && $7 != "" {print $7}' "$engagement_csv" | sort -u | comm -23 - "$brand_ids_file" | awk 'NF{exit 1}'; then
-  rm -f "$account_ids_file" "$product_ids_file" "$brand_ids_file"
-  fail "Engagement export contains related_brand_id values not found in product brand export"
-fi
-pass "Engagement product/brand references are valid"
+account_ids = {row["canonical_account_id"] for row in account_rows}
+product_account_ids = {row["canonical_account_id"] for row in product_rows}
+engagement_account_ids = {row["canonical_account_id"] for row in engagement_rows}
 
-# 4) No duplicate business keys.
-dup_product_keys="$(awk -F',' 'NR>1 {print $1"|"$2}' "$product_csv" | sort | uniq -d)"
-[[ -z "$dup_product_keys" ]] || {
-  rm -f "$account_ids_file" "$product_ids_file" "$brand_ids_file"
-  fail "Duplicate keys found in product brand export for canonical_account_id+product_id"
-}
+missing_product_accounts = sorted(product_account_ids - account_ids)
+if missing_product_accounts:
+    fail("Product export references canonical_account_id values that do not exist in account core export")
 
-dup_engagement_keys="$(awk -F',' 'NR>1 {print $1"|"$2}' "$engagement_csv" | sort | uniq -d)"
-[[ -z "$dup_engagement_keys" ]] || {
-  rm -f "$account_ids_file" "$product_ids_file" "$brand_ids_file"
-  fail "Duplicate keys found in engagement export for canonical_account_id+engagement_id"
-}
-pass "No duplicate business keys in canonical exports"
+missing_engagement_accounts = sorted(engagement_account_ids - account_ids)
+if missing_engagement_accounts:
+    fail("Engagement export references canonical_account_id values that do not exist in account core export")
 
-rm -f "$account_ids_file" "$product_ids_file" "$brand_ids_file"
-pass "Canonical export integrity validation completed"
+pass_("Cross-file canonical_account_id references are valid")
+
+
+def collect_batch_values(rows: list[dict[str, str]]) -> set[tuple[str, str, str]]:
+    return {
+        (row["run_id"], row["run_timestamp"], row["model_version"])
+        for row in rows
+    }
+
+
+account_batch = collect_batch_values(account_rows)
+product_batch = collect_batch_values(product_rows)
+engagement_batch = collect_batch_values(engagement_rows)
+
+if len(account_batch) != 1:
+    fail("Account core export contains multiple run_id/run_timestamp/model_version combinations")
+if len(product_batch) != 1:
+    fail("Product brand export contains multiple run_id/run_timestamp/model_version combinations")
+if len(engagement_batch) != 1:
+    fail("Engagement export contains multiple run_id/run_timestamp/model_version combinations")
+
+if account_batch != product_batch:
+    fail("Product brand export batch metadata does not match account core export")
+if account_batch != engagement_batch:
+    fail("Engagement export batch metadata does not match account core export")
+
+pass_("Batch metadata is consistent across canonical exports")
+
+product_ids = {row["product_id"] for row in product_rows}
+brand_ids = {row["brand_id"] for row in product_rows}
+
+missing_product_refs = sorted(
+    {
+        row["related_product_id"]
+        for row in engagement_rows
+        if row["related_product_id"] and row["related_product_id"] not in product_ids
+    }
+)
+if missing_product_refs:
+    fail("Engagement export contains related_product_id values not found in product brand export")
+
+missing_brand_refs = sorted(
+    {
+        row["related_brand_id"]
+        for row in engagement_rows
+        if row["related_brand_id"] and row["related_brand_id"] not in brand_ids
+    }
+)
+if missing_brand_refs:
+    fail("Engagement export contains related_brand_id values not found in product brand export")
+
+pass_("Engagement product/brand references are valid")
+
+product_keys = [(row["canonical_account_id"], row["product_id"]) for row in product_rows]
+if len(product_keys) != len(set(product_keys)):
+    fail("Duplicate keys found in product brand export for canonical_account_id+product_id")
+
+engagement_keys = [(row["canonical_account_id"], row["engagement_id"]) for row in engagement_rows]
+if len(engagement_keys) != len(set(engagement_keys)):
+    fail("Duplicate keys found in engagement export for canonical_account_id+engagement_id")
+
+pass_("No duplicate business keys in canonical exports")
+pass_("Canonical export integrity validation completed")
+PY

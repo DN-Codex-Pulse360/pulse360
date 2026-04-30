@@ -1,0 +1,106 @@
+{
+  "ai_enrichment_id": "ai_account_intelligence_ent_global_medical_asia",
+  "resolved_entity_id": "ent_global_medical_asia",
+  "crm_account_id": "001dL00000SYN001QAA",
+  "source_record_ids": [
+    "erp_invoice_apac_001",
+    "epm_forecast_apac_001",
+    "support_case_apac_001",
+    "contract_renewal_apac_001",
+    "telemetry_usage_apac_001",
+    "intent_campaign_apac_001",
+    "hierarchy_internal_apac_001"
+  ],
+  "source_families": [
+    "erp",
+    "epm",
+    "support",
+    "contracts",
+    "product_telemetry",
+    "marketing_intent",
+    "internal_hierarchy"
+  ],
+  "evidence_summary": "Synthetic ERP, EPM, support, contract, telemetry, intent, and hierarchy records indicate a high-value renewal and expansion opportunity, but support risk and subsidiary coverage gaps require stewardship before seller activation.",
+  "inferred_signals": [
+    {
+      "signal_type": "expansion_propensity",
+      "signal_value": "high",
+      "confidence": 0.86,
+      "source_record_ids": [
+        "erp_invoice_apac_001",
+        "telemetry_usage_apac_001",
+        "intent_campaign_apac_001"
+      ]
+    },
+    {
+      "signal_type": "renewal_risk",
+      "signal_value": "medium",
+      "confidence": 0.82,
+      "source_record_ids": [
+        "support_case_apac_001",
+        "contract_renewal_apac_001"
+      ]
+    },
+    {
+      "signal_type": "coverage_gap",
+      "signal_value": "subsidiary_gap_present",
+      "confidence": 0.91,
+      "source_record_ids": [
+        "epm_forecast_apac_001",
+        "hierarchy_internal_apac_001"
+      ]
+    }
+  ],
+  "recommended_actions": [
+    {
+      "rank": 1,
+      "action_type": "route_to_stewardship",
+      "target": "Global Medical Asia coverage and renewal review",
+      "target_record_id": null,
+      "reasoning": "High expansion signals are present, but support risk and subsidiary coverage gaps need review before activation.",
+      "confidence": 0.84,
+      "source_record_ids": [
+        "support_case_apac_001",
+        "contract_renewal_apac_001",
+        "hierarchy_internal_apac_001"
+      ]
+    }
+  ],
+  "llm_result_confidence": 0.88,
+  "business_action_confidence": 0.84,
+  "confidence_components": {
+    "source_reliability_score": 0.9,
+    "cross_source_coverage_score": 1,
+    "crm_anchor_score": 1,
+    "freshness_score": 0.96,
+    "ground_truth_alignment_score": 0.92,
+    "conflict_penalty": 0.12,
+    "schema_validation_score": 1,
+    "policy_safety_score": 1
+  },
+  "unsupported_claim_count": 0,
+  "insufficient_evidence_flag": false,
+  "activation_state": "review_required",
+  "activation_block_reasons": [
+    "support_risk_present",
+    "subsidiary_gap_requires_stewardship"
+  ],
+  "source_refs": [
+    "erp_invoice_apac_001",
+    "epm_forecast_apac_001",
+    "support_case_apac_001",
+    "contract_renewal_apac_001",
+    "telemetry_usage_apac_001",
+    "intent_campaign_apac_001",
+    "hierarchy_internal_apac_001"
+  ],
+  "model_id": "synthetic-ai-enrichment-fixture",
+  "prompt_version": "pulse360-account-intelligence-evidence-v1",
+  "llm_run_id": "synthetic_ai_fixture_run_20260426000000",
+  "llm_input_hash": "sha256:synthetic-enterprise-input-placeholder",
+  "llm_output_hash": "sha256:synthetic-enterprise-output-placeholder",
+  "generation_mode": "synthetic_fixture",
+  "run_id": "account_intelligence_ai_enrichment_run_20260426000000",
+  "run_timestamp": "2026-04-26T00:00:00Z",
+  "model_version": "account-intelligence-ai-enrichment-output-v1"
+}

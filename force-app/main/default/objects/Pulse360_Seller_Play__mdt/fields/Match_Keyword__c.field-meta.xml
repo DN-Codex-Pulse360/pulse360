@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Match_Keyword__c</fullName>
+    <description>Keyword used to match a generated seller action to a configured Pulse360 seller play.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Lower-case keyword used to bind action targets or reasoning to a seller play.</inlineHelpText>
+    <label>Match Keyword</label>
+    <length>255</length>
+    <required>true</required>
+    <type>Text</type>
+</CustomField>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Pulse360 altitude-2 portfolio dashboard for RevOps and leadership planning.</description>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>c:pulse360PlannerWorkspace</componentName>
+                <identifier>pulse360_portfolio_dashboard</identifier>
+                <componentInstanceProperties>
+                    <name>defaultFilter</name>
+                    <value>all</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>maxVisibleGroups</name>
+                    <value>12</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>summaryMetricLimit</name>
+                    <value>4</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>maxTimelineItems</name>
+                    <value>8</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>boardDensity</name>
+                    <value>compact</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>showSummaryPanel</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>showTimelinePanel</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>showActionRail</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>showExecutivePrompts</name>
+                    <value>true</value>
+                </componentInstanceProperties>
+            </componentInstance>
+        </itemInstances>
+        <name>main</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <masterLabel>Pulse360 Portfolio Dashboard</masterLabel>
+    <template>
+        <name>flexipage:defaultAppHomeTemplate</name>
+    </template>
+    <type>AppPage</type>
+</FlexiPage>

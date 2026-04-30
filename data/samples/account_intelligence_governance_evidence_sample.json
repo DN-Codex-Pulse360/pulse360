@@ -1,0 +1,26 @@
+{
+  "governance_evidence_id": "gov_firmographic_genai_ent_ph_sec_as096_003241",
+  "source_product": "account_intelligence_ai_synthetic",
+  "source_record_id": "ai_account_intelligence_ent_global_medical_asia",
+  "resolved_entity_id": "ent_global_medical_asia",
+  "crm_activation_key": "001dL00000SYN001QAA",
+  "source_refs": "[\"erp_invoice_apac_001\",\"epm_forecast_apac_001\",\"support_case_apac_001\",\"contract_renewal_apac_001\",\"telemetry_usage_apac_001\",\"intent_campaign_apac_001\",\"hierarchy_internal_apac_001\"]",
+  "freshness_status": "fresh",
+  "confidence_score": 0.94,
+  "confidence_components": "{\"source_reliability_score\":0.9,\"cross_source_coverage_score\":1,\"crm_anchor_score\":1,\"conflict_penalty\":0.12}",
+  "model_id": "synthetic-ai-enrichment-fixture",
+  "prompt_version": "pulse360-account-intelligence-evidence-v1",
+  "enrichment_run_id": "account_intelligence_ai_enrichment_run_20260426000000",
+  "source_run_id": "account_intelligence_ai_enrichment_run_20260426000000",
+  "source_run_timestamp": "2026-04-26T00:00:00Z",
+  "activation_eligible_flag": false,
+  "activation_block_reasons": [
+    "support_risk_present",
+    "subsidiary_gap_requires_stewardship"
+  ],
+  "review_required_flag": true,
+  "lineage_status": "source_bound",
+  "run_id": "governance_evidence_run_20260426000000",
+  "run_timestamp": "2026-04-26T00:00:00Z",
+  "model_version": "account-intelligence-governance-evidence-v1"
+}

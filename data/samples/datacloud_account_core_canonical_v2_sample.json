@@ -1,15 +1,15 @@
 {
-  "canonical_account_id": "acc_canon_001",
-  "ssot_id": "001xx00000SSOT01",
-  "source_account_id": "sf_acc_1001",
-  "deterministic_key": "PACIFIC_HOLDINGS_SG_UEN_88997766",
-  "account_name": "Pacific Holdings Group",
+  "canonical_account_id": "acc_singtel_001",
+  "ssot_id": "001xx00000SG0001",
+  "source_account_id": "sf_acc_sg_001",
+  "deterministic_key": "SINGTEL_GROUP_SG_FY2025",
+  "account_name": "Singtel Group",
   "parent_account_id": "",
-  "industry": "Financial Services",
+  "industry": "Telecommunications",
   "country_code": "SG",
-  "identity_confidence": 96,
-  "validity_score": 91,
-  "run_id": "run_20260308_03",
-  "run_timestamp": "2026-03-08T12:45:00Z",
-  "model_version": "dc-canonical-v2.0.0"
+  "identity_confidence": 97,
+  "validity_score": 94,
+  "run_id": "run_public_regional_20260328",
+  "run_timestamp": "2026-03-28T09:00:00Z",
+  "model_version": "dc-canonical-v2.1.0"
 }
