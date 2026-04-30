@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Parallel preview tab for the UX-led Pulse360 Seller Workspace V2.</description>
+    <label>Pulse360 Seller V2</label>
+    <lwcComponent>pulse360SellerWorkspaceV2</lwcComponent>
+    <motif>Custom31: Compass</motif>
+</CustomTab>

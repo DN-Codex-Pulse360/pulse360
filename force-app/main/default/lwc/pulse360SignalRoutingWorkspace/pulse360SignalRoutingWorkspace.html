@@ -1,0 +1,202 @@
+<template>
+    <div class="routing-shell">
+        <template if:true={hasError}>
+            <section class="notice notice_error">
+                <p>{errorMessage}</p>
+            </section>
+        </template>
+
+        <template if:true={hasWorkspace}>
+            <section class="control-surface">
+                <div>
+                    <p class="eyebrow">Pulse360 Signal Routing Workspace</p>
+                    <h1 class="surface-title">Turn routed signals into owned follow-up before they disappear into account noise</h1>
+                    <p class="surface-copy">This parallel slice translates whitespace, engagement, and coverage signals into a routed queue, visible evidence, and an executable next action.</p>
+                </div>
+                <template if:true={showPreviewSelector}>
+                    <lightning-combobox
+                        name="previewAccount"
+                        label="Preview account"
+                        value={activeAccountId}
+                        options={previewOptions}
+                        onchange={handlePreviewAccountChange}>
+                    </lightning-combobox>
+                </template>
+            </section>
+
+            <section class="queue-grid">
+                <aside class="surface queue-rail">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Routing queue</p>
+                            <h2 class="section-title">Who needs follow-up now</h2>
+                        </div>
+                    </div>
+
+                    <div class="queue-list">
+                        <template for:each={queueCards} for:item="item">
+                            <button class={item.className} key={item.accountId} data-account-id={item.accountId} onclick={handleQueueSelect}>
+                                <div class="queue-topline">
+                                    <strong>{item.accountName}</strong>
+                                    <span class={item.signalClass}>{item.signalLabel}</span>
+                                </div>
+                                <div class="queue-meta">{item.routeLabel}</div>
+                                <p>{item.summary}</p>
+                                <div class="queue-footer">
+                                    <span>{item.freshnessLabel}</span>
+                                    <span>{item.modeLabel}</span>
+                                </div>
+                            </button>
+                        </template>
+                    </div>
+                </aside>
+
+                <section class="hero-surface">
+                    <div class="hero-copy">
+                        <p class="eyebrow">Active routed signal</p>
+                        <h2 class="hero-title">{workspace.accountName}</h2>
+                        <p class="hero-summary">{workspace.whyNow}</p>
+                        <div class="badge-row">
+                            <span class={signalBadgeClass}>{workspace.signalLabel}</span>
+                            <span class={freshnessBadgeClass}>{workspace.freshnessLabel}</span>
+                            <span class="badge badge_soft">{workspace.payloadModeLabel}</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-highlight">
+                        <div class="detail-label">Route recommendation</div>
+                        <div class="highlight-title">{workspace.routeLabel}</div>
+                        <p>{workspace.thresholdLabel}</p>
+                        <div class="mini-grid">
+                            <div>
+                                <div class="detail-label">Signal score</div>
+                                <div class="detail-value">{workspace.signalScore}</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Confidence</div>
+                                <div class="detail-value">{workspace.confidenceLabel}</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="driver-strip">
+                <template for:each={workspace.topDrivers} for:item="driver">
+                    <article class="driver-card" key={driver.key}>
+                        <div class="detail-label">{driver.label}</div>
+                        <div class="driver-value">{driver.value}</div>
+                        <p>{driver.copy}</p>
+                    </article>
+                </template>
+            </section>
+
+            <section class="workspace-grid">
+                <div class="surface action-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Action design</p>
+                            <h2 class="section-title">What the operator should do next</h2>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <div class="card-block">
+                            <div class="detail-label">Drafted outreach</div>
+                            <p>{workspace.draftedOutreach}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Recommended play</div>
+                            <p>{recommendedPlaySummary}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Channel readiness</div>
+                            <p>{workspace.channelReadiness}</p>
+                        </div>
+                        <div class="card-block">
+                            <div class="detail-label">Commercial consequence</div>
+                            <p>{commercialImpactCopy}</p>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <lightning-button label="Create routed task" variant="brand" onclick={handleCreateRoutedTask}></lightning-button>
+                        <lightning-button label="Prepare outreach follow-up" variant="neutral" onclick={handleCreateOutreachTask}></lightning-button>
+                        <lightning-button label="Route specialist" variant="neutral" onclick={handleRouteSpecialist}></lightning-button>
+                        <lightning-button label="Open seller v2" variant="base" onclick={handleOpenSellerV2}></lightning-button>
+                    </div>
+
+                    <div class="surface-inset">
+                        <div class="section-header">
+                            <div>
+                                <p class="eyebrow">Target contacts</p>
+                                <h3 class="section-title">{targetContactHeader}</h3>
+                            </div>
+                        </div>
+
+                        <template if:true={hasTargetContacts}>
+                            <div class="contact-grid">
+                                <template for:each={workspace.targetContacts} for:item="contact">
+                                    <article class="contact-card" key={contact.contactId}>
+                                        <div class="contact-name">{contact.contactName}</div>
+                                        <div class="contact-role">{contact.contactLabel}</div>
+                                        <p>{contact.lastTouchedLabel}</p>
+                                        <template if:true={contact.hasEmail}>
+                                            <div class="contact-email">{contact.email}</div>
+                                        </template>
+                                    </article>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:false={hasTargetContacts}>
+                            <div class="card-block">
+                                <p>{workspace.contactCoverageNote}</p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <aside class="surface evidence-surface">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Evidence and limits</p>
+                            <h2 class="section-title">What is grounded and what is still provisional</h2>
+                        </div>
+                    </div>
+
+                    <div class="evidence-stack">
+                        <div class="sidebar-block">
+                            <div class="detail-label">Routing mode</div>
+                            <p>{workspace.provisionalNote}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">Contact coverage</div>
+                            <p>{workspace.contactCoverageNote}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">Freshness and model context</div>
+                            <p>{freshnessSummary}</p>
+                        </div>
+                        <div class="sidebar-block">
+                            <div class="detail-label">Supporting evidence</div>
+                            <template if:true={hasSupportingSources}>
+                                <ul class="source-list">
+                                    <template for:each={topSupportingSources} for:item="source">
+                                        <li key={source.sourceId}>
+                                            <strong>{source.sourceName}</strong>
+                                            <span>{source.sourceType}</span>
+                                            <p>{source.sourceUrl}</p>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+                            <template if:false={hasSupportingSources}>
+                                <p>No linked evidence was attached to the current routed action yet. Treat this as a directional queue item rather than a fully evidenced outbound package.</p>
+                            </template>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+        </template>
+    </div>
+</template>

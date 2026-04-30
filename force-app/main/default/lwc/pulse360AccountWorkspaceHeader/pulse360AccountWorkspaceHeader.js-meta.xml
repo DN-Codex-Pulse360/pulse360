@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>66.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Pulse360 Account Workspace Header</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects>
+                <object>Account</object>
+            </objects>
+            <property
+                name="showPortfolioLink"
+                type="Boolean"
+                label="Show Portfolio Link"
+                description="Show or hide the button that opens the Pulse360 portfolio dashboard."
+                default="true" />
+            <property
+                name="showGovernanceLink"
+                type="Boolean"
+                label="Show Governance Link"
+                description="Show or hide the button that opens Governance Cases."
+                default="true" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

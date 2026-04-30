@@ -1,0 +1,55 @@
+:host {
+    --pulse-ink: #16303b;
+    --pulse-copy: #35515d;
+    display: block;
+    color: var(--pulse-ink);
+}
+
+.surface {
+    border-radius: 1.5rem;
+    border: 1px solid #d8d0c0;
+    background: #fffdf8;
+    box-shadow: 0 16px 36px rgba(22, 48, 59, 0.08);
+    padding: 1.25rem 1.5rem;
+}
+
+.control-surface {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+    align-items: start;
+}
+
+.eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.section-title {
+    margin: 0.2rem 0 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+}
+
+.section-copy,
+.filter-help {
+    margin: 0;
+    color: var(--pulse-copy);
+    line-height: 1.5;
+}
+
+.filter-panel {
+    display: grid;
+    gap: 0.65rem;
+    align-self: end;
+}
+
+@media (max-width: 1024px) {
+    .control-surface {
+        grid-template-columns: 1fr;
+    }
+}

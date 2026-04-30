@@ -1,0 +1,71 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasWorkspace}>
+        <section class="surface summary-surface">
+            <div class="summary-layout">
+                <div class="hero-column">
+                    <div class="hero-copy">
+                        <p class="eyebrow">Account focus</p>
+                        <h2 class="hero-title">{workspace.accountName}</h2>
+                        <p class="hero-summary">{workspace.aiNarrative}</p>
+                        <div class="badge-row">
+                            <span class={freshnessClass}>{workspace.freshnessLabel}</span>
+                            <span class="badge badge_soft">{coverageSummary}</span>
+                            <span class="badge badge_soft">{validationLabel}</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-grid">
+                        <template for:each={metricCards} for:item="metric">
+                            <article class="metric-card" key={metric.key}>
+                                <div class="detail-label">{metric.label}</div>
+                                <div class="metric-value">{metric.value}</div>
+                                <p>{metric.copy}</p>
+                            </article>
+                        </template>
+                    </div>
+                </div>
+
+                <aside class="analytics-column">
+                    <div class="analytics-card">
+                        <div class="analytics-header">
+                            <div>
+                                <p class="eyebrow">Account dashboard</p>
+                                <h3 class="analytics-title">Signal and coverage dashboard</h3>
+                            </div>
+                        </div>
+                        <div class="signal-stack">
+                            <template for:each={signalMeters} for:item="signal">
+                                <div class="signal-row" key={signal.key}>
+                                    <div class="signal-copy">
+                                        <div class="signal-label">{signal.label}</div>
+                                        <div class="signal-value">{signal.valueLabel}</div>
+                                    </div>
+                                    <div class="meter-track" role="presentation">
+                                        <span class={signal.meterClass} style={signal.widthStyle}></span>
+                                    </div>
+                                    <p>{signal.copy}</p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="triage-strip">
+                <template for:each={topThingsToKnow} for:item="insight">
+                    <article class="triage-card" key={insight.key}>
+                        <div class="detail-label">{insight.label}</div>
+                        <div class="triage-value">{insight.value}</div>
+                        <p>{insight.copy}</p>
+                    </article>
+                </template>
+            </div>
+        </section>
+    </template>
+</template>

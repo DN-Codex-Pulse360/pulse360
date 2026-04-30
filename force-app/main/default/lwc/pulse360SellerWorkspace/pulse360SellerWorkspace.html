@@ -7,43 +7,297 @@
         </template>
 
         <template if:true={hasWorkspace}>
-            <c-pulse360-seller-workspace-header
-                account-id={recordId}
-                account-name={workspace.accountName}
-                hidden-revenue={workspace.hiddenRevenue}
-                currency-code={workspace.currencyCode}
-                group-known-subsidiary-count={workspace.groupKnownSubsidiaryCount}
-                uncovered-entity-count={workspace.uncoveredEntityCount}
-                freshness-label={workspace.freshnessLabel}
-                freshness-tone={workspace.freshnessTone}
-                coverage-gap-flag={workspace.coverageGapFlag}
-                coverage-percent={coveragePercent}
-                action-context={selectedActionContext}
-                onworkspaceaction={handleWorkspaceAction}>
-            </c-pulse360-seller-workspace-header>
+            <section class="surface hero-surface">
+                <div class="hero-copy">
+                    <p class="eyebrow">Pulse360 Seller Workspace</p>
+                    <h2 class="hero-title">{workspace.accountName}</h2>
+                    <p class="hero-summary">{heroSummary}</p>
+                    <div class="status-row">
+                        <template for:each={heroPills} for:item="pill">
+                            <span class={pill.className} key={pill.key}>{pill.label}</span>
+                        </template>
+                    </div>
+                </div>
 
-            <c-pulse360-seller-workspace-metrics
-                workspace={workspace}
-                action-context={selectedActionContext}
-                onworkspaceaction={handleWorkspaceAction}>
-            </c-pulse360-seller-workspace-metrics>
+                <aside class="agent-presence">
+                    <p class="agent-label">{agentLabel} ready</p>
+                    <p class="agent-preview">{agentPreview}</p>
+                    <p class="agent-meta">{agentAvailabilityCopy}</p>
+                </aside>
+            </section>
 
-            <c-pulse360-seller-workspace-action
-                action={selectedActionContext}
-                prompt-version={workspace.promptVersion}
-                onworkspaceaction={handleWorkspaceAction}>
-            </c-pulse360-seller-workspace-action>
+            <section class="surface move-surface">
+                <div class="move-header">
+                    <div>
+                        <p class="eyebrow">What should I do next?</p>
+                        <h3 class="move-title">{primaryAction.recommendedPlay}</h3>
+                    </div>
+                    <div class="chip-row">
+                        <span class="chip">{primaryAction.solutionFamily}</span>
+                        <span class="chip chip_alt">{primaryAction.confidenceLabel}</span>
+                    </div>
+                </div>
 
-            <template if:true={hasSecondaryActions}>
-                <c-pulse360-seller-workspace-follow-through
-                    actions={secondaryActions}
-                    primary-action={selectedActionContext}
-                    account-id={recordId}
-                    account-name={workspace.accountName}
-                    prompt-version={workspace.promptVersion}
-                    onworkspaceaction={handleWorkspaceAction}>
-                </c-pulse360-seller-workspace-follow-through>
-            </template>
+                <div class="move-grid">
+                    <div class="move-column">
+                        <div class="detail-block">
+                            <div class="detail-label">Target entity</div>
+                            <div class="detail-value">{primaryAction.targetEntity}</div>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Why now</div>
+                            <p class="panel-copy">{primaryAction.reasoning}</p>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Outreach objective</div>
+                            <p class="panel-copy">{primaryAction.outreachObjective}</p>
+                        </div>
+                    </div>
+
+                    <div class="move-column move-column_compact">
+                        <div class="detail-block">
+                            <div class="detail-label">Specialist route</div>
+                            <div class="detail-value">{primaryAction.specialistRoute}</div>
+                        </div>
+
+                        <div class="detail-block">
+                            <div class="detail-label">Buying-group gap</div>
+                            <p class="panel-copy">{primaryAction.buyingGroupGap}</p>
+                        </div>
+
+                        <div class="detail-grid">
+                            <div>
+                                <div class="detail-label">Estimated impact</div>
+                                <div class="detail-value">{primaryAction.estimatedRevenueImpact}</div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Prompt version</div>
+                                <div class="detail-value">{workspace.promptVersion}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <template if:true={canLaunchNativeAgent}>
+                        <lightning-button
+                            label="Open Pulse360 Agent"
+                            variant="brand"
+                            onclick={handleOpenAgent}>
+                        </lightning-button>
+                    </template>
+                    <template if:false={canLaunchNativeAgent}>
+                        <lightning-button
+                            label="Open Pulse360 Agent"
+                            variant="brand"
+                            disabled>
+                        </lightning-button>
+                        <lightning-button
+                            label="Create seller brief"
+                            variant="neutral"
+                            onclick={handleCreateSellerBrief}>
+                        </lightning-button>
+                    </template>
+                    <template if:true={canLaunchNativeAgent}>
+                        <lightning-button
+                            label="Create task"
+                            variant="neutral"
+                            onclick={handleCreateTask}>
+                        </lightning-button>
+                    </template>
+                    <lightning-button
+                        label="Route specialist"
+                        variant="neutral"
+                        onclick={handleRouteSpecialist}>
+                    </lightning-button>
+                </div>
+            </section>
+
+            <lightning-tabset variant="scoped" class="secondary-tabs">
+                <lightning-tab label="Explore group">
+                    <section class="surface secondary-surface">
+                        <div class="section-header">
+                            <div>
+                                <p class="eyebrow">Explore group</p>
+                                <h3 class="section-title">Choose the entity that should drive the next move</h3>
+                            </div>
+                            <p class="panel-copy panel-copy_compact">
+                                {workspace.crmCoveredSubsidiaryCount} of {workspace.groupKnownSubsidiaryCount} known entities are represented in CRM.
+                            </p>
+                        </div>
+
+                        <div class="coverage-shell">
+                            <div class="coverage-header">
+                                <span>CRM group coverage</span>
+                                <span>{coveragePercent}%</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style={coverageBarStyle}></div>
+                            </div>
+                        </div>
+
+                        <div class="entity-list">
+                            <template for:each={normalizedHierarchyEntities} for:item="entity">
+                                <article class={entity.className} key={entity.entityName}>
+                                    <div class="entity-header">
+                                        <div>
+                                            <div class="entity-name">{entity.entityName}</div>
+                                            <div class="entity-role">{entity.entityRole}</div>
+                                        </div>
+                                        <span class="entity-chip">{entity.coverageLabel}</span>
+                                    </div>
+                                    <template if:true={entity.signal}>
+                                        <p class="panel-copy panel-copy_compact">{entity.signal}</p>
+                                    </template>
+                                    <div class="entity-meta">
+                                        <template if:true={entity.suggestedPlay}>
+                                            <span class="entity-chip entity-chip_alt">{entity.suggestedPlay}</span>
+                                        </template>
+                                    </div>
+                                    <div class="entity-actions">
+                                        <lightning-button
+                                            label={entity.focusLabel}
+                                            variant="brand-outline"
+                                            data-entity-name={entity.entityName}
+                                            onclick={handleFocusEntity}>
+                                        </lightning-button>
+                                        <lightning-button
+                                            label="Create task"
+                                            variant="neutral"
+                                            data-entity-name={entity.entityName}
+                                            onclick={handleEntityTask}>
+                                        </lightning-button>
+                                    </div>
+                                </article>
+                            </template>
+                        </div>
+                    </section>
+                </lightning-tab>
+
+                <lightning-tab label="Why this recommendation">
+                    <section class="surface secondary-surface">
+                        <div class="section-header">
+                            <div>
+                                <p class="eyebrow">Why this recommendation</p>
+                                <h3 class="section-title">Explain the move before the seller acts</h3>
+                            </div>
+                        </div>
+
+                        <div class="reason-grid">
+                            <div class="detail-block">
+                                <div class="detail-label">Pulse360 narrative</div>
+                                <p class="panel-copy">{workspace.aiNarrative}</p>
+                            </div>
+                            <div class="detail-block">
+                                <div class="detail-label">Evidence summary</div>
+                                <p class="panel-copy">{evidenceSummary}</p>
+                            </div>
+                            <div class="detail-block">
+                                <div class="detail-label">What is still uncertain</div>
+                                <p class="panel-copy">{uncertaintySummary}</p>
+                            </div>
+                        </div>
+
+                        <div class="signal-grid">
+                            <template for:each={insightSignals} for:item="signal">
+                                <article class="signal-card" key={signal.key}>
+                                    <div class="detail-label">{signal.label}</div>
+                                    <div class="detail-value">{signal.value}</div>
+                                </article>
+                            </template>
+                        </div>
+
+                        <lightning-accordion allow-multiple-sections-open class="evidence-accordion">
+                            <lightning-accordion-section name="supporting-evidence" label="Supporting evidence">
+                                <template if:true={hasSupportingSources}>
+                                    <div class="source-list">
+                                        <template for:each={supportingSources} for:item="source">
+                                            <article class="source-card" key={source.sourceId}>
+                                                <div class="source-header">
+                                                    <strong>{source.sourceName}</strong>
+                                                    <span>{source.documentDate}</span>
+                                                </div>
+                                                <p class="micro-copy">{source.excerpt}</p>
+                                                <lightning-formatted-url
+                                                    value={source.sourceUrl}
+                                                    label="Open evidence"
+                                                    target="_blank">
+                                                </lightning-formatted-url>
+                                            </article>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template if:false={hasSupportingSources}>
+                                    <p class="panel-copy panel-copy_compact">No linked evidence is attached to the current move yet.</p>
+                                </template>
+                            </lightning-accordion-section>
+                            <lightning-accordion-section name="model-context" label="Model and freshness">
+                                <div class="meta-grid">
+                                    <div>
+                                        <div class="detail-label">Model</div>
+                                        <div class="detail-value">{workspace.modelId}</div>
+                                    </div>
+                                    <div>
+                                        <div class="detail-label">Prompt</div>
+                                        <div class="detail-value">{workspace.promptVersion}</div>
+                                    </div>
+                                    <div>
+                                        <div class="detail-label">Citations</div>
+                                        <div class="detail-value">{workspace.citationCount}</div>
+                                    </div>
+                                    <div>
+                                        <div class="detail-label">Enrichment run</div>
+                                        <div class="detail-value">{workspace.enrichmentRunId}</div>
+                                    </div>
+                                </div>
+                            </lightning-accordion-section>
+                        </lightning-accordion>
+                    </section>
+                </lightning-tab>
+
+                <template if:true={hasOtherMoves}>
+                    <lightning-tab label="Other viable moves">
+                        <section class="surface secondary-surface">
+                            <div class="section-header">
+                                <div>
+                                    <p class="eyebrow">Other viable moves</p>
+                                    <h3 class="section-title">Keep alternatives available without crowding the first screen</h3>
+                                </div>
+                            </div>
+
+                            <div class="secondary-grid">
+                                <template for:each={otherMoves} for:item="action">
+                                    <article class="secondary-card" key={action.key}>
+                                        <div class="secondary-header">
+                                            <span class="chip">{action.solutionFamily}</span>
+                                            <span class="micro-copy">{action.confidenceLabel}</span>
+                                        </div>
+                                        <div class="secondary-title">{action.recommendedPlay}</div>
+                                        <p class="panel-copy panel-copy_compact">{action.reasoning}</p>
+                                        <p class="why-not-now">{action.whyNotNow}</p>
+                                        <div class="entity-actions">
+                                            <lightning-button
+                                                label="Use this move"
+                                                variant="brand-outline"
+                                                data-rank={action.rank}
+                                                onclick={handleSelectSecondaryMove}>
+                                            </lightning-button>
+                                            <lightning-button
+                                                label="Create task"
+                                                variant="neutral"
+                                                data-rank={action.rank}
+                                                onclick={handleSecondaryTask}>
+                                            </lightning-button>
+                                        </div>
+                                    </article>
+                                </template>
+                            </div>
+                        </section>
+                    </lightning-tab>
+                </template>
+            </lightning-tabset>
         </template>
     </div>
 </template>

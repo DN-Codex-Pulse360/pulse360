@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AI_Citation_Count__c</fullName>
+    <description>Count of provenance references bound to the GPT-generated Pulse360 enrichment payload.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Shows how many public evidence references support the current Pulse360 GPT narrative.</inlineHelpText>
+    <label>AI Citation Count</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+</CustomField>

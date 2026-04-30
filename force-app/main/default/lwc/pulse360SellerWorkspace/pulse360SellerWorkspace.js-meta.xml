@@ -12,6 +12,18 @@
             <objects>
                 <object>Account</object>
             </objects>
+            <property
+                name="agentId"
+                type="String"
+                label="Pulse360 Agent Id"
+                description="ACC bot or agent id used to open the native Agentforce side panel."
+                default="Pulse360_Agent" />
+            <property
+                name="agentLabel"
+                type="String"
+                label="Agent Label"
+                description="Display label used for the native Agentforce launcher."
+                default="Pulse360 Agent" />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

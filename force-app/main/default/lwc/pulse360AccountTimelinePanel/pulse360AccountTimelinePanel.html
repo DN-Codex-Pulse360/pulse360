@@ -1,0 +1,34 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasWorkspace}>
+        <section class="surface timeline-surface">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Timeline</p>
+                    <h2 class="section-title">Signal and account history</h2>
+                    <p class="section-copy">Use chronology to judge whether the seller is acting on fresh account context or an aging signal set.</p>
+                </div>
+            </div>
+
+            <div class="timeline-list">
+                <template for:each={timelineItems} for:item="item">
+                    <article class="timeline-item" key={item.key}>
+                        <div class={item.markerClass}></div>
+                        <div class="timeline-body">
+                            <div class="timeline-meta">
+                                <div class="timeline-label">{item.label}</div>
+                                <span class={item.badgeClass}>{item.badge}</span>
+                            </div>
+                            <p>{item.copy}</p>
+                        </div>
+                    </article>
+                </template>
+            </div>
+        </section>
+    </template>
+</template>

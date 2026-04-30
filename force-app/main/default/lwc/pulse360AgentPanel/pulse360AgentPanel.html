@@ -1,0 +1,148 @@
+<template>
+    <template if:true={hasError}>
+        <section class="notice notice_error">
+            <p>{errorMessage}</p>
+        </section>
+    </template>
+
+    <template if:true={hasContext}>
+        <section class="surface agent-surface">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Real seller agent</p>
+                    <h2 class="section-title">Pulse360 Agent</h2>
+                    <p class="section-copy">
+                        Ask grounded seller questions against the live account context. This panel does not pretend to
+                        open a hidden Agentforce sidecar; it answers here with the current recommendation, evidence,
+                        risks, and execution path.
+                    </p>
+                </div>
+                <div class="badge-row">
+                    <span class="badge badge_soft">{context.freshness}</span>
+                    <template if:true={currentTurn}>
+                        <span class="badge badge_ready">{currentTurn.result.readinessLabel}</span>
+                    </template>
+                </div>
+            </div>
+
+            <div class="prompt-strip">
+                <template for:each={promptOptions} for:item="prompt">
+                    <button
+                        key={prompt.key}
+                        class={prompt.className}
+                        data-key={prompt.key}
+                        onclick={handlePromptClick}>
+                        {prompt.label}
+                    </button>
+                </template>
+            </div>
+
+            <template if:true={loading}>
+                <div class="loading-panel">
+                    <lightning-spinner alternative-text="Pulse360 Agent is preparing the response" size="small"></lightning-spinner>
+                    <p>Pulse360 Agent is grounding the answer in the current account, hierarchy, and evidence context.</p>
+                </div>
+            </template>
+
+            <template if:true={hasTranscript}>
+                <div class="conversation-list">
+                    <template for:each={transcript} for:item="turn">
+                        <article class="conversation-turn" key={turn.id}>
+                            <div class="turn turn_user">
+                                <div class="detail-label">You asked</div>
+                                <p>{turn.promptCopy}</p>
+                            </div>
+
+                            <div class="turn turn_assistant">
+                                <div class="assistant-header">
+                                    <div>
+                                        <div class="detail-label">Pulse360 Agent</div>
+                                        <h3 class="assistant-title">{turn.result.briefTitle}</h3>
+                                    </div>
+                                    <div class="assistant-badges">
+                                        <span class="badge badge_soft">{turn.goalLabel}</span>
+                                        <template if:true={turn.result.approvalRequired}>
+                                            <span class="badge badge_warning">Approval gate</span>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <p class="assistant-headline">{turn.result.briefHeadline}</p>
+
+                                <div class="assistant-meta-grid">
+                                    <div class="meta-card">
+                                        <div class="detail-label">Evidence status</div>
+                                        <p>{turn.result.evidenceStatus}</p>
+                                    </div>
+                                    <div class="meta-card">
+                                        <div class="detail-label">What changed</div>
+                                        <p>{turn.result.whatChanged}</p>
+                                    </div>
+                                </div>
+
+                                <div class="response-card">
+                                    <div class="detail-label">Agent response</div>
+                                    <p class="response-copy">{turn.result.briefBody}</p>
+                                </div>
+
+                                <div class="support-grid">
+                                    <div class="support-card">
+                                        <div class="detail-label">Execution checklist</div>
+                                        <ol class="step-list">
+                                            <template for:each={turn.result.executionChecklist} for:item="step">
+                                                <li key={step.rank}>
+                                                    <strong>{step.label}</strong>
+                                                    <span>{step.owner}</span>
+                                                    <p>{step.rationale}</p>
+                                                </li>
+                                            </template>
+                                        </ol>
+                                    </div>
+
+                                    <div class="support-card">
+                                        <div class="detail-label">Risk flags</div>
+                                        <ul class="bullet-list">
+                                            <template for:each={turn.result.riskFlags} for:item="risk">
+                                                <li key={risk}>{risk}</li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="support-card support-card_full">
+                                    <div class="detail-label">Evidence highlights</div>
+                                    <ul class="bullet-list">
+                                        <template for:each={turn.result.evidenceHighlights} for:item="highlight">
+                                            <li key={highlight}>{highlight}</li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+            </template>
+
+            <div class="action-row">
+                <lightning-button
+                    label="Create opportunity"
+                    variant="brand"
+                    onclick={handleCreateOpportunity}
+                    disabled={executionDisabled}>
+                </lightning-button>
+                <lightning-button
+                    label="Create task"
+                    variant="neutral"
+                    onclick={handleCreateTask}
+                    disabled={executionDisabled}>
+                </lightning-button>
+                <lightning-button
+                    label="Route specialist"
+                    variant="neutral"
+                    onclick={handleRouteSpecialist}
+                    disabled={executionDisabled}>
+                </lightning-button>
+            </div>
+        </section>
+    </template>
+</template>

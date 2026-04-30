@@ -1,0 +1,79 @@
+<template>
+    <div class="planner-shell">
+        <template if:true={hasError}>
+            <section class="notice notice_error">
+                <p>{errorMessage}</p>
+            </section>
+        </template>
+
+        <template if:true={hasWorkspace}>
+            <!-- Pulse360 Planner Workspace -->
+            <c-pulse360-planner-header
+                title={workspace.title}
+                summary={workspace.summary}
+                insight={workspace.highlightedInsight}
+                highlighted-action={workspace.highlightedAction}
+                next-move-label="Next planning move"
+                trust-copy="Use comparative ranking first, then drill into seller context only when a group earns attention.">
+            </c-pulse360-planner-header>
+
+            <div class="planner-layout">
+                <div class="planner-main">
+                    <c-pulse360-planner-filter-bar
+                        eyebrow="Portfolio lens"
+                        section-title="Rank groups by the decision they demand"
+                        section-copy="Keep the planner focused on why now, next move, and whether the evidence is reliable enough to act."
+                        selected-filter={selectedFilter}
+                        filter-options={filterOptions}
+                        current-filter-label={currentFilterLabel}
+                        filtered-group-count={filteredGroupCount}
+                        onfilterchange={handleFilterChange}>
+                    </c-pulse360-planner-filter-bar>
+
+                    <template if:true={hasSummaryPanel}>
+                        <c-pulse360-planner-summary-panel
+                            eyebrow="Portfolio dashboard"
+                            heading="Leadership-ready dashboards"
+                            summary-copy="Compare coverage, whitespace, validation, and executive focus before drilling into individual groups."
+                            metrics={summaryMetrics}
+                            groups={displayGroups}
+                            metric-limit={summaryMetricLimitValue}>
+                        </c-pulse360-planner-summary-panel>
+                    </template>
+
+                    <c-pulse360-planner-board
+                        eyebrow="Ranked portfolio"
+                        section-title="Leadership-ready group view"
+                        section-copy="Each card should answer three questions fast: why this matters now, what to do next, and whether the signals are trustworthy enough to move."
+                        groups={displayGroups}
+                        board-density={boardDensityValue}
+                        show-executive-prompts={showExecutivePromptsValue}
+                        onopenaccount={handleChildOpenAccount}
+                        onopensellerworkspace={handleChildOpenSellerWorkspace}>
+                    </c-pulse360-planner-board>
+                </div>
+
+                <div class="planner-rail">
+                    <template if:true={hasActionRailSection}>
+                        <c-pulse360-planner-action-rail
+                            eyebrow="Action queue"
+                            section-title="What leadership should do next"
+                            queue={filteredActionQueue}
+                            onopenaccount={handleChildOpenAccount}>
+                        </c-pulse360-planner-action-rail>
+                    </template>
+
+                    <template if:true={hasTimelinePanel}>
+                        <c-pulse360-planner-timeline
+                            eyebrow="Planning chronology"
+                            section-title="Momentum timeline"
+                            items={visibleTimelineItems}
+                            max-items={maxTimelineItemsValue}
+                            onopenaccount={handleChildOpenAccount}>
+                        </c-pulse360-planner-timeline>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
