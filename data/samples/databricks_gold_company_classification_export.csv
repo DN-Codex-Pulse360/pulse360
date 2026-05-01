@@ -1,0 +1,4 @@
+classification_id,party_id,source_account_id,scheme,code,description,is_primary,confidence,source_url,run_id,model_version
+class_001,party_001,sf_acc_1001,SIC,6719,Offices of holding companies,true,0.82,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0
+class_002,party_002,sf_acc_1002,SIC,6282,Investment advice,true,0.84,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0
+class_003,party_003,sf_acc_2001,SIC,6211,Security brokers dealers and flotation companies,true,0.83,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0

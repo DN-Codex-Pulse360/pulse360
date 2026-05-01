@@ -15,7 +15,14 @@ required_files=(
   "contracts/pulse360_sovereign_identifier.schema.json"
   "contracts/pulse360_firmographic_enrichment_output.schema.json"
   "config/data-cloud/sovereign-identifier-firmographic-dmo-design.csv"
+  "config/data-cloud/sovereign-firmographic-dlo-dmo-setup.csv"
   "config/openai/pulse360-sovereign-firmographic-enrichment-prompt.json"
+  "docs/runbook/pulse360-sovereign-firmographic-data-cloud-setup-runbook.md"
+  "data/samples/databricks_gold_sovereign_identifier_export.csv"
+  "data/samples/databricks_gold_firmographic_profile_export.csv"
+  "data/samples/databricks_gold_company_classification_export.csv"
+  "data/samples/databricks_gold_corporate_linkage_export.csv"
+  "data/samples/databricks_gold_firmographic_source_evidence_export.csv"
 )
 
 for f in "${required_files[@]}"; do
@@ -130,8 +137,141 @@ required_terms = [
 for term in required_terms:
     if term not in text:
         raise SystemExit(f"Design document missing term: {term}")
+
+setup_path = Path("config/data-cloud/sovereign-firmographic-dlo-dmo-setup.csv")
+with setup_path.open(newline="") as f:
+    setup_rows = list(csv.DictReader(f))
+setup_exports = {row["export_file"] for row in setup_rows}
+expected_exports = {
+    "data/samples/databricks_gold_sovereign_identifier_export.csv",
+    "data/samples/databricks_gold_firmographic_profile_export.csv",
+    "data/samples/databricks_gold_company_classification_export.csv",
+    "data/samples/databricks_gold_corporate_linkage_export.csv",
+    "data/samples/databricks_gold_firmographic_source_evidence_export.csv",
+}
+missing_exports = sorted(expected_exports - setup_exports)
+if missing_exports:
+    raise SystemExit(f"DLO/DMO setup matrix missing exports: {missing_exports}")
+for row in setup_rows:
+    if row["setup_mode"] != "runbook":
+        raise SystemExit(f"Unexpected setup_mode for Data Cloud artifact: {row}")
+    if not Path(row["export_file"]).is_file():
+        raise SystemExit(f"Setup matrix references missing export: {row['export_file']}")
+
+runbook = Path("docs/runbook/pulse360-sovereign-firmographic-data-cloud-setup-runbook.md").read_text()
+for term in [
+    "Cloud object creation",
+    "ssot__PartyIdentification__dlm",
+    "Provider IDs, CRM Account IDs, web profile",
+    "Do not activate the full sovereign identifier",
+]:
+    if term not in runbook:
+        raise SystemExit(f"Runbook missing term: {term}")
+
+def load_csv(path):
+    with Path(path).open(newline="") as f:
+        loaded = list(csv.DictReader(f))
+    if not loaded:
+        raise SystemExit(f"Sample export has no rows: {path}")
+    return loaded
+
+account_rows = load_csv("data/samples/datacloud_account_core_canonical_v2_export.csv")
+known_source_accounts = {row["source_account_id"] for row in account_rows}
+
+identifier_rows = load_csv("data/samples/databricks_gold_sovereign_identifier_export.csv")
+profile_rows = load_csv("data/samples/databricks_gold_firmographic_profile_export.csv")
+classification_rows = load_csv("data/samples/databricks_gold_company_classification_export.csv")
+linkage_rows = load_csv("data/samples/databricks_gold_corporate_linkage_export.csv")
+evidence_rows = load_csv("data/samples/databricks_gold_firmographic_source_evidence_export.csv")
+
+known_party_ids = {row["party_id"] for row in profile_rows}
+allowed_location_types = set(
+    json.loads(Path("contracts/pulse360_firmographic_enrichment_output.schema.json").read_text())
+    ["properties"]["firmographic_profile"]["properties"]["location_type"]["enum"]
+)
+allowed_identifier_types = identifier_types
+removed_identifier_types = {"PROVIDER_BOLDDATA_ID", "PROVIDER_INFOBEL_ID", "CRM_ACCOUNT_ID"}
+
+batch_values = set()
+for path, rows_for_batch in {
+    "identifier": identifier_rows,
+    "profile": profile_rows,
+    "classification": classification_rows,
+    "linkage": linkage_rows,
+    "evidence": evidence_rows,
+}.items():
+    for row in rows_for_batch:
+        if row["source_account_id"] not in known_source_accounts:
+            raise SystemExit(f"{path} export references unknown source_account_id: {row['source_account_id']}")
+        if row["party_id"] not in known_party_ids:
+            raise SystemExit(f"{path} export references unknown party_id: {row['party_id']}")
+        batch_values.add((row["run_id"], row["model_version"]))
+if len(batch_values) != 1:
+    raise SystemExit(f"Gold exports contain inconsistent run_id/model_version values: {sorted(batch_values)}")
+
+for row in identifier_rows:
+    if row["identifier_type"] not in allowed_identifier_types:
+        raise SystemExit(f"Unknown identifier type in sample: {row['identifier_type']}")
+    if row["identifier_type"] in removed_identifier_types:
+        raise SystemExit(f"Provider/internal ID present in sovereign sample: {row['identifier_type']}")
+    if row["is_sovereign_identifier"].lower() != "true":
+        raise SystemExit(f"Sovereign sample row is not sovereign: {row['identifier_id']}")
+    if row["verification_status"] == "verified":
+        if row["source_type"] not in {"official_registry", "tax_authority", "filing"}:
+            raise SystemExit(f"Verified sovereign ID has weak source type: {row['identifier_id']}")
+        if float(row["confidence"]) < 0.9:
+            raise SystemExit(f"Verified sovereign ID below confidence threshold: {row['identifier_id']}")
+    if not row["source_url"]:
+        raise SystemExit(f"Sovereign identifier missing source URL: {row['identifier_id']}")
+
+for row in profile_rows:
+    if row["location_type"] not in allowed_location_types:
+        raise SystemExit(f"Invalid location_type in profile export: {row['location_type']}")
+    if row["latest_financial_results_summary"] and not row["latest_financial_results_source_url"]:
+        raise SystemExit(f"Investor financial summary missing source URL: {row['firmographic_profile_id']}")
+    if row["investor_updates_summary"] and not row["investor_updates_source_urls"]:
+        raise SystemExit(f"Investor updates summary missing source URLs: {row['firmographic_profile_id']}")
+
+allowed_classification_schemes = {"SIC", "NAICS", "NACE", "LOCAL", "OTHER"}
+for row in classification_rows:
+    if row["scheme"] not in allowed_classification_schemes:
+        raise SystemExit(f"Invalid classification scheme: {row['scheme']}")
+    if not row["source_url"]:
+        raise SystemExit(f"Classification missing source URL: {row['classification_id']}")
+
+allowed_relationships = {"parent", "subsidiary", "branch", "ultimate_parent", "local_headquarter", "national_headquarter", "shared_director", "beneficial_owner", "other"}
+for row in linkage_rows:
+    if row["relationship_type"] not in allowed_relationships:
+        raise SystemExit(f"Invalid corporate linkage relationship: {row['relationship_type']}")
+    if row["related_party_id"] and row["related_party_id"] not in known_party_ids:
+        raise SystemExit(f"Corporate linkage references unknown related_party_id: {row['related_party_id']}")
+    if not row["source_url"]:
+        raise SystemExit(f"Corporate linkage missing source URL: {row['linkage_id']}")
+
+evidence_by_account_and_field = {
+    (row["source_account_id"], row["field_path"]): row
+    for row in evidence_rows
+}
+for row in identifier_rows:
+    evidence_key = (row["source_account_id"], "identifiers[0].identifier_value")
+    if evidence_key not in evidence_by_account_and_field:
+        raise SystemExit(f"Identifier lacks field evidence: {row['identifier_id']}")
+for row in profile_rows:
+    for field in [
+        "firmographic_profile.latest_financial_results_summary",
+        "firmographic_profile.investor_updates_summary",
+    ]:
+        if row[field.split(".")[-1]] and (row["source_account_id"], field) not in evidence_by_account_and_field:
+            raise SystemExit(f"Profile field lacks evidence: {row['firmographic_profile_id']} {field}")
+for row in evidence_rows:
+    if not row["source_url"]:
+        raise SystemExit(f"Evidence row missing source URL: {row['evidence_id']}")
+    if not row["evidence_excerpt"]:
+        raise SystemExit(f"Evidence row missing excerpt: {row['evidence_id']}")
+    if float(row["confidence"]) <= 0:
+        raise SystemExit(f"Evidence row has non-positive confidence: {row['evidence_id']}")
 PY
-pass "Sovereign identifier, firmographic DMO, and prompt artifacts are structurally valid"
+pass "Sovereign identifier, firmographic DMO, sample, and prompt artifacts are structurally valid"
 
 grep -q "official_registry" config/openai/pulse360-sovereign-firmographic-enrichment-prompt.json || fail "Prompt missing official registry source rule"
 grep -q "conflicts" config/openai/pulse360-sovereign-firmographic-enrichment-prompt.json || fail "Prompt missing conflict handling"

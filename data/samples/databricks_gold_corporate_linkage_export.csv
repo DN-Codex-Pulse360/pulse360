@@ -1,0 +1,5 @@
+linkage_id,party_id,source_account_id,relationship_type,related_party_id,related_entity_name,related_identifier_type,related_identifier_value,ownership_percentage,jurisdiction_country_code,confidence,source_url,run_id,model_version
+link_001,party_002,sf_acc_1002,parent,party_001,Pacific Holdings Group Pte Ltd,SG_UEN,88997766,100,SG,0.9,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0
+link_002,party_003,sf_acc_2001,parent,party_001,Pacific Holdings Group Pte Ltd,SG_UEN,88997766,100,SG,0.9,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0
+link_003,party_001,sf_acc_1001,subsidiary,party_002,Pacific Capital Singapore Pte Ltd,SG_UEN,11223344,100,SG,0.9,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0
+link_004,party_001,sf_acc_1001,subsidiary,party_003,Pacific Capital Securities Pte Ltd,SG_UEN,55667788,100,SG,0.9,https://investors.example.com/pacific-holdings/fy2025-results.pdf,run_20260308_03,pulse360-sovereign-firmographic-v1.0.0
