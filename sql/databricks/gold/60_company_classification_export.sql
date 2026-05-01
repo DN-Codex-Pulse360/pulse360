@@ -9,7 +9,9 @@ SELECT
   true AS is_primary,
   CAST(CASE WHEN crm_industry IS NOT NULL THEN 0.7 ELSE 0.45 END AS DOUBLE) AS confidence,
   concat('salesforce://Account/', crm_account_id) AS source_url,
-  concat('run_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss')) AS run_id,
+  b.run_id,
   'pulse360-sovereign-firmographic-v1.0.0' AS model_version
 FROM pulse360_s4.silver_salesforce.crm_account
+LEFT JOIN pulse360_s4.gold.account_export_base b
+  ON crm_account_id = b.source_account_id
 WHERE crm_industry IS NOT NULL;

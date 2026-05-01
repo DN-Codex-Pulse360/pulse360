@@ -10,9 +10,11 @@ SELECT
   concat('Salesforce Account Name: ', COALESCE(crm_account_name, '')) AS evidence_excerpt,
   current_timestamp() AS retrieved_at,
   CAST(0.7 AS DOUBLE) AS confidence,
-  concat('run_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss')) AS run_id,
+  b.run_id,
   'pulse360-sovereign-firmographic-v1.0.0' AS model_version
 FROM pulse360_s4.silver_salesforce.crm_account
+LEFT JOIN pulse360_s4.gold.account_export_base b
+  ON crm_account_id = b.source_account_id
 WHERE crm_account_name IS NOT NULL
 
 UNION ALL
@@ -28,9 +30,11 @@ SELECT
   concat('Salesforce Account Industry: ', COALESCE(crm_industry, '')) AS evidence_excerpt,
   current_timestamp() AS retrieved_at,
   CAST(0.65 AS DOUBLE) AS confidence,
-  concat('run_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss')) AS run_id,
+  b.run_id,
   'pulse360-sovereign-firmographic-v1.0.0' AS model_version
 FROM pulse360_s4.silver_salesforce.crm_account
+LEFT JOIN pulse360_s4.gold.account_export_base b
+  ON crm_account_id = b.source_account_id
 WHERE crm_industry IS NOT NULL
 
 UNION ALL
@@ -46,7 +50,9 @@ SELECT
   concat('Salesforce AnnualRevenue: ', CAST(crm_annual_revenue AS STRING)) AS evidence_excerpt,
   current_timestamp() AS retrieved_at,
   CAST(0.6 AS DOUBLE) AS confidence,
-  concat('run_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss')) AS run_id,
+  b.run_id,
   'pulse360-sovereign-firmographic-v1.0.0' AS model_version
 FROM pulse360_s4.silver_salesforce.crm_account
+LEFT JOIN pulse360_s4.gold.account_export_base b
+  ON crm_account_id = b.source_account_id
 WHERE crm_annual_revenue IS NOT NULL;
