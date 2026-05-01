@@ -1,0 +1,251 @@
+{
+  "name": "pulse360-sovereign-firmographic-enrichment",
+  "version": "2026-05-01",
+  "purpose": "Extract high-confidence sovereign identifiers and firmographic facts for Pulse360 Customer Accounts into the Data Cloud enrichment contract.",
+  "output_schema": "contracts/pulse360_firmographic_enrichment_output.schema.json",
+  "related_contracts": [
+    "contracts/pulse360_sovereign_identifier.schema.json",
+    "config/data-cloud/sovereign-identifier-firmographic-dmo-design.csv"
+  ],
+  "required_inputs": [
+    "source_account_id",
+    "party_id",
+    "candidate_account_name",
+    "candidate_country_code",
+    "known_crm_account_fields",
+    "approved_evidence_packets"
+  ],
+  "system_prompt": "You are a KYB-grade firmographic enrichment assistant for Pulse360. Your job is to extract business identity, sovereign identifier, company profile, classification, corporate linkage, executive role, and digital-footprint facts from supplied evidence packets. Return only schema-valid JSON. Do not invent facts. Do not infer sovereign identifiers, revenue, company status, ownership, or parentage unless the supplied evidence explicitly supports the value. Preserve uncertainty, conflicts, source URLs, source names, retrieval dates, and confidence scores.",
+  "developer_prompt": "Use Salesforce/Data Cloud party-identity semantics. A Customer Account can have many Party Identification rows. Sovereign identifiers are official registry, tax, or statutory identifiers issued by a government or recognized legal-entity authority. Provider IDs, website IDs, CRM Account IDs, and search-result IDs are not sovereign identifiers. Prefer official registry, tax authority, regulatory filing, government open-data, stock-exchange, or audited-filing evidence over commercial provider pages and general websites. If two credible sources disagree, emit a conflict instead of silently choosing one. If a value is not directly present in evidence, leave it empty, null, or omit the optional value as allowed by the schema.",
+  "workflow": [
+    "Normalize the candidate account name and country code only for search and matching; keep the legal name from evidence.",
+    "Identify the legal entity and reject evidence for similarly named entities unless address, country, domain, or identifier evidence supports the match.",
+    "Extract sovereign identifiers first, including type, jurisdiction, issuing authority, normalized value, source URL, verification status, and confidence.",
+    "Extract firmographic profile fields with field-level evidence and confidence.",
+    "Extract repeatable classifications, corporate linkages, executive roles, and digital-footprint observations only when explicitly supported.",
+    "List conflicts when candidate values differ across credible sources.",
+    "Return the final object in the configured output schema."
+  ],
+  "source_priority": [
+    {
+      "rank": 1,
+      "source_type": "official_registry",
+      "examples": "Company registries, business registration authorities, securities regulators, tax authorities where lawfully available",
+      "maximum_confidence": 0.98
+    },
+    {
+      "rank": 2,
+      "source_type": "filing",
+      "examples": "Annual reports, audited filings, stock exchange disclosures, regulator filings",
+      "maximum_confidence": 0.95
+    },
+    {
+      "rank": 3,
+      "source_type": "provider",
+      "examples": "Approved third-party firmographic providers such as BoldData/CompanyData or InfobelPRO",
+      "maximum_confidence": 0.88
+    },
+    {
+      "rank": 4,
+      "source_type": "web_research",
+      "examples": "Company websites, reputable directories, press pages, corporate profile pages",
+      "maximum_confidence": 0.75
+    },
+    {
+      "rank": 5,
+      "source_type": "crm",
+      "examples": "Existing Salesforce CRM values supplied in the evidence packet",
+      "maximum_confidence": 0.7
+    }
+  ],
+  "confidence_rules": {
+    "sovereign_identifier_verified_minimum": 0.9,
+    "sovereign_identifier_probable_maximum": 0.89,
+    "provider_id_maximum": 0.88,
+    "web_research_maximum": 0.75,
+    "conflicting_value_maximum": 0.6,
+    "required_evidence_for_confidence_above_0_9": [
+      "source_type is official_registry, tax_authority, or filing",
+      "source_url is present",
+      "evidence_excerpt directly contains the asserted value or exact supporting text",
+      "jurisdiction_country_code matches the candidate account country or evidence clearly establishes cross-border registration"
+    ]
+  },
+  "identifier_type_catalog": [
+    {
+      "identifier_type": "PH_SEC_REGISTRATION_NUMBER",
+      "jurisdiction_country_code": "PH",
+      "issuing_authority": "Philippine Securities and Exchange Commission",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "PH_TIN",
+      "jurisdiction_country_code": "PH",
+      "issuing_authority": "Bureau of Internal Revenue",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "SG_UEN",
+      "jurisdiction_country_code": "SG",
+      "issuing_authority": "Accounting and Corporate Regulatory Authority",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "MY_SSM_REGISTRATION_NUMBER",
+      "jurisdiction_country_code": "MY",
+      "issuing_authority": "Companies Commission of Malaysia",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "ID_NIB",
+      "jurisdiction_country_code": "ID",
+      "issuing_authority": "Online Single Submission",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "TH_TAX_ID",
+      "jurisdiction_country_code": "TH",
+      "issuing_authority": "Revenue Department",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "VN_ENTERPRISE_CODE",
+      "jurisdiction_country_code": "VN",
+      "issuing_authority": "Business Registration Authority",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "HK_BRN",
+      "jurisdiction_country_code": "HK",
+      "issuing_authority": "Companies Registry or Inland Revenue Department",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "GLOBAL_LEI",
+      "jurisdiction_country_code": "ZZ",
+      "issuing_authority": "Global Legal Entity Identifier Foundation",
+      "is_sovereign_identifier": true
+    },
+    {
+      "identifier_type": "PROVIDER_BOLDDATA_ID",
+      "jurisdiction_country_code": "ZZ",
+      "issuing_authority": "BoldData or CompanyData",
+      "is_sovereign_identifier": false
+    },
+    {
+      "identifier_type": "PROVIDER_INFOBEL_ID",
+      "jurisdiction_country_code": "ZZ",
+      "issuing_authority": "InfobelPRO",
+      "is_sovereign_identifier": false
+    },
+    {
+      "identifier_type": "CRM_ACCOUNT_ID",
+      "jurisdiction_country_code": "ZZ",
+      "issuing_authority": "Salesforce CRM",
+      "is_sovereign_identifier": false
+    }
+  ],
+  "field_catalog": {
+    "identity": [
+      "legal_name",
+      "trade_name",
+      "registration_status",
+      "legal_form",
+      "incorporation_date",
+      "dissolution_date"
+    ],
+    "industry": [
+      "primary_industry_label",
+      "business_category",
+      "business_description",
+      "SIC",
+      "NAICS",
+      "NACE",
+      "LOCAL"
+    ],
+    "location": [
+      "registered_address",
+      "operational_address",
+      "latitude",
+      "longitude"
+    ],
+    "financials": [
+      "annual_revenue_local",
+      "annual_revenue_usd",
+      "revenue_currency",
+      "revenue_year",
+      "revenue_indicator",
+      "share_capital",
+      "financial_year_end"
+    ],
+    "size": [
+      "employees_total",
+      "employees_total_indicator",
+      "employees_on_site",
+      "employee_range"
+    ],
+    "hierarchy": [
+      "location_type",
+      "subsidiary_flag",
+      "parent",
+      "subsidiary",
+      "ultimate_parent",
+      "local_headquarter",
+      "national_headquarter",
+      "global_headquarter",
+      "group_company_count"
+    ],
+    "people": [
+      "executive_name",
+      "role_title",
+      "role_type"
+    ],
+    "digital": [
+      "website",
+      "domain",
+      "social_profile",
+      "technology"
+    ]
+  },
+  "disallowed_behavior": [
+    "Do not fabricate a government registration number from a provider profile number.",
+    "Do not mark provider, CRM, website, social, or search-result IDs as sovereign identifiers.",
+    "Do not infer parentage from a shared brand name without source-backed legal linkage.",
+    "Do not infer annual revenue from employee count, market size, or generic sales copy.",
+    "Do not output personal emails, mobile numbers, or other sensitive executive contact details unless the engagement evidence explicitly authorizes those fields.",
+    "Do not suppress conflicting legal names, registration statuses, identifiers, or parent relationships."
+  ],
+  "output_requirements": [
+    "Every non-empty extracted field must have at least one matching field_evidence item.",
+    "Every identifier must include source_name, source_type, source_url, verification_status, confidence, run_id, and model_version.",
+    "Verified sovereign identifiers must have confidence >= 0.9 and source_type official_registry, tax_authority, or filing.",
+    "If evidence supports only a commercial provider ID, set is_sovereign_identifier to false.",
+    "Use ISO 3166-1 alpha-2 country codes where available; use ZZ only for global/provider/internal identifiers.",
+    "Use null for numeric or date values that are unknown and optional under the schema.",
+    "Set conflicts when two credible sources disagree and avoid overwriting the disagreement with a single winner."
+  ],
+  "minimal_response_shape": {
+    "source_account_id": "<input source_account_id>",
+    "party_id": "<input party_id>",
+    "legal_name": "<source-backed legal name>",
+    "trade_name": "",
+    "jurisdiction_country_code": "<ISO country>",
+    "identifiers": [],
+    "firmographic_profile": {
+      "registration_status": "",
+      "legal_form": "",
+      "primary_industry_label": "",
+      "confidence": 0
+    },
+    "classifications": [],
+    "corporate_linkages": [],
+    "executive_roles": [],
+    "digital_footprint": [],
+    "field_evidence": [],
+    "conflicts": [],
+    "overall_confidence": 0,
+    "last_verified_at": "<ISO datetime>",
+    "run_id": "<run id>",
+    "model_version": "pulse360-sovereign-firmographic-enrichment:2026-05-01"
+  }
+}

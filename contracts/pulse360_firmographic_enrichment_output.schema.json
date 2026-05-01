@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/pulse360_firmographic_enrichment_output",
+  "title": "Pulse360 Firmographic Enrichment Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_account_id",
+    "party_id",
+    "legal_name",
+    "jurisdiction_country_code",
+    "identifiers",
+    "firmographic_profile",
+    "classifications",
+    "corporate_linkages",
+    "executive_roles",
+    "digital_footprint",
+    "field_evidence",
+    "conflicts",
+    "overall_confidence",
+    "last_verified_at",
+    "run_id",
+    "model_version"
+  ],
+  "properties": {
+    "source_account_id": { "type": "string", "minLength": 1 },
+    "party_id": { "type": "string", "minLength": 1 },
+    "legal_name": { "type": "string", "minLength": 1 },
+    "trade_name": { "type": "string" },
+    "jurisdiction_country_code": { "type": "string", "minLength": 2, "maxLength": 2 },
+    "identifiers": {
+      "type": "array",
+      "items": { "$ref": "pulse360_sovereign_identifier.schema.json" }
+    },
+    "firmographic_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registration_status",
+        "legal_form",
+        "primary_industry_label",
+        "confidence"
+      ],
+      "properties": {
+        "registration_status": { "type": "string" },
+        "legal_form": { "type": "string" },
+        "incorporation_date": { "type": ["string", "null"], "format": "date" },
+        "dissolution_date": { "type": ["string", "null"], "format": "date" },
+        "primary_industry_label": { "type": "string" },
+        "business_category": { "type": "string" },
+        "business_description": { "type": "string" },
+        "registered_address": { "$ref": "#/$defs/address" },
+        "operational_address": { "$ref": "#/$defs/address" },
+        "annual_revenue_local": { "type": ["number", "null"], "minimum": 0 },
+        "annual_revenue_usd": { "type": ["number", "null"], "minimum": 0 },
+        "revenue_currency": { "type": "string" },
+        "revenue_year": { "type": ["integer", "null"], "minimum": 1800 },
+        "revenue_indicator": { "type": "string" },
+        "share_capital": { "type": ["number", "null"], "minimum": 0 },
+        "financial_year_end": { "type": "string" },
+        "employees_total": { "type": ["integer", "null"], "minimum": 0 },
+        "employees_total_indicator": { "type": "string" },
+        "employees_on_site": { "type": ["integer", "null"], "minimum": 0 },
+        "employee_range": { "type": "string" },
+        "import_export_code": { "type": "string" },
+        "import_export_label": { "type": "string" },
+        "location_type": { "type": "string" },
+        "subsidiary_flag": { "type": ["boolean", "null"] },
+        "local_headquarter_id": { "type": "string" },
+        "national_headquarter_id": { "type": "string" },
+        "global_headquarter_id": { "type": "string" },
+        "group_company_count": { "type": ["integer", "null"], "minimum": 0 },
+        "ultimate_parent_name": { "type": "string" },
+        "primary_source_name": { "type": "string" },
+        "primary_source_url": { "type": "string" },
+        "source_count": { "type": ["integer", "null"], "minimum": 0 },
+        "conflict_count": { "type": ["integer", "null"], "minimum": 0 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "classifications": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/classification" }
+    },
+    "corporate_linkages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/corporate_linkage" }
+    },
+    "executive_roles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/executive_role" }
+    },
+    "digital_footprint": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/digital_footprint" }
+    },
+    "field_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/field_evidence" }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/conflict" }
+    },
+    "overall_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "last_verified_at": { "type": "string", "format": "date-time" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "model_version": { "type": "string", "minLength": 1 }
+  },
+  "$defs": {
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "address_line_1": { "type": "string" },
+        "address_line_2": { "type": "string" },
+        "city": { "type": "string" },
+        "state_province": { "type": "string" },
+        "postal_code": { "type": "string" },
+        "country_code": { "type": "string", "minLength": 2, "maxLength": 2 },
+        "latitude": { "type": ["number", "null"], "minimum": -90, "maximum": 90 },
+        "longitude": { "type": ["number", "null"], "minimum": -180, "maximum": 180 }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scheme", "code", "description", "confidence"],
+      "properties": {
+        "scheme": { "type": "string", "enum": ["SIC", "NAICS", "NACE", "LOCAL", "OTHER"] },
+        "code": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "is_primary": { "type": "boolean" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_url": { "type": "string" }
+      }
+    },
+    "corporate_linkage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relationship_type", "related_entity_name", "confidence"],
+      "properties": {
+        "relationship_type": {
+          "type": "string",
+          "enum": ["parent", "subsidiary", "branch", "ultimate_parent", "local_headquarter", "national_headquarter", "shared_director", "beneficial_owner", "other"]
+        },
+        "related_entity_name": { "type": "string", "minLength": 1 },
+        "related_identifier_type": { "type": "string" },
+        "related_identifier_value": { "type": "string" },
+        "ownership_percentage": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "jurisdiction_country_code": { "type": "string", "minLength": 2, "maxLength": 2 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_url": { "type": "string" }
+      }
+    },
+    "executive_role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "role_title", "confidence"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "role_title": { "type": "string", "minLength": 1 },
+        "role_type": { "type": "string" },
+        "linked_entity_name": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_url": { "type": "string" }
+      }
+    },
+    "digital_footprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["footprint_type", "value", "confidence"],
+      "properties": {
+        "footprint_type": { "type": "string", "enum": ["website", "domain", "social_profile", "technology", "other"] },
+        "value": { "type": "string", "minLength": 1 },
+        "first_seen_date": { "type": ["string", "null"], "format": "date" },
+        "last_seen_date": { "type": ["string", "null"], "format": "date" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_url": { "type": "string" }
+      }
+    },
+    "field_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_path", "source_name", "source_type", "source_url", "confidence"],
+      "properties": {
+        "field_path": { "type": "string", "minLength": 1 },
+        "source_name": { "type": "string", "minLength": 1 },
+        "source_type": {
+          "type": "string",
+          "enum": ["official_registry", "tax_authority", "filing", "provider", "crm", "customer_internal", "web_research", "other"]
+        },
+        "source_url": { "type": "string", "minLength": 1 },
+        "evidence_excerpt": { "type": "string" },
+        "retrieved_at": { "type": "string", "format": "date-time" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_path", "candidate_values"],
+      "properties": {
+        "field_path": { "type": "string", "minLength": 1 },
+        "candidate_values": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["value", "source_name", "source_url", "confidence"],
+            "properties": {
+              "value": { "type": "string" },
+              "source_name": { "type": "string" },
+              "source_url": { "type": "string" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        },
+        "recommended_resolution": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/pulse360_sovereign_identifier",
+  "title": "Pulse360 Sovereign and Provider Identifier",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "identifier_id",
+    "party_id",
+    "source_account_id",
+    "identifier_type",
+    "identifier_name",
+    "identifier_value",
+    "normalized_identifier_value",
+    "jurisdiction_country_code",
+    "issuing_authority",
+    "is_sovereign_identifier",
+    "verification_status",
+    "confidence",
+    "source_name",
+    "source_type",
+    "source_url",
+    "last_verified_at",
+    "run_id",
+    "model_version"
+  ],
+  "properties": {
+    "identifier_id": { "type": "string", "minLength": 1 },
+    "party_id": { "type": "string", "minLength": 1 },
+    "source_account_id": { "type": "string", "minLength": 1 },
+    "identifier_type": {
+      "type": "string",
+      "enum": [
+        "PH_SEC_REGISTRATION_NUMBER",
+        "PH_TIN",
+        "SG_UEN",
+        "MY_SSM_REGISTRATION_NUMBER",
+        "ID_NIB",
+        "TH_TAX_ID",
+        "VN_ENTERPRISE_CODE",
+        "HK_BRN",
+        "GLOBAL_LEI",
+        "PROVIDER_BOLDDATA_ID",
+        "PROVIDER_INFOBEL_ID",
+        "CRM_ACCOUNT_ID",
+        "OTHER"
+      ]
+    },
+    "identifier_name": { "type": "string", "minLength": 1 },
+    "identifier_value": { "type": "string", "minLength": 1 },
+    "normalized_identifier_value": { "type": "string", "minLength": 1 },
+    "jurisdiction_country_code": { "type": "string", "minLength": 2, "maxLength": 2 },
+    "issuing_authority": { "type": "string", "minLength": 1 },
+    "issued_at_location": { "type": "string" },
+    "issued_date": { "type": ["string", "null"], "format": "date" },
+    "expiry_date": { "type": ["string", "null"], "format": "date" },
+    "is_sovereign_identifier": { "type": "boolean" },
+    "verification_status": {
+      "type": "string",
+      "enum": ["verified", "probable", "conflicting", "unverified"]
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "source_name": { "type": "string", "minLength": 1 },
+    "source_type": {
+      "type": "string",
+      "enum": ["official_registry", "tax_authority", "filing", "provider", "crm", "customer_internal", "web_research", "other"]
+    },
+    "source_url": { "type": "string", "minLength": 1 },
+    "evidence_excerpt": { "type": "string" },
+    "last_verified_at": { "type": "string", "format": "date-time" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "model_version": { "type": "string", "minLength": 1 }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "identifier_type": {
+            "enum": ["PROVIDER_BOLDDATA_ID", "PROVIDER_INFOBEL_ID", "CRM_ACCOUNT_ID"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "is_sovereign_identifier": { "const": false }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verification_status": { "const": "verified" },
+          "is_sovereign_identifier": { "const": true }
+        }
+      },
+      "then": {
+        "properties": {
+          "source_type": {
+            "enum": ["official_registry", "tax_authority", "filing"]
+          },
+          "confidence": { "minimum": 0.9 }
+        }
+      }
+    }
+  ]
+}
