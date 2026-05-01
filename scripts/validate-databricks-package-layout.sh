@@ -20,6 +20,8 @@ workspace="$temp_dir/workspace"
   || fail "Databricks account-intelligence-export workspace is missing databricks.yml"
 [[ -f "$workspace/account-intelligence-export/sql/databricks/gold/30_datacloud_export_accounts.sql" ]] \
   || fail "Databricks account-intelligence-export workspace is missing export SQL"
+[[ -f "$workspace/account-intelligence-export/sql/databricks/gold/80_firmographic_source_evidence_export.sql" ]] \
+  || fail "Databricks account-intelligence-export workspace is missing firmographic evidence export SQL"
 [[ -f "$workspace/account-intelligence-export/contracts/databricks_to_datacloud.schema.json" ]] \
   || fail "Databricks account-intelligence-export workspace is missing the handoff contract"
 

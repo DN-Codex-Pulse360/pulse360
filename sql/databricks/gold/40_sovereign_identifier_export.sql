@@ -1,0 +1,25 @@
+CREATE OR REPLACE TABLE pulse360_s4.intelligence.sovereign_identifier_export AS
+SELECT
+  CAST(NULL AS STRING) AS identifier_id,
+  CAST(NULL AS STRING) AS party_id,
+  CAST(NULL AS STRING) AS source_account_id,
+  CAST(NULL AS STRING) AS identifier_type,
+  CAST(NULL AS STRING) AS identifier_name,
+  CAST(NULL AS STRING) AS identifier_value,
+  CAST(NULL AS STRING) AS normalized_identifier_value,
+  CAST(NULL AS STRING) AS jurisdiction_country_code,
+  CAST(NULL AS STRING) AS issuing_authority,
+  CAST(NULL AS STRING) AS issued_at_location,
+  CAST(NULL AS DATE) AS issued_date,
+  CAST(NULL AS DATE) AS expiry_date,
+  CAST(NULL AS BOOLEAN) AS is_sovereign_identifier,
+  CAST(NULL AS STRING) AS verification_status,
+  CAST(NULL AS DOUBLE) AS confidence,
+  CAST(NULL AS STRING) AS source_name,
+  CAST(NULL AS STRING) AS source_type,
+  CAST(NULL AS STRING) AS source_url,
+  CAST(NULL AS STRING) AS evidence_excerpt,
+  CAST(NULL AS TIMESTAMP) AS last_verified_at,
+  CAST(NULL AS STRING) AS run_id,
+  CAST(NULL AS STRING) AS model_version
+WHERE 1 = 0;

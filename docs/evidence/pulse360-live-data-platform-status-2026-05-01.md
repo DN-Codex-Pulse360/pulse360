@@ -1,0 +1,130 @@
+# Pulse360 Live Data Platform Status
+
+Date: 2026-05-01
+
+## Scope
+
+Read-only validation of the live Salesforce/Data Cloud and Databricks surfaces
+for the sovereign identifier and firmographic Data layer work.
+
+## Salesforce/Data Cloud Target
+
+Org alias: `pulse360-agent-target`
+
+Observed Data Cloud streams:
+
+| Stream | Import status | Last refresh | Rows |
+| --- | --- | --- | ---: |
+| `Pulse360_Activation_Review_Queue` | `SUCCESS` | `2026-05-01T03:45:03Z` | 11 |
+| `DC Export Accounts P360 V2` | `SUCCESS` | `2026-04-29T14:23:19Z` | 18 |
+
+Observed DLOs:
+
+| DLO | Status | Sync status | Records | Fields |
+| --- | --- | --- | ---: | ---: |
+| `Pulse360 Activation Review Queue` | `ACTIVE` | `ACTIVE` | 11 | 38 |
+| `Pulse360 Account Intelligence Export V2` | `ACTIVE` | `ACTIVE` | 18 | 49 |
+
+No live Data Cloud streams were found with names containing `Sovereign`,
+`Firmographic`, or `Identifier`.
+
+## Salesforce Account Activation Sample
+
+Recent Account rows are populated through the existing Account summary
+activation fields:
+
+| Account | External registration | Externally validated | Identity confidence | External validity | Enrichment run |
+| --- | --- | --- | ---: | ---: | --- |
+| `Edge Communications` | null | false | 93 | 88 | `run_default_20260427_115330` |
+| `Burlington Textiles Corp of America` | null | false | 93 | 88 | `run_default_20260427_115330` |
+| `Pyramid Construction Inc.` | null | false | 93 | 88 | `run_default_20260427_115330` |
+| `United Oil & Gas Corp.` | null | false | 93 | 88 | `run_default_20260427_115330` |
+
+This confirms the live CRM surface is still on the older Account-summary path.
+The new sovereign identifier and rich firmographic extension tables are not
+activated into Salesforce/Data Cloud yet.
+
+## Databricks Unity Catalog
+
+Catalog/schema: `pulse360_s4.intelligence`
+
+Observed tables:
+
+| Table | Rows |
+| --- | ---: |
+| `crm_accounts_raw` | 3 |
+| `datacloud_activation_review_queue` | 11 |
+| `datacloud_export_accounts` | 18 |
+| `duplicate_candidate_pairs` | 3 |
+| `firmographic_enrichment` | 3 |
+| `governance_ops_metrics` | 1 |
+| `hierarchy_entity_graph` | 3 |
+
+Not found live yet:
+
+- `sovereign_identifier_export`
+- `firmographic_profile_export`
+- `company_classification_export`
+- `corporate_linkage_export`
+- `firmographic_source_evidence_export`
+
+The source branch now adds SQL definitions for those five outputs under
+`sql/databricks/gold`.
+
+## Databricks Jobs
+
+Latest successful data-layer validation:
+
+| Job | Run | Status | Output |
+| --- | --- | --- | --- |
+| `pulse360-data-layer-closeout-validation` | `618622060099342` | `SUCCESS` | `check_count=19`, `failure_count=0` |
+
+Latest successful firmographic GenAI enrichment:
+
+| Job | Run | Status |
+| --- | --- | --- |
+| `pulse360-firmographic-genai-enrichment` | `767020160543876` | `SUCCESS` |
+
+Current ingestion blockers:
+
+| Job | Latest failed run | Pipeline update | Root cause |
+| --- | --- | --- | --- |
+| `pulse360-salesforce-extract` | `227640205260468` | `48392bb0-eaa3-44c5-a771-4150056f79e8` | UC Salesforce connection OAuth token exchange failed for connection `pulse360` |
+| `pulse360-salesforce-governance-feedback` | `144025314928475` | `89c27091-cbe0-4348-a1bd-4de8e95b47cd` | UC Salesforce connection OAuth token exchange failed for connection `pulse360` |
+
+The managed-ingestion event log reports:
+
+```text
+SAAS_CONNECTOR_UC_CONNECTION_OAUTH_EXCHANGE_FAILED
+The OAuth token exchange failed for UC connection: pulse360.
+Edit the UC connection, re-authenticate, and run the pipeline again.
+```
+
+## Required Platform Action
+
+The Databricks UC connection `pulse360` must be re-authenticated by an operator
+with access to the Salesforce credential flow.
+
+After re-authentication:
+
+1. Run `pulse360-salesforce-extract`.
+2. Run `pulse360-salesforce-governance-feedback`.
+3. Confirm both latest runs complete successfully.
+4. Run or deploy the gold SQL package so the new sovereign/firmographic outputs
+   are materialized.
+5. Create the corresponding Data Cloud streams/DLO mappings from
+   `config/data-cloud/sovereign-firmographic-dlo-dmo-setup.csv`.
+
+## Source-Side Progress
+
+The source branch now includes contract and SQL definitions for:
+
+- `pulse360_s4.intelligence.sovereign_identifier_export`
+- `pulse360_s4.intelligence.firmographic_profile_export`
+- `pulse360_s4.intelligence.company_classification_export`
+- `pulse360_s4.intelligence.corporate_linkage_export`
+- `pulse360_s4.intelligence.firmographic_source_evidence_export`
+
+The sovereign identifier export is intentionally typed but empty until official
+registry, tax, or filing identifiers are available. CRM IDs and provider IDs
+must not be emitted as sovereign identifiers.

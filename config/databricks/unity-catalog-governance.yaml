@@ -20,6 +20,11 @@ governance:
     - account_core_export
     - product_brand_export
     - engagement_export
+    - sovereign_identifier_export
+    - firmographic_profile_export
+    - company_classification_export
+    - corporate_linkage_export
+    - firmographic_source_evidence_export
 lineage:
   required_table_links:
     - upstream: pulse360_s4.intelligence.crm_accounts_raw
@@ -34,3 +39,11 @@ lineage:
       downstream: pulse360_s4.intelligence.product_brand_export
     - upstream: pulse360_s4.intelligence.governance_case_metrics
       downstream: pulse360_s4.intelligence.engagement_export
+    - upstream: pulse360_s4.silver_salesforce.crm_account
+      downstream: pulse360_s4.intelligence.firmographic_profile_export
+    - upstream: pulse360_s4.silver_salesforce.crm_account
+      downstream: pulse360_s4.intelligence.company_classification_export
+    - upstream: pulse360_s4.silver_salesforce.crm_account
+      downstream: pulse360_s4.intelligence.corporate_linkage_export
+    - upstream: pulse360_s4.silver_salesforce.crm_account
+      downstream: pulse360_s4.intelligence.firmographic_source_evidence_export

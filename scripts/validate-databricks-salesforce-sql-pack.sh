@@ -30,6 +30,11 @@ required_files=(
   "sql/databricks/gold/10_account_export_base.sql"
   "sql/databricks/gold/20_account_core_export.sql"
   "sql/databricks/gold/30_datacloud_export_accounts.sql"
+  "sql/databricks/gold/40_sovereign_identifier_export.sql"
+  "sql/databricks/gold/50_firmographic_profile_export.sql"
+  "sql/databricks/gold/60_company_classification_export.sql"
+  "sql/databricks/gold/70_corporate_linkage_export.sql"
+  "sql/databricks/gold/80_firmographic_source_evidence_export.sql"
   "sql/databricks/gold/README.md"
   "docs/setup/databricks-silver-salesforce-runbook.md"
   "docs/setup/databricks-gold-account-export-runbook.md"
@@ -47,6 +52,11 @@ gold_runbook="docs/setup/databricks-gold-account-export-runbook.md"
 silver_account_sql="sql/databricks/silver_salesforce/10_crm_account.sql"
 gold_export_base_sql="sql/databricks/gold/10_account_export_base.sql"
 gold_export_sql="sql/databricks/gold/30_datacloud_export_accounts.sql"
+gold_sovereign_sql="sql/databricks/gold/40_sovereign_identifier_export.sql"
+gold_profile_sql="sql/databricks/gold/50_firmographic_profile_export.sql"
+gold_classification_sql="sql/databricks/gold/60_company_classification_export.sql"
+gold_linkage_sql="sql/databricks/gold/70_corporate_linkage_export.sql"
+gold_evidence_sql="sql/databricks/gold/80_firmographic_source_evidence_export.sql"
 
 for token in \
   "00_create_schema.sql" \
@@ -58,6 +68,7 @@ done
 for token in \
   "00_create_schemas.sql" \
   "30_datacloud_export_accounts.sql" \
+  "80_firmographic_source_evidence_export.sql" \
   "source_account_id" \
   "crm_account_id"; do
   search_fixed "$token" "$gold_readme" || fail "Missing token in gold README: $token"
@@ -97,6 +108,45 @@ for token in \
   search_fixed "$token" "$gold_export_sql" || fail "Missing token in datacloud export SQL: $token"
 done
 pass "SQL definitions preserve CRM-key-safe export fields"
+
+for token in \
+  "CREATE OR REPLACE TABLE pulse360_s4.intelligence.sovereign_identifier_export AS" \
+  "WHERE 1 = 0" \
+  "identifier_type"; do
+  search_fixed "$token" "$gold_sovereign_sql" || fail "Missing token in sovereign identifier export SQL: $token"
+done
+
+for token in \
+  "CREATE OR REPLACE TABLE pulse360_s4.intelligence.firmographic_profile_export AS" \
+  "latest_financial_results_summary" \
+  "investor_updates_summary" \
+  "location_type" \
+  "salesforce://Account/"; do
+  search_fixed "$token" "$gold_profile_sql" || fail "Missing token in firmographic profile export SQL: $token"
+done
+
+for token in \
+  "CREATE OR REPLACE TABLE pulse360_s4.intelligence.company_classification_export AS" \
+  "'LOCAL' AS scheme" \
+  "crm_industry"; do
+  search_fixed "$token" "$gold_classification_sql" || fail "Missing token in company classification export SQL: $token"
+done
+
+for token in \
+  "CREATE OR REPLACE TABLE pulse360_s4.intelligence.corporate_linkage_export AS" \
+  "'parent' AS relationship_type" \
+  "'subsidiary' AS relationship_type"; do
+  search_fixed "$token" "$gold_linkage_sql" || fail "Missing token in corporate linkage export SQL: $token"
+done
+
+for token in \
+  "CREATE OR REPLACE TABLE pulse360_s4.intelligence.firmographic_source_evidence_export AS" \
+  "field_path" \
+  "'crm' AS source_type" \
+  "salesforce://Account/"; do
+  search_fixed "$token" "$gold_evidence_sql" || fail "Missing token in firmographic evidence export SQL: $token"
+done
+pass "SQL definitions include sovereign and firmographic export tables"
 
 for token in \
   "crm_account_id" \
