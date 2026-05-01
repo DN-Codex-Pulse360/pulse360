@@ -58,13 +58,25 @@
         "revenue_indicator": { "type": "string" },
         "share_capital": { "type": ["number", "null"], "minimum": 0 },
         "financial_year_end": { "type": "string" },
+        "latest_financial_results_summary": { "type": "string" },
+        "latest_financial_results_period": { "type": "string" },
+        "latest_financial_results_presentation_date": { "type": ["string", "null"], "format": "date" },
+        "latest_financial_results_source_url": { "type": "string" },
+        "investor_updates_summary": { "type": "string" },
+        "investor_updates_source_urls": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
         "employees_total": { "type": ["integer", "null"], "minimum": 0 },
         "employees_total_indicator": { "type": "string" },
         "employees_on_site": { "type": ["integer", "null"], "minimum": 0 },
         "employee_range": { "type": "string" },
         "import_export_code": { "type": "string" },
         "import_export_label": { "type": "string" },
-        "location_type": { "type": "string" },
+        "location_type": {
+          "type": "string",
+          "enum": ["single_location", "headquarters", "branch", "regional_office", "subsidiary", "parent_company", "ultimate_parent", "registered_office", "operating_site", "unknown"]
+        },
         "subsidiary_flag": { "type": ["boolean", "null"] },
         "local_headquarter_id": { "type": "string" },
         "national_headquarter_id": { "type": "string" },

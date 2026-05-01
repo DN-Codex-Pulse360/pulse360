@@ -141,12 +141,10 @@ Recommended identifier type taxonomy:
 | `VN_ENTERPRISE_CODE` | VN | Business Registration Authority | Company registration |
 | `HK_BRN` | HK | Companies Registry / IRD | Business registration |
 | `GLOBAL_LEI` | Global | GLEIF | Legal Entity Identifier |
-| `PROVIDER_BOLDDATA_ID` | Provider | BoldData / CompanyData | Provider reference, not sovereign |
-| `PROVIDER_INFOBEL_ID` | Provider | InfobelPRO | Provider reference, not sovereign |
-| `CRM_ACCOUNT_ID` | Internal | Salesforce | Activation key, not sovereign |
 
-Provider IDs and CRM IDs are allowed as Party Identification rows, but must not
-be marked as sovereign identifiers.
+Provider IDs, CRM IDs, website IDs, social profile IDs, and search-result IDs
+are not Party Identification rows in Pulse360. Preserve them only as source
+provenance or evidence references when they are needed for traceability.
 
 ### 3. Identifier Evidence Extension
 
@@ -184,11 +182,35 @@ Create a single current operational profile per Account/Party:
 | Industry | `primary_industry_label`, `primary_sic_code`, `primary_naics_code`, `primary_nace_code`, `business_category`, `business_description` |
 | Location | `registered_address_*`, `operational_address_*`, `latitude`, `longitude` |
 | Financials | `annual_revenue_local`, `annual_revenue_usd`, `revenue_currency`, `revenue_year`, `revenue_indicator`, `share_capital`, `financial_year_end` |
+| Investor context | `latest_financial_results_summary`, `latest_financial_results_period`, `latest_financial_results_presentation_date`, `latest_financial_results_source_url`, `investor_updates_summary`, `investor_updates_source_urls` |
 | Size | `employees_total`, `employees_total_indicator`, `employees_on_site`, `employee_range` |
 | Trade | `import_export_code`, `import_export_label` |
 | Hierarchy summary | `location_type`, `subsidiary_flag`, `local_headquarter_id`, `national_headquarter_id`, `global_headquarter_id`, `group_company_count`, `ultimate_parent_name` |
 | Digital footprint | `website`, `domain`, `social_profiles_json`, `technology_stack_json`, `domain_age_years` |
 | Provenance | `source_count`, `primary_source_name`, `primary_source_url`, `last_verified_at`, `confidence`, `conflict_count`, `run_id`, `model_version` |
+
+`location_type` is a controlled description of the Account's site or hierarchy
+role. It should answer "what kind of company location or legal node is this?"
+rather than "where is it?" Recommended values are:
+
+| Value | Meaning |
+| --- | --- |
+| `single_location` | The company appears to operate as one standalone location |
+| `headquarters` | Primary headquarters of the legal entity |
+| `branch` | Branch office or branch registration of another entity |
+| `regional_office` | Regional office that is neither the global HQ nor merely a branch |
+| `subsidiary` | Legal subsidiary of another company |
+| `parent_company` | Direct parent of one or more companies |
+| `ultimate_parent` | Top known parent in the ownership chain |
+| `registered_office` | Registered/legal office, not necessarily operating site |
+| `operating_site` | Physical operating location, plant, store, or office |
+| `unknown` | Evidence does not support a specific classification |
+
+The investor context fields are summaries, not accounting ledgers. They should
+capture source-backed highlights from the latest investor presentation, earnings
+deck, filing, or market announcement, such as revenue growth, EBITDA/profit
+direction, segment performance, outlook, and material strategic updates. They
+must cite the presentation or news source through field evidence.
 
 ### 5. Repeatable Child DMOs
 
@@ -221,7 +243,8 @@ GPT must not:
 - invent or normalize legal identifiers beyond formatting cleanup
 - create parent/subsidiary links without source evidence
 - infer revenue from vague market statements
-- use a commercial provider's proprietary ID as the sovereign anchor
+- emit commercial provider or CRM IDs as sovereign identifier rows
+- summarize investor presentations or news that were not provided as evidence
 - output personally sensitive executive contact details unless source and
   lawful-use basis are explicitly approved for the engagement
 

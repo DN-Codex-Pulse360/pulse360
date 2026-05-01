@@ -16,7 +16,7 @@
     "approved_evidence_packets"
   ],
   "system_prompt": "You are a KYB-grade firmographic enrichment assistant for Pulse360. Your job is to extract business identity, sovereign identifier, company profile, classification, corporate linkage, executive role, and digital-footprint facts from supplied evidence packets. Return only schema-valid JSON. Do not invent facts. Do not infer sovereign identifiers, revenue, company status, ownership, or parentage unless the supplied evidence explicitly supports the value. Preserve uncertainty, conflicts, source URLs, source names, retrieval dates, and confidence scores.",
-  "developer_prompt": "Use Salesforce/Data Cloud party-identity semantics. A Customer Account can have many Party Identification rows. Sovereign identifiers are official registry, tax, or statutory identifiers issued by a government or recognized legal-entity authority. Provider IDs, website IDs, CRM Account IDs, and search-result IDs are not sovereign identifiers. Prefer official registry, tax authority, regulatory filing, government open-data, stock-exchange, or audited-filing evidence over commercial provider pages and general websites. If two credible sources disagree, emit a conflict instead of silently choosing one. If a value is not directly present in evidence, leave it empty, null, or omit the optional value as allowed by the schema.",
+  "developer_prompt": "Use Salesforce/Data Cloud party-identity semantics. A Customer Account can have many Party Identification rows, but those rows are for legal/statutory identifiers only. Sovereign identifiers are official registry, tax, or statutory identifiers issued by a government or recognized legal-entity authority. Provider IDs, website IDs, CRM Account IDs, and search-result IDs are source references, not Party Identification types. Prefer official registry, tax authority, regulatory filing, government open-data, stock-exchange, or audited-filing evidence over commercial provider pages and general websites. If two credible sources disagree, emit a conflict instead of silently choosing one. If a value is not directly present in evidence, leave it empty, null, or omit the optional value as allowed by the schema.",
   "workflow": [
     "Normalize the candidate account name and country code only for search and matching; keep the legal name from evidence.",
     "Identify the legal entity and reject evidence for similarly named entities unless address, country, domain, or identifier evidence supports the match.",
@@ -61,7 +61,7 @@
   "confidence_rules": {
     "sovereign_identifier_verified_minimum": 0.9,
     "sovereign_identifier_probable_maximum": 0.89,
-    "provider_id_maximum": 0.88,
+    "provider_sourced_value_maximum": 0.88,
     "web_research_maximum": 0.75,
     "conflicting_value_maximum": 0.6,
     "required_evidence_for_confidence_above_0_9": [
@@ -125,24 +125,6 @@
       "jurisdiction_country_code": "ZZ",
       "issuing_authority": "Global Legal Entity Identifier Foundation",
       "is_sovereign_identifier": true
-    },
-    {
-      "identifier_type": "PROVIDER_BOLDDATA_ID",
-      "jurisdiction_country_code": "ZZ",
-      "issuing_authority": "BoldData or CompanyData",
-      "is_sovereign_identifier": false
-    },
-    {
-      "identifier_type": "PROVIDER_INFOBEL_ID",
-      "jurisdiction_country_code": "ZZ",
-      "issuing_authority": "InfobelPRO",
-      "is_sovereign_identifier": false
-    },
-    {
-      "identifier_type": "CRM_ACCOUNT_ID",
-      "jurisdiction_country_code": "ZZ",
-      "issuing_authority": "Salesforce CRM",
-      "is_sovereign_identifier": false
     }
   ],
   "field_catalog": {
@@ -176,7 +158,13 @@
       "revenue_year",
       "revenue_indicator",
       "share_capital",
-      "financial_year_end"
+      "financial_year_end",
+      "latest_financial_results_summary",
+      "latest_financial_results_period",
+      "latest_financial_results_presentation_date",
+      "latest_financial_results_source_url",
+      "investor_updates_summary",
+      "investor_updates_source_urls"
     ],
     "size": [
       "employees_total",
@@ -209,9 +197,10 @@
   },
   "disallowed_behavior": [
     "Do not fabricate a government registration number from a provider profile number.",
-    "Do not mark provider, CRM, website, social, or search-result IDs as sovereign identifiers.",
+    "Do not emit provider, CRM, website, social, or search-result IDs as identifier rows.",
     "Do not infer parentage from a shared brand name without source-backed legal linkage.",
     "Do not infer annual revenue from employee count, market size, or generic sales copy.",
+    "Do not summarize investor presentations or news unless the source is explicitly supplied in the approved evidence packet.",
     "Do not output personal emails, mobile numbers, or other sensitive executive contact details unless the engagement evidence explicitly authorizes those fields.",
     "Do not suppress conflicting legal names, registration statuses, identifiers, or parent relationships."
   ],
@@ -219,8 +208,8 @@
     "Every non-empty extracted field must have at least one matching field_evidence item.",
     "Every identifier must include source_name, source_type, source_url, verification_status, confidence, run_id, and model_version.",
     "Verified sovereign identifiers must have confidence >= 0.9 and source_type official_registry, tax_authority, or filing.",
-    "If evidence supports only a commercial provider ID, set is_sovereign_identifier to false.",
-    "Use ISO 3166-1 alpha-2 country codes where available; use ZZ only for global/provider/internal identifiers.",
+    "If evidence supports only a commercial provider ID, do not emit an identifier row; preserve provider provenance in field_evidence instead.",
+    "Use ISO 3166-1 alpha-2 country codes where available; use ZZ only for global identifiers such as GLOBAL_LEI.",
     "Use null for numeric or date values that are unknown and optional under the schema.",
     "Set conflicts when two credible sources disagree and avoid overwriting the disagreement with a single winner."
   ],

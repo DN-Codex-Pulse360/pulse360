@@ -94,12 +94,17 @@ for required_identifier_type in [
     "VN_ENTERPRISE_CODE",
     "HK_BRN",
     "GLOBAL_LEI",
+]:
+    if required_identifier_type not in identifier_types:
+        raise SystemExit(f"Missing identifier type: {required_identifier_type}")
+
+for removed_identifier_type in [
     "PROVIDER_BOLDDATA_ID",
     "PROVIDER_INFOBEL_ID",
     "CRM_ACCOUNT_ID",
 ]:
-    if required_identifier_type not in identifier_types:
-        raise SystemExit(f"Missing identifier type: {required_identifier_type}")
+    if removed_identifier_type in identifier_types:
+        raise SystemExit(f"Removed identifier type still present: {removed_identifier_type}")
 
 prompt = json.loads(Path("config/openai/pulse360-sovereign-firmographic-enrichment-prompt.json").read_text())
 catalog_types = {row["identifier_type"] for row in prompt["identifier_type_catalog"]}
@@ -109,8 +114,7 @@ if missing_prompt_types:
 
 for item in prompt["identifier_type_catalog"]:
     if item["identifier_type"].startswith("PROVIDER_") or item["identifier_type"] == "CRM_ACCOUNT_ID":
-        if item["is_sovereign_identifier"] is not False:
-            raise SystemExit(f"Provider/internal ID marked sovereign: {item['identifier_type']}")
+        raise SystemExit(f"Provider/internal ID still present in prompt catalog: {item['identifier_type']}")
 
 text = Path("docs/design/pulse360-sovereign-identifier-and-firmographic-data-cloud-design.md").read_text()
 required_terms = [
@@ -118,7 +122,10 @@ required_terms = [
     "Pulse360_Firmographic_Profile__dlm",
     "Pulse360_Identifier_Evidence__dlm",
     "GPT Enrichment Rules",
-    "Provider IDs and CRM IDs are allowed as Party Identification rows, but must not",
+    "Provider IDs, CRM IDs, website IDs, social profile IDs, and search-result IDs",
+    "latest_financial_results_summary",
+    "investor_updates_summary",
+    "`location_type` is a controlled description",
 ]
 for term in required_terms:
     if term not in text:

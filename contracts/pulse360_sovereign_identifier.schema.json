@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "pulse360/contracts/pulse360_sovereign_identifier",
-  "title": "Pulse360 Sovereign and Provider Identifier",
+  "title": "Pulse360 Sovereign Identifier",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -40,9 +40,6 @@
         "VN_ENTERPRISE_CODE",
         "HK_BRN",
         "GLOBAL_LEI",
-        "PROVIDER_BOLDDATA_ID",
-        "PROVIDER_INFOBEL_ID",
-        "CRM_ACCOUNT_ID",
         "OTHER"
       ]
     },
@@ -72,20 +69,6 @@
     "model_version": { "type": "string", "minLength": 1 }
   },
   "allOf": [
-    {
-      "if": {
-        "properties": {
-          "identifier_type": {
-            "enum": ["PROVIDER_BOLDDATA_ID", "PROVIDER_INFOBEL_ID", "CRM_ACCOUNT_ID"]
-          }
-        }
-      },
-      "then": {
-        "properties": {
-          "is_sovereign_identifier": { "const": false }
-        }
-      }
-    },
     {
       "if": {
         "properties": {
