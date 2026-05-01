@@ -85,14 +85,14 @@ Latest successful firmographic GenAI enrichment:
 | --- | --- | --- |
 | `pulse360-firmographic-genai-enrichment` | `767020160543876` | `SUCCESS` |
 
-Current ingestion blockers:
+Resolved ingestion blocker:
 
-| Job | Latest failed run | Pipeline update | Root cause |
-| --- | --- | --- | --- |
-| `pulse360-salesforce-extract` | `227640205260468` | `48392bb0-eaa3-44c5-a771-4150056f79e8` | UC Salesforce connection OAuth token exchange failed for connection `pulse360` |
-| `pulse360-salesforce-governance-feedback` | `144025314928475` | `89c27091-cbe0-4348-a1bd-4de8e95b47cd` | UC Salesforce connection OAuth token exchange failed for connection `pulse360` |
+| Job | Failed run | Recovery run | Recovery status | Notes |
+| --- | --- | --- | --- | --- |
+| `pulse360-salesforce-extract` | `227640205260468` | `645797079073348` | `SUCCESS` | New pipeline update `8cebc0ad-4ed4-42b9-bc62-c9ca8f608da5` completed |
+| `pulse360-salesforce-governance-feedback` | `144025314928475` | `82684971078881` | `SUCCESS` | New pipeline update `4ff336e3-1b05-45c6-b961-a36c431ed248` completed |
 
-The managed-ingestion event log reports:
+The failed managed-ingestion event log reported:
 
 ```text
 SAAS_CONNECTOR_UC_CONNECTION_OAUTH_EXCHANGE_FAILED
@@ -102,17 +102,22 @@ Edit the UC connection, re-authenticate, and run the pipeline again.
 
 ## Required Platform Action
 
-The Databricks UC connection `pulse360` must be re-authenticated by an operator
-with access to the Salesforce credential flow.
+The Databricks UC connection `pulse360` was re-authenticated by an operator with
+access to the Salesforce credential flow. The UI still displayed an HTTP 408
+toast, but the backend connection metadata showed a refreshed active credential
+and both managed-ingestion jobs subsequently completed successfully.
 
-After re-authentication:
+Completed after re-authentication:
 
 1. Run `pulse360-salesforce-extract`.
 2. Run `pulse360-salesforce-governance-feedback`.
 3. Confirm both latest runs complete successfully.
-4. Run or deploy the gold SQL package so the new sovereign/firmographic outputs
-   are materialized.
-5. Create the corresponding Data Cloud streams/DLO mappings from
+4. Run the gold SQL package so the new sovereign/firmographic outputs are
+   materialized.
+
+Remaining platform action:
+
+1. Create the corresponding Data Cloud streams/DLO mappings from
    `config/data-cloud/sovereign-firmographic-dlo-dmo-setup.csv`.
 
 ## Source-Side Progress
@@ -128,3 +133,25 @@ The source branch now includes contract and SQL definitions for:
 The sovereign identifier export is intentionally typed but empty until official
 registry, tax, or filing identifiers are available. CRM IDs and provider IDs
 must not be emitted as sovereign identifiers.
+
+## Materialized Gold Output Counts
+
+After running the gold SQL package on `2026-05-01`, the following live table
+counts were observed:
+
+| Table | Row count |
+| --- | ---: |
+| `pulse360_s4.intelligence.sovereign_identifier_export` | 0 |
+| `pulse360_s4.intelligence.firmographic_profile_export` | 18 |
+| `pulse360_s4.intelligence.company_classification_export` | 11 |
+| `pulse360_s4.intelligence.corporate_linkage_export` | 2 |
+| `pulse360_s4.intelligence.firmographic_source_evidence_export` | 37 |
+| `pulse360_s4.intelligence.datacloud_export_accounts` | 18 |
+
+Observed `location_type` distribution:
+
+| location_type | Count |
+| --- | ---: |
+| `parent_company` | 1 |
+| `single_location` | 16 |
+| `subsidiary` | 1 |
