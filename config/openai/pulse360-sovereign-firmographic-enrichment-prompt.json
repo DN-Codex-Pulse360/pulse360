@@ -161,7 +161,7 @@
       "financial_year_end",
       "latest_financial_results_summary",
       "latest_financial_results_period",
-      "latest_financial_results_presentation_date",
+      "latest_fin_results_presentation_date",
       "latest_financial_results_source_url",
       "investor_updates_summary",
       "investor_updates_source_urls"

@@ -175,6 +175,11 @@ def load_csv(path):
         raise SystemExit(f"Sample export has no rows: {path}")
     return loaded
 
+def assert_data_cloud_safe_names(names, label):
+    too_long = sorted(name for name in names if len(name) > 40)
+    if too_long:
+        raise SystemExit(f"{label} contains Data Cloud field names over 40 chars: {too_long}")
+
 account_rows = load_csv("data/samples/datacloud_account_core_canonical_v2_export.csv")
 known_source_accounts = {row["source_account_id"] for row in account_rows}
 
@@ -183,6 +188,17 @@ profile_rows = load_csv("data/samples/databricks_gold_firmographic_profile_expor
 classification_rows = load_csv("data/samples/databricks_gold_company_classification_export.csv")
 linkage_rows = load_csv("data/samples/databricks_gold_corporate_linkage_export.csv")
 evidence_rows = load_csv("data/samples/databricks_gold_firmographic_source_evidence_export.csv")
+
+assert_data_cloud_safe_names(profile_rows[0].keys(), "Firmographic profile sample")
+assert_data_cloud_safe_names(identifier_rows[0].keys(), "Sovereign identifier sample")
+assert_data_cloud_safe_names(classification_rows[0].keys(), "Company classification sample")
+assert_data_cloud_safe_names(linkage_rows[0].keys(), "Corporate linkage sample")
+assert_data_cloud_safe_names(evidence_rows[0].keys(), "Firmographic evidence sample")
+assert_data_cloud_safe_names(
+    json.loads(Path("contracts/pulse360_firmographic_enrichment_output.schema.json").read_text())
+    ["properties"]["firmographic_profile"]["properties"].keys(),
+    "Firmographic profile schema",
+)
 
 known_party_ids = {row["party_id"] for row in profile_rows}
 allowed_location_types = set(

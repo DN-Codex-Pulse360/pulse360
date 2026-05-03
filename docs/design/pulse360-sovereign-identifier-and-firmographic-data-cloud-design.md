@@ -182,7 +182,7 @@ Create a single current operational profile per Account/Party:
 | Industry | `primary_industry_label`, `primary_sic_code`, `primary_naics_code`, `primary_nace_code`, `business_category`, `business_description` |
 | Location | `registered_address_*`, `operational_address_*`, `latitude`, `longitude` |
 | Financials | `annual_revenue_local`, `annual_revenue_usd`, `revenue_currency`, `revenue_year`, `revenue_indicator`, `share_capital`, `financial_year_end` |
-| Investor context | `latest_financial_results_summary`, `latest_financial_results_period`, `latest_financial_results_presentation_date`, `latest_financial_results_source_url`, `investor_updates_summary`, `investor_updates_source_urls` |
+| Investor context | `latest_financial_results_summary`, `latest_financial_results_period`, `latest_fin_results_presentation_date`, `latest_financial_results_source_url`, `investor_updates_summary`, `investor_updates_source_urls` |
 | Size | `employees_total`, `employees_total_indicator`, `employees_on_site`, `employee_range` |
 | Trade | `import_export_code`, `import_export_label` |
 | Hierarchy summary | `location_type`, `subsidiary_flag`, `local_headquarter_id`, `national_headquarter_id`, `global_headquarter_id`, `group_company_count`, `ultimate_parent_name` |

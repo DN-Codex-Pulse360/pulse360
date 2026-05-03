@@ -44,7 +44,7 @@ SELECT
   '' AS financial_year_end,
   '' AS latest_financial_results_summary,
   '' AS latest_financial_results_period,
-  CAST(NULL AS DATE) AS latest_financial_results_presentation_date,
+  CAST(NULL AS DATE) AS latest_fin_results_presentation_date,
   '' AS latest_financial_results_source_url,
   '' AS investor_updates_summary,
   CAST(array() AS ARRAY<STRING>) AS investor_updates_source_urls,

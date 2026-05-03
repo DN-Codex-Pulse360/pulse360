@@ -60,7 +60,7 @@
         "financial_year_end": { "type": "string" },
         "latest_financial_results_summary": { "type": "string" },
         "latest_financial_results_period": { "type": "string" },
-        "latest_financial_results_presentation_date": { "type": ["string", "null"], "format": "date" },
+        "latest_fin_results_presentation_date": { "type": ["string", "null"], "format": "date" },
         "latest_financial_results_source_url": { "type": "string" },
         "investor_updates_summary": { "type": "string" },
         "investor_updates_source_urls": {
