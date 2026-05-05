@@ -155,3 +155,40 @@ Observed `location_type` distribution:
 | `parent_company` | 1 |
 | `single_location` | 16 |
 | `subsidiary` | 1 |
+
+## Data Cloud DMO Mapping Validation
+
+On `2026-05-05`, the saved Data Cloud mappings were validated directly against
+the live org alias `pulse360-agent-target`.
+
+| DMO | API name | Queryable | Row count | Status |
+| --- | --- | --- | ---: | --- |
+| Firmographic Profile | `Pulse360_Firmographic_Profile__dlm` | yes | 18 | pass |
+| Company Classification | `Pulse_360_Company_Classification__dlm` | yes | 11 | pass |
+| Corporate Linkage | `Pulse360_Corporate_Linkage__dlm` | yes | 2 | pass |
+| Firmographic Source Evidence | `Pulse360_Firmographic_Source_Evidenc__dlm` | yes | 37 | pass |
+| Sovereign Identifier | `Pulse360_Sovereign_Identifier__dlm` | yes | 0 | pass, expected empty |
+
+Key integrity checks:
+
+- `Pulse360_Firmographic_Profile__dlm` has 18 rows, 18 distinct
+  `source_account_id__c` values, and 18 distinct `party_id__c` values.
+- All 18 referenced `source_account_id__c` values exist in Salesforce `Account`.
+- `ssot__Account__dlm` has 18 rows and uses `ssot__Id__c` as the CRM Account
+  key matching the Pulse360 `source_account_id__c` values.
+- Classification, corporate-linkage, and evidence rows all reference known
+  firmographic-profile `party_id__c` and `source_account_id__c` values.
+- All 37 firmographic evidence rows have `source_url__c` populated.
+- The live relationship metadata surface did not yet expose relationship edges
+  from the Pulse360 extension DMOs to `ssot__Account__dlm`; relationship setup
+  remains an org-locked Data Cloud UI step.
+
+Required relationship target:
+
+| Child DMO | Child field | Parent DMO | Parent field |
+| --- | --- | --- | --- |
+| `Pulse360_Firmographic_Profile__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
+| `Pulse_360_Company_Classification__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
+| `Pulse360_Corporate_Linkage__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
+| `Pulse360_Firmographic_Source_Evidenc__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
+| `Pulse360_Sovereign_Identifier__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
