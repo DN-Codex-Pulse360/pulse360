@@ -179,16 +179,25 @@ Key integrity checks:
 - Classification, corporate-linkage, and evidence rows all reference known
   firmographic-profile `party_id__c` and `source_account_id__c` values.
 - All 37 firmographic evidence rows have `source_url__c` populated.
-- The live relationship metadata surface did not yet expose relationship edges
-  from the Pulse360 extension DMOs to `ssot__Account__dlm`; relationship setup
-  remains an org-locked Data Cloud UI step.
+- The first validation pass showed no relationship edges from the Pulse360
+  extension DMOs to `ssot__Account__dlm`. The relationships were then created
+  through the Data Cloud UI and revalidated.
 
 Required relationship target:
 
-| Child DMO | Child field | Parent DMO | Parent field |
-| --- | --- | --- | --- |
-| `Pulse360_Firmographic_Profile__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
-| `Pulse_360_Company_Classification__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
-| `Pulse360_Corporate_Linkage__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
-| `Pulse360_Firmographic_Source_Evidenc__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
-| `Pulse360_Sovereign_Identifier__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` |
+| Child DMO | Child field | Parent DMO | Parent field | Cardinality | Generated relationship field | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| `Pulse360_Firmographic_Profile__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` | `OneToOne` | `rel_1777989007569_end__c` | pass |
+| `Pulse_360_Company_Classification__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` | `ManyToOne` | `rel_1777990282217_end__c` | pass |
+| `Pulse360_Corporate_Linkage__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` | `ManyToOne` | `rel_1777990382517_end__c` | pass |
+| `Pulse360_Firmographic_Source_Evidenc__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` | `ManyToOne` | `rel_1777990482469_end__c` | pass |
+| `Pulse360_Sovereign_Identifier__dlm` | `source_account_id__c` | `ssot__Account__dlm` | `ssot__Id__c` | `ManyToOne` | `rel_1777990642329_end__c` | pass |
+
+Post-relationship validation:
+
+- `ssot__Account__dlm` exposes all five Pulse360 DMOs as child relationships.
+- Each Pulse360 child DMO exposes a generated reference field to
+  `ssot__Account__dlm`.
+- Row counts remained aligned after relationship creation:
+  `18`, `11`, `2`, `37`, and `0`.
+- `source_account_id__c` remained populated on every populated Pulse360 DMO row.
