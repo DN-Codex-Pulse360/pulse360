@@ -1,0 +1,60 @@
+{
+  "api": "openai_responses",
+  "provider": "openai",
+  "models": {
+    "narrative_reasoning": "gpt-5.5",
+    "action_ranking": "gpt-5.5",
+    "high_volume_extraction": "gpt-5.5"
+  },
+  "prompt_version": "pulse360-public-regional-openai-v2",
+  "structured_outputs_required": true,
+  "secret_scope": "pulse360-ai",
+  "secret_key": "openai-api-key",
+  "reasoning": {
+    "default_effort": "low",
+    "retry_effort": "medium",
+    "retry_when_llm_confidence_below": 0.8,
+    "retry_when_conflicts_present": true
+  },
+  "structured_outputs": {
+    "type": "json_schema",
+    "strict": true,
+    "schema_contract": "contracts/genai_firmographic_enrichment_output.schema.json",
+    "data_cloud_contract": "contracts/pulse360_firmographic_enrichment_output.schema.json"
+  },
+  "prompt_caching": {
+    "enabled": true,
+    "prompt_cache_key": "pulse360-firmographic-openai-v2"
+  },
+  "request_timeout_seconds": 300,
+  "tools": {
+    "web_search": {
+      "enabled": false,
+      "type": "web_search",
+      "external_web_access": true,
+      "enable_in_databricks_with": "PULSE360_OPENAI_WEB_SEARCH=1"
+    }
+  },
+  "contract_rules": {
+    "bind_all_citations_to_source_ids": true,
+    "allow_free_form_citation_text": false,
+    "require_document_date": true,
+    "require_source_url": true,
+    "require_accessed_at": true,
+    "do_not_emit_provider_ids_as_sovereign_identifiers": true,
+    "investor_summaries_require_source_urls": true
+  },
+  "response_contract": {
+    "narrative_field": "ai_narrative",
+    "actions_field": "ai_recommended_actions",
+    "source_refs_field": "source_refs",
+    "model_id_field": "model_id",
+    "prompt_version_field": "prompt_version",
+    "citation_count_field": "citation_count"
+  },
+  "official_docs": {
+    "latest_model": "https://developers.openai.com/api/docs/guides/latest-model",
+    "structured_outputs": "https://developers.openai.com/api/docs/guides/structured-outputs",
+    "responses_api": "https://developers.openai.com/api/docs/guides/migrate-to-responses"
+  }
+}

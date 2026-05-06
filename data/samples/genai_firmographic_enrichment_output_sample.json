@@ -1,0 +1,54 @@
+{
+  "genai_enrichment_id": "genai_firmographic_ent_ph_sec_as096_003241",
+  "evidence_packet_id": "firmographic_packet_ent_ph_sec_as096_003241",
+  "resolved_entity_id": "ent_ph_sec_as096_003241",
+  "crm_account_id": null,
+  "ai_narrative": "Ayala Corporation has a coverage gap because governed firmographic evidence shows external group scale while the current CRM-safe anchor is not yet available for this group profile. The revenue and group coverage statements are limited to supplied source facts and should stay in review until a Salesforce Account anchor or approved External ID is established.",
+  "ai_recommended_actions": [
+    {
+      "rank": 1,
+      "action_type": "flag_hierarchy_review",
+      "target": "Ayala Corporation coverage gap review",
+      "target_record_id": null,
+      "reasoning": "The evidence packet contains external revenue and subsidiary-count facts, but no CRM-safe activation key. Route to stewardship before CRM activation.",
+      "estimated_revenue_impact": "Improved group coverage accuracy before seller activation",
+      "confidence": 0.74,
+      "source_ids": [
+        "src_neutral_firmographic_ayala_revenue_2024",
+        "src_neutral_firmographic_ayala_group_hint"
+      ]
+    }
+  ],
+  "llm_result_confidence": 0.82,
+  "business_action_confidence": 0.74,
+  "confidence_components": {
+    "source_reliability_score": 0.88,
+    "evidence_coverage_score": 0.8,
+    "corroboration_score": 0.75,
+    "freshness_score": 0.9,
+    "extraction_certainty_score": 0.84,
+    "conflict_penalty": 0.1,
+    "schema_validation_score": 1,
+    "citation_binding_score": 1,
+    "actionability_score": 0.8,
+    "crm_anchor_score": 0.2,
+    "policy_safety_score": 1
+  },
+  "unsupported_claim_count": 0,
+  "insufficient_evidence_flag": false,
+  "source_refs": [
+    "src_neutral_firmographic_ayala_revenue_2024",
+    "src_neutral_firmographic_ayala_group_hint"
+  ],
+  "model_id": "gpt-design-placeholder",
+  "prompt_version": "pulse360-firmographic-evidence-v1",
+  "llm_run_id": "llm_fixture_run_20260425000000",
+  "llm_input_hash": "sha256:fixture-input-placeholder",
+  "llm_output_hash": "sha256:fixture-output-placeholder",
+  "llm_cost_estimate": 0,
+  "generation_mode": "source_bound_fixture",
+  "activation_eligible_flag": false,
+  "run_id": "genai_firmographic_fixture_run_20260425000000",
+  "run_timestamp": "2026-04-25T00:00:00Z",
+  "model_version": "genai-firmographic-enrichment-output-v1"
+}

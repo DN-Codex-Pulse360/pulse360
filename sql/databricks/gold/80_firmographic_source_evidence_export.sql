@@ -1,4 +1,38 @@
 CREATE OR REPLACE TABLE pulse360_s4.intelligence.firmographic_source_evidence_export AS
+WITH account_gpt_firmographic_latest AS (
+  SELECT *
+  FROM pulse360_s4.gold.account_gpt_firmographic_latest
+  WHERE gpt_status = 'schema_valid'
+),
+gpt_field_evidence AS (
+  SELECT
+    explode(
+      from_json(
+        gpt_field_evidence_json,
+        'array<struct<evidence_id:string,party_id:string,source_account_id:string,field_path:string,source_name:string,source_type:string,source_url:string,evidence_excerpt:string,retrieved_at:string,confidence:double,run_id:string,model_version:string>>'
+      )
+    ) AS evidence
+  FROM account_gpt_firmographic_latest
+)
+SELECT
+  evidence.evidence_id,
+  evidence.party_id,
+  evidence.source_account_id,
+  evidence.field_path,
+  evidence.source_name,
+  evidence.source_type,
+  evidence.source_url,
+  evidence.evidence_excerpt,
+  CAST(evidence.retrieved_at AS TIMESTAMP) AS retrieved_at,
+  CAST(evidence.confidence AS DOUBLE) AS confidence,
+  evidence.run_id,
+  evidence.model_version
+FROM gpt_field_evidence
+WHERE evidence.evidence_id IS NOT NULL
+  AND evidence.source_url IS NOT NULL
+
+UNION ALL
+
 SELECT
   concat('evid_', lower(a.crm_account_id), '_legal_name') AS evidence_id,
   concat('party_', lower(a.crm_account_id)) AS party_id,
