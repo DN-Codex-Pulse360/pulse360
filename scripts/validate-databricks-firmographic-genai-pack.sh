@@ -189,6 +189,11 @@ cases = [
     ("Singapore", "SG"),
     ("SG", "SG"),
     ("Australia", "AU"),
+    ("France", "FR"),
+    ("Germany", "DE"),
+    ("Japan", "JP"),
+    ("South Africa", "ZA"),
+    ("Switzerland", "CH"),
     ("United Kingdom", "GB"),
     ("United States", "US"),
 ]
