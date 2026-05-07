@@ -157,6 +157,9 @@ for token in \
   "gpt-5.5" \
   "reasoning" \
   "retry_reasoning_effort" \
+  "account_context.country and candidate_country_code" \
+  "jurisdiction anchors" \
+  "Do not let search-result spelling correction override" \
   "pulse360_s4.gold.account_genai_enrichment_output_runtime" \
   "source_bound_fixture" \
   "batch_llm" \
@@ -172,6 +175,46 @@ for token in \
     || fail "Firmographic/GPT runtime notebook missing token: $token"
 done
 pass "Firmographic/GPT runtime notebook supports OpenAI Responses and fixture modes"
+
+python3 - <<'PY'
+import importlib.util
+from pathlib import Path
+
+path = Path("notebooks/databricks/firmographic_research_discovery_job.py")
+spec = importlib.util.spec_from_file_location("firmographic_research_discovery_job", path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+cases = [
+    ("Singapore", "SG"),
+    ("SG", "SG"),
+    ("Australia", "AU"),
+    ("United Kingdom", "GB"),
+    ("United States", "US"),
+]
+for value, expected in cases:
+    actual = module.account_country({"crm_billing_country": value})
+    if actual != expected:
+        raise SystemExit(f"Country normalization failed for {value}: expected {expected}, got {actual}")
+
+rows = module.build_discovery_rows(
+    [
+        {
+            "crm_account_id": "001000000000001AAA",
+            "crm_account_name": "Hanbaobao Pty Ltd",
+            "crm_billing_country": "Singapore",
+        }
+    ],
+    1,
+)
+if not rows or rows[0]["candidate_country_code"] != "SG":
+    raise SystemExit("Discovery rows must preserve normalized CRM/source country code")
+if "Singapore (SG)" not in rows[0]["search_query"]:
+    raise SystemExit("Discovery search query must include country name and ISO code")
+if "Reject or flag similarly named entities in other countries" not in rows[0]["search_query"]:
+    raise SystemExit("Discovery search query must include jurisdiction disambiguation guardrail")
+PY
+pass "Firmographic discovery normalizes CRM country and preserves jurisdiction guardrails"
 
 for token in \
   "pulse360_s4.silver_salesforce.crm_account" \

@@ -35,6 +35,61 @@ APPROVED_SOURCE_TYPES = [
     "company_website",
 ]
 
+COUNTRY_CODE_ALIASES = {
+    "AU": "AU",
+    "AUS": "AU",
+    "AUSTRALIA": "AU",
+    "CA": "CA",
+    "CAN": "CA",
+    "CANADA": "CA",
+    "GB": "GB",
+    "GBR": "GB",
+    "GREAT BRITAIN": "GB",
+    "HK": "HK",
+    "HKG": "HK",
+    "HONG KONG": "HK",
+    "ID": "ID",
+    "IDN": "ID",
+    "INDONESIA": "ID",
+    "MY": "MY",
+    "MYS": "MY",
+    "MALAYSIA": "MY",
+    "PH": "PH",
+    "PHL": "PH",
+    "PHILIPPINES": "PH",
+    "SG": "SG",
+    "SGP": "SG",
+    "SINGAPORE": "SG",
+    "TH": "TH",
+    "THA": "TH",
+    "THAILAND": "TH",
+    "UK": "GB",
+    "UNITED KINGDOM": "GB",
+    "US": "US",
+    "USA": "US",
+    "UNITED STATES": "US",
+    "UNITED STATES OF AMERICA": "US",
+    "VN": "VN",
+    "VNM": "VN",
+    "VIET NAM": "VN",
+    "VIETNAM": "VN",
+}
+
+COUNTRY_NAME_BY_CODE = {
+    "AU": "Australia",
+    "CA": "Canada",
+    "GB": "United Kingdom",
+    "HK": "Hong Kong",
+    "ID": "Indonesia",
+    "MY": "Malaysia",
+    "PH": "Philippines",
+    "SG": "Singapore",
+    "TH": "Thailand",
+    "US": "United States",
+    "VN": "Vietnam",
+    "ZZ": "global",
+}
+
 
 def utc_now_iso() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -62,7 +117,12 @@ def account_name(row: dict[str, Any]) -> str:
 
 def account_country(row: dict[str, Any]) -> str:
     country = row.get("crm_billing_country") or row.get("crm_shipping_country") or row.get("country") or "ZZ"
-    return str(country)[:2].upper()
+    normalized = re.sub(r"[^A-Za-z]+", " ", str(country)).strip().upper()
+    return COUNTRY_CODE_ALIASES.get(normalized, str(country)[:2].upper() if country else "ZZ")
+
+
+def country_search_label(country_code: str) -> str:
+    return COUNTRY_NAME_BY_CODE.get(country_code, country_code)
 
 
 def account_website(row: dict[str, Any]) -> str | None:
@@ -79,15 +139,21 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
         crm_account_id = source_account_id(account)
         name = account_name(account)
         country = account_country(account)
+        country_label = country_search_label(country)
         website = account_website(account)
         account_slug = slug(name)
-        base_query = f'"{name}" {country}'.strip()
+        base_query = f'"{name}" {country_label} {country}'.strip()
+        jurisdiction_guard = (
+            f"Prioritize {country_label} ({country}) registry, tax, filing, company website, and address evidence. "
+            "Reject or flag similarly named entities in other countries unless the CRM account country is absent or "
+            "cross-border registration is directly supported."
+        )
         source_candidates = [
             {
                 "source_type": "official_registry",
                 "source_name": "Official registry search",
                 "source_url": f"https://www.google.com/search?q={base_query}+official+company+registry",
-                "search_query": f"{base_query} official company registry registration number",
+                "search_query": f"{base_query} official company registry registration number. {jurisdiction_guard}",
                 "use_basis": "public_registry_search",
                 "target_fields": ["identifiers", "registration_status", "legal_form", "incorporation_date"],
             },
@@ -95,7 +161,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "tax_authority",
                 "source_name": "Tax authority search",
                 "source_url": f"https://www.google.com/search?q={base_query}+tax+identifier",
-                "search_query": f"{base_query} tax identifier business registration",
+                "search_query": f"{base_query} tax identifier business registration. {jurisdiction_guard}",
                 "use_basis": "public_tax_reference_search",
                 "target_fields": ["identifiers"],
             },
@@ -103,7 +169,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "filing",
                 "source_name": "Regulatory filing search",
                 "source_url": f"https://www.google.com/search?q={base_query}+annual+report+filing",
-                "search_query": f"{base_query} annual report filing latest financial results",
+                "search_query": f"{base_query} annual report filing latest financial results. {jurisdiction_guard}",
                 "use_basis": "public_filing_search",
                 "target_fields": [
                     "latest_financial_results_summary",
@@ -116,7 +182,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "investor_relations",
                 "source_name": "Investor relations search",
                 "source_url": f"https://www.google.com/search?q={base_query}+investor+relations+presentation",
-                "search_query": f"{base_query} investor relations earnings presentation news",
+                "search_query": f"{base_query} investor relations earnings presentation news. {jurisdiction_guard}",
                 "use_basis": "public_investor_material_search",
                 "target_fields": ["investor_updates_summary", "investor_updates_source_urls"],
             },
@@ -124,7 +190,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "annual_report",
                 "source_name": "Annual report search",
                 "source_url": f"https://www.google.com/search?q={base_query}+annual+report+PDF",
-                "search_query": f"{base_query} annual report PDF revenue employees subsidiaries",
+                "search_query": f"{base_query} annual report PDF revenue employees subsidiaries. {jurisdiction_guard}",
                 "use_basis": "public_company_report_search",
                 "target_fields": ["annual_revenue_local", "employees_total", "corporate_linkages"],
             },
@@ -132,7 +198,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "earnings_release",
                 "source_name": "Earnings release search",
                 "source_url": f"https://www.google.com/search?q={base_query}+earnings+release",
-                "search_query": f"{base_query} earnings release latest results",
+                "search_query": f"{base_query} earnings release latest results. {jurisdiction_guard}",
                 "use_basis": "public_earnings_release_search",
                 "target_fields": ["latest_financial_results_summary", "investor_updates_summary"],
             },
@@ -140,7 +206,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "stock_exchange",
                 "source_name": "Stock exchange search",
                 "source_url": f"https://www.google.com/search?q={base_query}+stock+exchange+filing",
-                "search_query": f"{base_query} stock exchange filing listed company",
+                "search_query": f"{base_query} stock exchange filing listed company. {jurisdiction_guard}",
                 "use_basis": "public_market_disclosure_search",
                 "target_fields": ["identifiers", "latest_financial_results_summary", "corporate_linkages"],
             },
@@ -148,7 +214,7 @@ def build_discovery_rows(accounts: list[dict[str, Any]], target_account_count: i
                 "source_type": "company_website",
                 "source_name": "Company website",
                 "source_url": website or f"https://www.google.com/search?q={base_query}+official+website",
-                "search_query": f"{base_query} official website about company",
+                "search_query": f"{base_query} official website about company. {jurisdiction_guard}",
                 "use_basis": "public_company_website_search",
                 "target_fields": ["business_description", "website", "company_classification"],
             },

@@ -934,9 +934,14 @@ def call_anthropic(packet: dict[str, Any], config: dict[str, Any], api_key: str)
         "max_tokens": 1800,
         "system": (
             "You create source-bound firmographic enrichment JSON for Pulse360. "
-            "Use only supplied facts. Do not invent CRM keys, legal identifiers, "
-            "revenue, employee counts, or hierarchy edges. Every action must cite "
-            "source_ids from the evidence packet. Emit only the requested tool input."
+            "Use only supplied facts. Treat account_context.country and candidate_country_code "
+            "as jurisdiction anchors when disambiguating similarly named entities. Prefer evidence "
+            "whose registry jurisdiction, address, legal suffix, domain, and identifiers match the "
+            "CRM/source country. Do not let search-result spelling correction override the supplied "
+            "country; emit a conflict instead when another-country evidence is plausible but not "
+            "anchored to the CRM account. Do not invent CRM keys, legal identifiers, revenue, "
+            "employee counts, or hierarchy edges. Every action must cite source_ids from the evidence "
+            "packet. Emit only the requested tool input."
         ),
         "tools": [anthropic_tool_schema(allowed_sources)],
         "tool_choice": {"type": "tool", "name": "emit_firmographic_enrichment"},
@@ -979,6 +984,12 @@ def call_openai(
                 "content": (
                     "You create source-bound firmographic enrichment JSON for Pulse360. "
                     "Use the supplied CRM account context and approved source candidates. "
+                    "Treat account_context.country and candidate_country_code as jurisdiction "
+                    "anchors when disambiguating similarly named entities. Prefer evidence whose "
+                    "registry jurisdiction, address, legal suffix, domain, and identifiers match "
+                    "the CRM/source country. Do not let search-result spelling correction override "
+                    "the supplied country; emit a conflict instead when another-country evidence "
+                    "is plausible but not anchored to the CRM account. "
                     "When web search is available, verify facts against official registries, "
                     "filings, investor relations, annual reports, earnings releases, stock "
                     "exchange disclosures, or company websites. Do not invent CRM keys, legal "
