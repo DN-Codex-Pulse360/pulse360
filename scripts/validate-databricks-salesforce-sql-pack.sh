@@ -111,8 +111,13 @@ pass "SQL definitions preserve CRM-key-safe export fields"
 
 for token in \
   "CREATE OR REPLACE TABLE pulse360_s4.intelligence.sovereign_identifier_export AS" \
-  "WHERE 1 = 0" \
-  "identifier_type"; do
+  "identifier_type" \
+  "identifier.identifier_type NOT LIKE 'PROVIDER_%'" \
+  "identifier.identifier_type NOT LIKE 'CRM_%'" \
+  "identifier.identifier_type NOT LIKE 'SEARCH_%'" \
+  "identifier.source_url IS NOT NULL" \
+  "identifier.confidence >= 0.90" \
+  "identifier.source_type IN ('official_registry', 'tax_authority', 'filing')"; do
   search_fixed "$token" "$gold_sovereign_sql" || fail "Missing token in sovereign identifier export SQL: $token"
 done
 
