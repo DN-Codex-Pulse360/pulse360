@@ -283,6 +283,14 @@ Acceptance thresholds:
 for commercial providers, customer-internal systems, and clean rooms remains
 gated by entitlement, customer approval, and collaboration agreements.
 
+`DAN-285` is closed for the first weighted attribute slice by
+`contracts/weighted_attribute_resolution.schema.json`,
+`config/databricks/weighted-attribute-resolution-rules.json`, and
+`sql/databricks/firmographic_enrichment/25_weighted_attribute_resolution.sql`.
+Served attribute candidates now have deterministic source contribution rows,
+source weights, freshness, conflict counts, license references, and run
+metadata before downstream GPT or Data Cloud promotion.
+
 ## Acceptance Criteria
 
 1. No paid-provider endpoint or vendor-specific runtime is hardwired into the Pulse360 design.

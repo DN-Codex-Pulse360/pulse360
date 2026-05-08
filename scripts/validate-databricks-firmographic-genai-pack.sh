@@ -17,14 +17,17 @@ search_fixed() {
 
 required_files=(
   "contracts/firmographic_source_adapter.schema.json"
+  "contracts/weighted_attribute_resolution.schema.json"
   "contracts/firmographic_research_document.schema.json"
   "contracts/firmographic_evidence_packet.schema.json"
   "contracts/genai_firmographic_enrichment_output.schema.json"
   "data/samples/firmographic_source_adapters.json"
+  "data/samples/weighted_attribute_resolution_sample.json"
   "data/samples/firmographic_research_document_sample.json"
   "data/samples/firmographic_evidence_packet_sample.json"
   "data/samples/genai_firmographic_enrichment_output_sample.json"
   "config/databricks/firmographic-source-adapters.json"
+  "config/databricks/weighted-attribute-resolution-rules.json"
   "config/openai/pulse360-gpt-enrichment-spec.json"
   "notebooks/databricks/firmographic_research_discovery_job.py"
   "notebooks/databricks/firmographic_genai_enrichment_job.py"
@@ -35,6 +38,7 @@ required_files=(
   "sql/databricks/firmographic_enrichment/10_firmographic_evidence_sample.sql"
   "sql/databricks/firmographic_enrichment/15_extracted_firmographic_fact.sql"
   "sql/databricks/firmographic_enrichment/20_firmographic_fact.sql"
+  "sql/databricks/firmographic_enrichment/25_weighted_attribute_resolution.sql"
   "sql/databricks/firmographic_enrichment/30_account_genai_enrichment_output.sql"
   "sql/databricks/firmographic_enrichment/README.md"
   "docs/planning/pulse360-databricks-firmographic-provider-genai-design-2026-04-25.md"
@@ -49,6 +53,8 @@ python3 -m json.tool contracts/firmographic_research_document.schema.json >/dev/
   || fail "Invalid firmographic research document schema JSON"
 python3 -m json.tool contracts/firmographic_source_adapter.schema.json >/dev/null \
   || fail "Invalid firmographic source adapter schema JSON"
+python3 -m json.tool contracts/weighted_attribute_resolution.schema.json >/dev/null \
+  || fail "Invalid weighted attribute resolution schema JSON"
 python3 -m json.tool contracts/firmographic_evidence_packet.schema.json >/dev/null \
   || fail "Invalid firmographic evidence schema JSON"
 python3 -m json.tool contracts/genai_firmographic_enrichment_output.schema.json >/dev/null \
@@ -57,6 +63,8 @@ python3 -m json.tool data/samples/firmographic_research_document_sample.json >/d
   || fail "Invalid firmographic research document sample JSON"
 python3 -m json.tool data/samples/firmographic_source_adapters.json >/dev/null \
   || fail "Invalid firmographic source adapter sample JSON"
+python3 -m json.tool data/samples/weighted_attribute_resolution_sample.json >/dev/null \
+  || fail "Invalid weighted attribute resolution sample JSON"
 python3 -m json.tool data/samples/firmographic_evidence_packet_sample.json >/dev/null \
   || fail "Invalid firmographic evidence sample JSON"
 python3 -m json.tool data/samples/genai_firmographic_enrichment_output_sample.json >/dev/null \
@@ -65,6 +73,8 @@ python3 -m json.tool config/openai/pulse360-gpt-enrichment-spec.json >/dev/null 
   || fail "Invalid OpenAI enrichment config JSON"
 python3 -m json.tool config/databricks/firmographic-source-adapters.json >/dev/null \
   || fail "Invalid Databricks source adapter config JSON"
+python3 -m json.tool config/databricks/weighted-attribute-resolution-rules.json >/dev/null \
+  || fail "Invalid weighted attribute resolution rules JSON"
 pass "Firmographic/GPT JSON artifacts parse"
 
 python3 - <<'PY'
@@ -126,6 +136,22 @@ done
 pass "Firmographic source adapter contract preserves plural ingestion controls"
 
 for token in \
+  "source_contributions" \
+  "source_weight" \
+  "contribution_score" \
+  "survivorship_rule" \
+  "highest_weighted_confidence" \
+  "official_source_priority" \
+  "aggregate_only" \
+  "conflict_count" \
+  "license_or_contract_references" \
+  "freshness_status"; do
+  search_fixed "$token" contracts/weighted_attribute_resolution.schema.json data/samples/weighted_attribute_resolution_sample.json config/databricks/weighted-attribute-resolution-rules.json \
+    || fail "Weighted attribute contract/sample/config missing token: $token"
+done
+pass "Weighted attribute contract preserves source contribution metadata"
+
+for token in \
   "firmographic_facts" \
   "license_or_contract_reference" \
   "source_confidence" \
@@ -161,6 +187,8 @@ pass "Gen AI enrichment output preserves confidence components"
 for token in \
   "pulse360_s4.bronze_firmographic.raw_research_document" \
   "pulse360_s4.silver_firmographic.extracted_firmographic_fact" \
+  "pulse360_s4.silver_firmographic.source_contribution" \
+  "pulse360_s4.silver_firmographic.weighted_attribute_resolution" \
   "pulse360_s4.bronze_firmographic" \
   "pulse360_s4.silver_firmographic" \
   "pulse360_s4.gold.account_genai_enrichment_output" \
@@ -171,6 +199,9 @@ for token in \
   "approved_marketplace_delta_share" \
   "approved_customer_internal_export" \
   "approved_clean_room_output" \
+  "source_contributions_json" \
+  "source_refs_json" \
+  "license_or_contract_references_json" \
   "approval_status" \
   "llm_result_confidence" \
   "business_action_confidence" \
@@ -183,6 +214,9 @@ pass "Firmographic/GPT SQL emits source-bound confidence fields"
 
 bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/validate-firmographic-source-adapters.sh"
 pass "Firmographic source adapter validator passed"
+
+bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/validate-weighted-attribute-resolution.sh"
+pass "Weighted attribute resolution validator passed"
 
 for token in \
   "OPENAI_API_KEY" \
@@ -299,12 +333,15 @@ for forbidden in \
   if grep -Riq "$forbidden" \
     contracts/firmographic_research_document.schema.json \
     contracts/firmographic_evidence_packet.schema.json \
+    contracts/weighted_attribute_resolution.schema.json \
     contracts/genai_firmographic_enrichment_output.schema.json \
     data/samples/firmographic_research_document_sample.json \
     data/samples/firmographic_source_adapters.json \
+    data/samples/weighted_attribute_resolution_sample.json \
     data/samples/firmographic_evidence_packet_sample.json \
     data/samples/genai_firmographic_enrichment_output_sample.json \
     config/databricks/firmographic-source-adapters.json \
+    config/databricks/weighted-attribute-resolution-rules.json \
     notebooks/databricks/firmographic_genai_enrichment_job.py \
     sql/databricks/firmographic_enrichment \
     docs/planning/pulse360-databricks-firmographic-provider-genai-design-2026-04-25.md; then

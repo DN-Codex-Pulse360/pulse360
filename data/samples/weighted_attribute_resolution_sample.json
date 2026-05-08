@@ -1,0 +1,69 @@
+{
+  "attribute_resolution_id": "wattr_9b2b20f0e4f791253e0a6b5edfb1ae546a53c0cd2df1cc91c83f7f0a9995ef9c",
+  "entity_anchor_id": "ent_ph_sec_as096_003241",
+  "source_account_id": null,
+  "resolved_entity_id": "ent_ph_sec_as096_003241",
+  "attribute_path": "firmographic_profile.annual_revenue",
+  "attribute_name": "annual_revenue",
+  "fact_type": "financial",
+  "winning_value": "176300000000",
+  "winning_value_normalized": "176300000000",
+  "fact_unit": "PHP",
+  "winning_source_id": "src_research_research_doc_ayala_integrated_report_2024_annual_revenue",
+  "winning_source_family": "internet_research",
+  "survivorship_rule": "highest_weighted_confidence",
+  "resolution_status": "corroborated",
+  "confidence": 0.872,
+  "freshness_status": "fresh",
+  "source_contribution_count": 2,
+  "conflict_count": 0,
+  "source_contributions": [
+    {
+      "source_id": "src_research_research_doc_ayala_integrated_report_2024_annual_revenue",
+      "source_family": "internet_research",
+      "source_system": "governed_research_pipeline",
+      "source_type": "approved_public_pdf",
+      "source_record_id": "research_doc_ayala_integrated_report_2024",
+      "source_url": "https://www.ayala.com/investors/reports",
+      "source_confidence": 0.882,
+      "source_weight": 0.86,
+      "freshness_score": 0.9,
+      "field_completeness_score": 0.95,
+      "contribution_score": 0.872,
+      "selected_flag": true,
+      "rejection_reason": null,
+      "source_excerpt": "Approved research fixture: annual revenue fact extracted from governed public-report row.",
+      "license_or_contract_reference": "public-company-investor-report-demo-use",
+      "run_id": "firmographic_research_fixture_run_20260426000000"
+    },
+    {
+      "source_id": "src_fixture_ayala_2024_annual_revenue",
+      "source_family": "neutral_fixture",
+      "source_system": "provider_neutral_fixture",
+      "source_type": "neutral_fixture_payload",
+      "source_record_id": "fixture_ayala_2024",
+      "source_url": null,
+      "source_confidence": 0.84,
+      "source_weight": 0.78,
+      "freshness_score": 0.9,
+      "field_completeness_score": 0.78,
+      "contribution_score": 0.813,
+      "selected_flag": false,
+      "rejection_reason": "Lower weighted contribution score than selected public-report evidence.",
+      "source_excerpt": "Neutral fixture: revenue fact is bound to a governed source row.",
+      "license_or_contract_reference": "provider-neutral-demo-use",
+      "run_id": "firmographic_fixture_run_20260425000000"
+    }
+  ],
+  "source_refs": [
+    "src_research_research_doc_ayala_integrated_report_2024_annual_revenue",
+    "src_fixture_ayala_2024_annual_revenue"
+  ],
+  "license_or_contract_references": [
+    "public-company-investor-report-demo-use",
+    "provider-neutral-demo-use"
+  ],
+  "last_resolved_at": "2026-05-08T00:00:00Z",
+  "run_id": "weighted_attribute_fixture_run_20260508000000",
+  "model_version": "weighted-attribute-resolution-v1"
+}

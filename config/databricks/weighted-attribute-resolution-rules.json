@@ -1,0 +1,50 @@
+{
+  "version": "2026-05-08",
+  "target_catalog": "pulse360_s4",
+  "source_fact_view": "pulse360_s4.silver_firmographic.firmographic_fact",
+  "source_contribution_view": "pulse360_s4.silver_firmographic.source_contribution",
+  "weighted_attribute_view": "pulse360_s4.silver_firmographic.weighted_attribute_resolution",
+  "default_survivorship_rule": "highest_weighted_confidence",
+  "source_type_weights": {
+    "approved_registry_export": 0.94,
+    "approved_regulatory_filing": 0.94,
+    "approved_marketplace_delta_share": 0.9,
+    "approved_provider_export": 0.9,
+    "approved_customer_internal_export": 0.88,
+    "approved_public_pdf": 0.86,
+    "approved_public_url": 0.86,
+    "approved_clean_room_output": 0.82,
+    "neutral_fixture_payload": 0.78,
+    "manual_research_note": 0.7
+  },
+  "source_family_rules": {
+    "national_registry": {
+      "identity_key_policy": "sovereign_candidate_official_only",
+      "default_survivorship_rule": "official_source_priority"
+    },
+    "commercial_provider_marketplace": {
+      "identity_key_policy": "xref_only",
+      "default_survivorship_rule": "highest_weighted_confidence"
+    },
+    "customer_internal": {
+      "identity_key_policy": "crm_safe_join_only",
+      "default_survivorship_rule": "highest_weighted_confidence"
+    },
+    "internet_research": {
+      "identity_key_policy": "evidence_only",
+      "default_survivorship_rule": "highest_weighted_confidence"
+    },
+    "clean_room_collaboration": {
+      "identity_key_policy": "aggregate_only",
+      "default_survivorship_rule": "aggregate_only"
+    }
+  },
+  "required_controls": {
+    "require_source_contribution_json": true,
+    "require_license_or_contract_reference": true,
+    "require_freshness_status": true,
+    "require_run_metadata": true,
+    "require_conflict_count": true,
+    "block_missing_source_refs": true
+  }
+}

@@ -623,3 +623,33 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-283-plural-enrichment-ingestion-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-283-plural-enrichment-ingestion-closure-2026-05-08.md)
+
+## Weighted Attribute Resolution Closure
+
+On `2026-05-08`, `DAN-285` was closed for the first governed implementation
+slice of weighted firmographic attribute resolution.
+
+Current closure position:
+
+- The repo now contains a weighted attribute resolution contract and sample.
+- Databricks rules define source type weights, source family identity policies,
+  survivorship defaults, and required contribution controls.
+- The firmographic enrichment SQL package now emits
+  `pulse360_s4.silver_firmographic.source_contribution` and
+  `pulse360_s4.silver_firmographic.weighted_attribute_resolution`.
+- Each weighted attribute candidate carries source contribution JSON, source
+  refs, license/contract refs, freshness, conflict count, confidence, run ID,
+  and model version.
+- The firmographic GPT package validator now includes the weighted attribute
+  resolution gate.
+
+Acceptance caveats:
+
+- This is a deterministic contract/SQL slice and does not change Data Cloud
+  export tables yet.
+- Live Databricks SQL execution remains subject to SQL Warehouse availability.
+- Model serving and BYOM feature-table work remains tracked under `DAN-286`.
+
+Latest detailed evidence:
+
+- [dan-285-weighted-attribute-resolution-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-285-weighted-attribute-resolution-closure-2026-05-08.md)
