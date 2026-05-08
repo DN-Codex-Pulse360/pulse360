@@ -1,0 +1,78 @@
+{
+  "version": "2026-05-08",
+  "linear_parent": "DAN-280",
+  "linear_issue": "DAN-292",
+  "acceptance_decision": "ready_for_m1_implementation_scope_with_runtime_gates",
+  "claim_taxonomy": [
+    "built",
+    "feasible",
+    "gated",
+    "roadmap"
+  ],
+  "closed_child_workstreams": [
+    "DAN-281",
+    "DAN-282",
+    "DAN-283",
+    "DAN-284",
+    "DAN-285",
+    "DAN-286",
+    "DAN-287",
+    "DAN-288",
+    "DAN-289",
+    "DAN-290",
+    "DAN-291"
+  ],
+  "final_gate_issue": "DAN-292",
+  "selected_first_module": "M1 Account Hierarchy Intelligence",
+  "next_delivery_scope": [
+    "M1 hierarchy foundation",
+    "Group Revenue Reveal validation",
+    "source-backed corporate linkage",
+    "governance evidence packet for served attributes",
+    "Salesforce dashboard/report validation"
+  ],
+  "do_not_claim_until_verified": [
+    "live Databricks SQL execution for new model/governance tables",
+    "Unity Catalog lineage for new feature, score, and governance evidence paths",
+    "Salesforce BYOM or Model Builder runtime success",
+    "native Agentforce runtime success",
+    "external audit readiness",
+    "paid provider integration",
+    "automatic steward merge execution"
+  ],
+  "required_final_validators": [
+    "scripts/validate-revops-final-acceptance-gate.sh",
+    "scripts/validate-revops-module-sequence.sh",
+    "scripts/validate-databricks-model-serving-byom-plan.sh",
+    "scripts/validate-governance-evidence-pack.sh",
+    "scripts/validate-databricks-package-layout.sh",
+    "scripts/validate-salesforce-firmographic-ux-pack.sh"
+  ],
+  "runtime_gates": [
+    {
+      "gate": "databricks_sql_warehouse",
+      "status": "gated",
+      "evidence_needed": "SELECT 1 and package SQL execution succeed against the target warehouse."
+    },
+    {
+      "gate": "unity_catalog_lineage",
+      "status": "gated",
+      "evidence_needed": "Lineage CLI/API output captured for CRM-to-export and feature-to-score paths."
+    },
+    {
+      "gate": "data_cloud_setup",
+      "status": "gated",
+      "evidence_needed": "Direct Access streams, DMO mappings, and Account relationships refreshed without errors."
+    },
+    {
+      "gate": "salesforce_byom",
+      "status": "gated",
+      "evidence_needed": "Target org entitlement, endpoint connectivity, auth, and prediction mapping verified."
+    },
+    {
+      "gate": "native_agentforce",
+      "status": "gated",
+      "evidence_needed": "Target org Builder/runtime support and action surface behavior proven."
+    }
+  ]
+}
