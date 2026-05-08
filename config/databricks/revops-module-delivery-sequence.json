@@ -1,0 +1,269 @@
+{
+  "version": "2026-05-08",
+  "linear_parent": "DAN-280",
+  "linear_issue": "DAN-291",
+  "selected_first_slice": "M1",
+  "selection_rationale": "Account hierarchy should lead because sovereign identity, CRM-safe account joins, corporate linkage, and group rollups unlock whitespace, coverage, routing, and renewal context without requiring model serving first.",
+  "source_control_posture": "contract_first",
+  "runtime_posture": "no_org_state_change",
+  "agentforce_posture": "Agentforce-compatible action and citation contracts only until native runtime is proven in the target org.",
+  "modules": [
+    {
+      "module_id": "M1",
+      "module_name": "Account Hierarchy Intelligence",
+      "priority": 1,
+      "delivery_slice": "M1A hierarchy foundation",
+      "business_goal": "Show a trusted account group view that reveals parent-child structure, group revenue context, coverage gaps, and why the hierarchy is credible.",
+      "mvp_scope": [
+        "Anchor each account on CRM-safe source_account_id and available sovereign identifier evidence.",
+        "Expose corporate linkage edges with relationship type, related entity name, confidence, and evidence.",
+        "Roll up group-level revenue and hierarchy completeness where source-backed.",
+        "Surface a seller-facing Group Revenue Reveal and coverage-gap validation report."
+      ],
+      "source_dependencies": [
+        "DAN-282",
+        "DAN-284",
+        "DAN-285",
+        "DAN-287",
+        "DAN-288"
+      ],
+      "open_blockers": [],
+      "data_products": [
+        "sovereign_identifier_export",
+        "corporate_linkage_export",
+        "firmographic_profile_export",
+        "weighted_attribute_resolution"
+      ],
+      "data_cloud_outputs": [
+        "Pulse360 Sovereign Identifier",
+        "Pulse360 Corporate Linkage",
+        "Pulse360 Firmographic Profile"
+      ],
+      "salesforce_surfaces": [
+        "Account and Corporate Linkage report",
+        "Account and Firmographic report",
+        "Pulse360 Account Intelligence Validation dashboard"
+      ],
+      "acceptance_gates": [
+        "All Account joins preserve source_account_id as the CRM activation key.",
+        "Sovereign identifier rows may remain zero until official registry, tax, or filing evidence is present.",
+        "Corporate linkage report renders linked Account rows and source-backed relationship fields.",
+        "Weighted attribute outputs include source_contributions_json and do not overwrite CRM-safe identifiers."
+      ],
+      "status": "ready_for_demo_hardening"
+    },
+    {
+      "module_id": "M2",
+      "module_name": "ICP Fit and Account Scoring",
+      "priority": 2,
+      "delivery_slice": "M2A scoring foundation",
+      "business_goal": "Rank accounts by ideal-customer fit with explainable top drivers and source-bound confidence.",
+      "mvp_scope": [
+        "Build account feature snapshots over firmographic, classification, revenue, and hierarchy attributes.",
+        "Produce an ICP fit score with top positive and negative drivers.",
+        "Publish score and driver summaries to Data Cloud and Salesforce validation reports.",
+        "Capture model, feature, prompt, and source lineage for every score."
+      ],
+      "source_dependencies": [
+        "DAN-283",
+        "DAN-285",
+        "DAN-286",
+        "DAN-288"
+      ],
+      "open_blockers": [
+        "DAN-286"
+      ],
+      "data_products": [
+        "account_feature_snapshot",
+        "model_score_output",
+        "weighted_attribute_resolution"
+      ],
+      "data_cloud_outputs": [
+        "Pulse360 Account Score",
+        "Pulse360 Score Driver"
+      ],
+      "salesforce_surfaces": [
+        "Account score panel",
+        "Account score validation report"
+      ],
+      "acceptance_gates": [
+        "Every score has model version, feature snapshot version, run ID, and confidence.",
+        "Top drivers reference source-backed attributes, not unsupported GPT inference.",
+        "Scores can be regenerated deterministically for the same feature snapshot."
+      ],
+      "status": "blocked_by_feature_engineering_and_model_serving"
+    },
+    {
+      "module_id": "M3",
+      "module_name": "Whitespace and Expansion",
+      "priority": 3,
+      "delivery_slice": "M3A group whitespace grid",
+      "business_goal": "Identify expansion opportunities across linked account groups, products, and uncovered subsidiaries.",
+      "mvp_scope": [
+        "Combine M1 hierarchy edges with product, entitlement, or opportunity coverage.",
+        "Create a group-by-product whitespace matrix with confidence and source coverage.",
+        "Recommend next best expansion action only when supporting evidence exists.",
+        "Route expansion candidates into Salesforce action surfaces."
+      ],
+      "source_dependencies": [
+        "DAN-291:M1",
+        "DAN-286",
+        "DAN-288",
+        "DAN-289"
+      ],
+      "open_blockers": [
+        "DAN-286",
+        "Product ownership or entitlement source availability"
+      ],
+      "data_products": [
+        "entity_hierarchy_rollup",
+        "account_feature_snapshot",
+        "model_score_output"
+      ],
+      "data_cloud_outputs": [
+        "Pulse360 Whitespace Opportunity",
+        "Pulse360 Group Coverage"
+      ],
+      "salesforce_surfaces": [
+        "Whitespace grid",
+        "Next best expansion action panel"
+      ],
+      "acceptance_gates": [
+        "Whitespace records are tied to a known account group or related account edge.",
+        "Coverage gaps distinguish no evidence from negative evidence.",
+        "Action recommendations are source-bound and carry confidence and freshness."
+      ],
+      "status": "blocked_by_m1_and_feature_engineering"
+    },
+    {
+      "module_id": "M4",
+      "module_name": "Buying Committee",
+      "priority": 4,
+      "delivery_slice": "M4A role coverage foundation",
+      "business_goal": "Show whether each target account has enough known stakeholders and which roles are missing.",
+      "mvp_scope": [
+        "Resolve CRM contacts and role evidence to account or account group context.",
+        "Classify known stakeholder roles with source and freshness metadata.",
+        "Identify buying committee gaps by segment or account category.",
+        "Draft outreach only as a user-reviewed action, not an automated send."
+      ],
+      "source_dependencies": [
+        "DAN-283",
+        "DAN-284",
+        "DAN-287",
+        "DAN-288"
+      ],
+      "open_blockers": [
+        "Contact role and consent source availability"
+      ],
+      "data_products": [
+        "contact_person_candidate",
+        "resolved_entity_source_xref",
+        "governance_resolution_candidate"
+      ],
+      "data_cloud_outputs": [
+        "Pulse360 Buying Committee Role",
+        "Pulse360 Role Gap"
+      ],
+      "salesforce_surfaces": [
+        "Buying committee coverage panel",
+        "Steward review queue"
+      ],
+      "acceptance_gates": [
+        "Contact/person matching keeps CRM Contact IDs separate from account/entity IDs.",
+        "Consent and source restrictions are visible before outreach suggestions.",
+        "Drafted outreach is reviewable and traceable to role evidence."
+      ],
+      "status": "blocked_by_person_source_availability"
+    },
+    {
+      "module_id": "M5",
+      "module_name": "Intent Routing",
+      "priority": 5,
+      "delivery_slice": "M5A governed routing queue",
+      "business_goal": "Prioritize incoming account intent signals and route them to the right seller or queue with explainable thresholds.",
+      "mvp_scope": [
+        "Normalize intent, web, event, or campaign signals into account feature snapshots.",
+        "Apply thresholding and confidence rules before routing.",
+        "Publish route recommendation, reason, and freshness to Salesforce or Slack-compatible action surfaces.",
+        "Require human approval for externally visible actions."
+      ],
+      "source_dependencies": [
+        "DAN-283",
+        "DAN-286",
+        "DAN-288",
+        "DAN-289"
+      ],
+      "open_blockers": [
+        "DAN-286",
+        "Intent source availability"
+      ],
+      "data_products": [
+        "account_feature_snapshot",
+        "model_score_output",
+        "governance_resolution_candidate"
+      ],
+      "data_cloud_outputs": [
+        "Pulse360 Intent Signal",
+        "Pulse360 Routing Recommendation"
+      ],
+      "salesforce_surfaces": [
+        "Intent routing queue",
+        "Slack-compatible notification action"
+      ],
+      "acceptance_gates": [
+        "Routing recommendations carry threshold, confidence, freshness, and source lineage.",
+        "No native Agentforce or Slack automation claim is made until the target runtime is proven.",
+        "Human approval is required before any externally visible action."
+      ],
+      "status": "blocked_by_feature_engineering_and_intent_sources"
+    },
+    {
+      "module_id": "M6",
+      "module_name": "Renewal Risk",
+      "priority": 6,
+      "delivery_slice": "M6A risk evidence foundation",
+      "business_goal": "Explain which accounts are at renewal risk and what source-backed save play should be considered.",
+      "mvp_scope": [
+        "Combine engagement, support, usage, opportunity, and firmographic features.",
+        "Generate renewal risk score and top drivers with lineage.",
+        "Create evidence-backed save play recommendations for seller review.",
+        "Expose risk and action state in Salesforce without overwriting source system facts."
+      ],
+      "source_dependencies": [
+        "DAN-283",
+        "DAN-286",
+        "DAN-287",
+        "DAN-288"
+      ],
+      "open_blockers": [
+        "DAN-286",
+        "Engagement, support, usage, or contract source availability"
+      ],
+      "data_products": [
+        "account_feature_snapshot",
+        "model_score_output",
+        "weighted_attribute_resolution"
+      ],
+      "data_cloud_outputs": [
+        "Pulse360 Renewal Risk",
+        "Pulse360 Save Play"
+      ],
+      "salesforce_surfaces": [
+        "Renewal risk panel",
+        "Save play review action"
+      ],
+      "acceptance_gates": [
+        "Risk scores include model version, feature snapshot, source lineage, and confidence.",
+        "Save plays are advisory and require user review.",
+        "Data Cloud and Salesforce outputs preserve source system ownership boundaries."
+      ],
+      "status": "blocked_by_feature_engineering_and_renewal_sources"
+    }
+  ],
+  "next_linear_sequence": [
+    "DAN-286",
+    "DAN-290",
+    "DAN-292"
+  ]
+}

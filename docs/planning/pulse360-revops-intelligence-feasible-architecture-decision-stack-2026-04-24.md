@@ -129,6 +129,13 @@ Pulse360 should become a RevOps intelligence platform where:
 
 ## Module Dependency Strategy
 
+`DAN-291` closure note: the durable module sequence is now source-controlled in
+`config/databricks/revops-module-delivery-sequence.json` and documented in
+`docs/planning/pulse360-revops-module-delivery-sequence-2026-05-08.md`. The
+selected first slice is `M1 Account Hierarchy Intelligence`; the next blocking
+implementation issue is `DAN-286` for feature engineering, model serving, and
+Salesforce BYOM planning.
+
 | Module | First Slice | Dependencies | Delivery Posture |
 | --- | --- | --- | --- |
 | M1 Account Hierarchy Intelligence | Sovereign/CRM-safe account identity, hierarchy edge, group revenue, coverage gap, Group Revenue Reveal | `DAN-282`, `DAN-284`, `DAN-287`, `DAN-288` | Start here |
@@ -208,8 +215,6 @@ Pulse360 should become a RevOps intelligence platform where:
 
 ## Immediate Next Work
 
-1. `DAN-282`: create the sovereign identity schema contract and first matching plan.
-2. `DAN-285`: create the source contribution and weighted attribute schema.
-3. `DAN-287`: create the Data Cloud operational profile mapping for M1.
-4. `DAN-291`: choose the first module slice and dependency path.
-5. `DAN-286`: add source-bound GPT/OpenAI enrichment design and job plan for provider-backed firmographic narratives/actions.
+1. `DAN-286`: add feature engineering, model serving, and Salesforce BYOM planning so `M2`, `M3`, `M5`, and `M6` can progress.
+2. `DAN-290`: harden governance, lineage, audit, and regulator evidence across Databricks and Salesforce.
+3. `DAN-292`: create final acceptance gate and readout evidence for the full feasible architecture build plan.

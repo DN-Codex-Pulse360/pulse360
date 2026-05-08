@@ -653,3 +653,33 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-285-weighted-attribute-resolution-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-285-weighted-attribute-resolution-closure-2026-05-08.md)
+
+## Six Module Delivery Sequence Closure
+
+On `2026-05-08`, `DAN-291` was closed for the six-module RevOps Intelligence
+delivery sequence.
+
+Current closure position:
+
+- The selected first delivery slice is `M1 Account Hierarchy Intelligence`.
+- M1 is sequenced first because it uses the validated account identity,
+  firmographic profile, corporate linkage, evidence, Data Cloud, and Salesforce
+  report/dashboard foundation already present in the build.
+- The durable sequence contract is source-controlled in
+  `config/databricks/revops-module-delivery-sequence.json`.
+- `M2`, `M3`, `M5`, and `M6` remain explicitly gated by `DAN-286` feature
+  engineering, model serving, and Salesforce BYOM planning.
+- `M4` remains gated by contact/person, role, and consent source availability.
+
+Acceptance caveats:
+
+- This is a source-only sequencing closure. It does not deploy Salesforce
+  metadata, change Data Cloud relationships, run Databricks jobs, or mutate
+  target-org configuration.
+- Native Agentforce claims remain gated until target-org runtime support is
+  proven.
+- Live Databricks SQL execution remains subject to SQL Warehouse availability.
+
+Latest detailed evidence:
+
+- [dan-291-six-module-delivery-sequence-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-291-six-module-delivery-sequence-closure-2026-05-08.md)
