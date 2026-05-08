@@ -459,3 +459,34 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-104-milestone-e-acceptance-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-104-milestone-e-acceptance-2026-05-08.md)
+
+## Milestone B Acceptance Closure
+
+On `2026-05-08`, the older Milestone B Databricks acceptance gate was
+revalidated against the live Databricks Lakeview and SQL Warehouse runtime.
+
+Current closure position:
+
+- The main and demo S4 Lakeview dashboards are both `ACTIVE`.
+- Both dashboards contain the required DS-01, DS-02, DS-03, and freshness
+  visuals, with `7` datasets and `8` widgets each.
+- The required Catalog objects exist and return data:
+  `governance_ops_metrics`, `duplicate_candidate_pairs`, and
+  `firmographic_enrichment`.
+- Governance runtime metrics include resolved cases, open backlog, average
+  resolution time, and quality score.
+- The required gate scripts now exist and pass:
+  `./scripts/validate-databricks-dashboard-visuals.sh` and
+  `./scripts/validate-governance-ops-metrics-runtime.sh`.
+- The broader closeout gate includes both Milestone B validators.
+
+Acceptance caveats:
+
+- API validation confirms the dashboards are active, structured, and not empty
+  placeholders; it does not replace a human aesthetic browser review.
+- Governance metrics are deterministic demo/runtime data and remain
+  presentation-safe without rerunning source jobs.
+
+Latest detailed evidence:
+
+- [dan-105-milestone-b-acceptance-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-105-milestone-b-acceptance-2026-05-08.md)
