@@ -431,6 +431,48 @@ Latest detailed evidence:
 
 - [dan-219-public-regional-gpt-enrichment-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-219-public-regional-gpt-enrichment-closure-2026-05-08.md)
 
+## Sovereign Identity Spine Closure
+
+On `2026-05-08`, `DAN-282` was reconciled against the source-controlled
+sovereign identifier contract, Databricks export path, Data Cloud DMO setup,
+and Salesforce validation surfaces.
+
+Current closure position:
+
+- The sovereign identifier design follows the Salesforce KYC/KYB
+  Party Identification pattern: many legal/statutory identifiers per Account
+  or Party, with evidence kept separate from the Account scalar activation
+  surface.
+- `contracts/pulse360_sovereign_identifier.schema.json` defines the governed
+  identifier contract and enforces the verified-source guardrail.
+- `sql/databricks/gold/40_sovereign_identifier_export.sql` emits only
+  sovereign identifier rows, excludes provider/search/CRM identifier types, and
+  blocks verified rows unless confidence is at least `0.90` and the source type
+  is `official_registry`, `tax_authority`, or `filing`.
+- `Pulse360_Sovereign_Identifier__dlm` is live, queryable, related to
+  `ssot__Account__dlm`, and represented in the promoted report/dashboard
+  validation surface.
+- The current row count remains `0`, which is expected and accepted until
+  official registry, tax-authority, or filing evidence satisfies the gate.
+- The `sovereign_identifier_export_Pulse360_Dat` stream is `ACTIVE/SUCCESS`,
+  last refreshed `2026-05-08T06:12:02Z`, with `0` rows processed.
+
+Acceptance caveats:
+
+- `DAN-282` is closed for the first governed spine implementation, not for
+  broad sovereign identifier coverage.
+- Standard `ssot__PartyIdentification__dlm` remains the preferred semantic
+  target where org support allows it; this prototype also uses Pulse360 custom
+  extension DMOs for Data Cloud validation and reporting.
+- The broad close gate was attempted during this closure pass, but the
+  unrelated Databricks SQL governance metrics step returned warehouse
+  `HTTP 400` even for `SELECT 1`; targeted sovereign, SQL-pack, GPT-pack, and
+  Salesforce UX validators passed.
+
+Latest detailed evidence:
+
+- [dan-282-sovereign-identity-spine-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-282-sovereign-identity-spine-closure-2026-05-08.md)
+
 ## Milestone C Acceptance Closure
 
 On `2026-05-08`, the remaining Milestone C acceptance blockers were validated
