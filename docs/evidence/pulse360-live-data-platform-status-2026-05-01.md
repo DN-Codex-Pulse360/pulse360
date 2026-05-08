@@ -349,3 +349,44 @@ Folder visibility:
   org.
 - Source metadata excludes user-specific `folderShares`, `owner`, and
   `runningUser`; target-org folder sharing remains an admin/UI step.
+
+## Account Activation Closure
+
+On `2026-05-08`, the `DAN-114` Data Cloud to Salesforce Account activation
+blocker was revalidated in `pulse360-agent-target`.
+
+Latest evidence:
+
+- Account activation field metadata and live org fields are present.
+- The Account sync contract has `31` required fields, `31` mapped fields, no
+  missing mappings, and no missing Account target fields.
+- `DC Export Accounts P360 V2` is `ACTIVE/SUCCESS`, last refreshed
+  `2026-04-29T14:23:19Z`, with `18` processed rows.
+- The activation source object
+  `pulse360_account_intelligence_export_v2__dll` has `18` rows, `18` distinct
+  CRM-safe activation IDs, and `0` duplicate activation IDs.
+- `ssot__Account__dlm` has `18` rows, `18` distinct CRM-safe activation IDs,
+  and `0` duplicate activation IDs.
+- Required supported Copy Field fields are populated in both source and DMO.
+- Data Action `Pulse360_Account_Intelligence_Copy_Fields_20xo47` is `ACTIVE`.
+- Latest Copy Field job `1A5dL0000001BFxSAM` completed with `18` processed,
+  `18` updated, `0` failed, and `0` skipped.
+- All `18` Salesforce Account records have populated
+  `Unified_Profile_Id__c`, `Identity_Confidence__c`, `Health_Score__c`,
+  `Cross_Sell_Propensity__c`, and `DataCloud_Last_Synced__c`.
+- The populated Account records show `LastModifiedBy.Name = Platform
+  Integration User`, confirming platform/runtime writeback provenance rather
+  than manual user repair.
+
+Current interpretation:
+
+- The old duplicate/null DMO row blocker is resolved.
+- The old `ActivationTarget` / `MktDataLakeMapping` objects remain empty, but
+  the active implementation path is now Data Cloud Copy Field Enrichment from
+  `ssot__Account__dlm` to Salesforce `Account`.
+- `DAN-114` can close from a runtime evidence standpoint, and `DAN-103` /
+  `DAN-61` can proceed to acceptance review.
+
+Latest detailed evidence:
+
+- [dan-59-data-cloud-stream-health-latest.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-59-data-cloud-stream-health-latest.md)
