@@ -421,3 +421,41 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-103-milestone-c-acceptance-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-103-milestone-c-acceptance-2026-05-08.md)
+
+## Milestone E Acceptance Closure
+
+On `2026-05-08`, the Milestone E acceptance gate was validated against
+source-controlled artifacts plus live Salesforce/Data Cloud and Databricks
+runtime evidence.
+
+Current closure position:
+
+- Both Databricks Lakeview dashboards required by `DAN-104` resolve through the
+  Databricks API and are `ACTIVE`.
+- The Salesforce dashboard `Pulse360 Account Intelligence Validation`
+  (`01ZdL00000ABncLUAT`) exists in the hidden validation dashboard folder with
+  developer name `zZUAzaLhrPFnOpTDCJvUEUvPEQIohz`.
+- The five promoted validation reports exist in the hidden validation report
+  folder.
+- Data Cloud validation streams are `ACTIVE/SUCCESS` with current
+  `2026-05-08` refresh timestamps for firmographic profile, source evidence,
+  classification, corporate linkage, sovereign identifier, and activation
+  review queue.
+- `DC Export Accounts P360 V2` remains `ACTIVE/SUCCESS`, with `18` processed
+  rows.
+- Salesforce runtime surfaces are present: `Account_Record_Page`, `38`
+  `pulse360%` Lightning component bundles, and `18` Account rows with
+  `DataCloud_Last_Synced__c`.
+- The new closeout gate
+  `./scripts/validate-build-deploy-verify-close-gate.sh` passed.
+
+Acceptance caveats:
+
+- Sovereign identifier coverage remains `0`, expected until official registry,
+  tax-authority, or filing evidence satisfies the verification gate.
+- The gate does not run a Salesforce deploy dry-run by default; that remains
+  opt-in after explicit deployment approval.
+
+Latest detailed evidence:
+
+- [dan-104-milestone-e-acceptance-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-104-milestone-e-acceptance-2026-05-08.md)
