@@ -390,3 +390,34 @@ Current interpretation:
 Latest detailed evidence:
 
 - [dan-59-data-cloud-stream-health-latest.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-59-data-cloud-stream-health-latest.md)
+
+## Milestone C Acceptance Closure
+
+On `2026-05-08`, the remaining Milestone C acceptance blockers were validated
+against source-controlled contracts and live MCP checks in
+`pulse360-agent-target`.
+
+Current closure position:
+
+- `DAN-116` is satisfied: Salesforce Account, the Data Cloud source object, and
+  `ssot__Account__dlm` all preserve the Salesforce `Account.Id` as the
+  activation/join key across `18` records.
+- `DAN-61` is satisfied for prototype acceptance: calculated insight
+  configuration validates, the Data Cloud field path validates, the Copy Field
+  job completed `18/18` with no failures, and all target Accounts have synced
+  intelligence fields plus `DataCloud_Last_Synced__c`.
+- `DAN-103` can close once the Linear blocker links are removed from
+  `DAN-116` and `DAN-61`.
+
+Acceptance caveats:
+
+- Sovereign identifier coverage is still `0`, which is expected until official
+  registry, tax-authority, or filing evidence passes the verification gate.
+- The live activation mechanism is Data Cloud Copy Field Enrichment, not the
+  older empty `ActivationTarget` / `MktDataLakeMapping` surface.
+- Payload and long-text exceptions remain handled by the documented runbook
+  rather than by native Copy Field.
+
+Latest detailed evidence:
+
+- [dan-103-milestone-c-acceptance-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-103-milestone-c-acceptance-2026-05-08.md)
