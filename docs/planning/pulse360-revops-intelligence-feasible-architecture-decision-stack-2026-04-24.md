@@ -143,6 +143,12 @@ contracts in `contracts/account_feature_snapshot.schema.json` and
 `icp_fit`, using a batch-first Data Cloud enrichment path while live Databricks
 Model Serving and Salesforce BYOM remain runtime-gated.
 
+`DAN-290` closure note: the source-controlled governance evidence packet is now
+defined in `contracts/governance_evidence_packet.schema.json`, with gate config
+in `config/databricks/governance-evidence-gates.json`. The packet ties served
+attributes to source contributions, lineage refs, model refs, LLM audit refs,
+Salesforce audit refs, confidence, freshness, run ID, and regulator readiness.
+
 | Module | First Slice | Dependencies | Delivery Posture |
 | --- | --- | --- | --- |
 | M1 Account Hierarchy Intelligence | Sovereign/CRM-safe account identity, hierarchy edge, group revenue, coverage gap, Group Revenue Reveal | `DAN-282`, `DAN-284`, `DAN-287`, `DAN-288` | Start here |
@@ -222,5 +228,4 @@ Model Serving and Salesforce BYOM remain runtime-gated.
 
 ## Immediate Next Work
 
-1. `DAN-290`: harden governance, lineage, audit, and regulator evidence across Databricks and Salesforce.
-2. `DAN-292`: create final acceptance gate and readout evidence for the full feasible architecture build plan.
+1. `DAN-292`: create final acceptance gate and readout evidence for the full feasible architecture build plan.

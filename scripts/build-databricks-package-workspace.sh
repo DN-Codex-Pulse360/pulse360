@@ -13,6 +13,7 @@ bundle_slugs=(
   "account-intelligence-export"
   "firmographic-enrichment"
   "model-serving-byom"
+  "governance-evidence"
 )
 
 bundle_names=(
@@ -20,6 +21,7 @@ bundle_names=(
   "pulse360-account-intelligence-export"
   "pulse360-firmographic-enrichment"
   "pulse360-model-serving-byom"
+  "pulse360-governance-evidence"
 )
 
 member_files=(
@@ -27,6 +29,7 @@ member_files=(
   "account-intelligence-export.members.txt"
   "firmographic-enrichment.members.txt"
   "model-serving-byom.members.txt"
+  "governance-evidence.members.txt"
 )
 
 validate_scripts=(
@@ -34,6 +37,7 @@ validate_scripts=(
   "scripts/validate-contracts.sh && bash scripts/validate-canonical-exports.sh"
   "scripts/validate-databricks-firmographic-genai-pack.sh"
   "scripts/validate-databricks-model-serving-byom-plan.sh"
+  "scripts/validate-governance-evidence-pack.sh && bash scripts/validate-unity-catalog-config.sh"
 )
 
 run_orders=(
@@ -41,6 +45,7 @@ run_orders=(
   "sql/databricks/gold/00_create_schemas.sql sql/databricks/gold/10_account_export_base.sql sql/databricks/gold/20_account_core_export.sql sql/databricks/gold/30_datacloud_export_accounts.sql"
   "sql/databricks/firmographic_enrichment/00_create_bronze_schema.sql sql/databricks/firmographic_enrichment/01_create_silver_schema.sql sql/databricks/firmographic_enrichment/02_create_gold_schema.sql sql/databricks/firmographic_enrichment/05_raw_research_document_sample.sql sql/databricks/firmographic_enrichment/10_firmographic_evidence_sample.sql sql/databricks/firmographic_enrichment/15_extracted_firmographic_fact.sql sql/databricks/firmographic_enrichment/20_firmographic_fact.sql sql/databricks/firmographic_enrichment/30_account_genai_enrichment_output.sql notebooks/databricks/firmographic_research_discovery_job.py notebooks/databricks/firmographic_genai_enrichment_job.py"
   "sql/databricks/model_serving/00_create_schema.sql sql/databricks/model_serving/10_account_feature_snapshot.sql sql/databricks/model_serving/20_model_score_output.sql sql/databricks/model_serving/30_icp_fit_baseline_score.sql"
+  "sql/databricks/governance_evidence/00_create_schema.sql sql/databricks/governance_evidence/10_governance_evidence_packet.sql sql/databricks/governance_evidence/20_governance_evidence_from_firmographic.sql"
 )
 
 copy_member() {

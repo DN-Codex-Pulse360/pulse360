@@ -1,0 +1,92 @@
+{
+  "version": "2026-05-08",
+  "linear_issue": "DAN-290",
+  "required_evidence_families": [
+    "unity_catalog_lineage",
+    "source_contribution",
+    "feature_model_lineage",
+    "data_cloud_mapping",
+    "salesforce_record_audit",
+    "governance_case_decision_audit",
+    "llm_prompt_model_citation_audit",
+    "provider_entitlement_or_license"
+  ],
+  "served_attribute_required_fields": [
+    "source_account_id",
+    "served_attribute_name",
+    "served_attribute_value_hash",
+    "source_contributions",
+    "lineage_refs",
+    "confidence",
+    "freshness_status",
+    "run_id",
+    "generated_at",
+    "validation_status"
+  ],
+  "model_score_required_fields": [
+    "feature_snapshot_id",
+    "model_family",
+    "model_version",
+    "registered_model_name",
+    "score",
+    "confidence",
+    "top_drivers",
+    "run_id",
+    "scored_at"
+  ],
+  "llm_required_fields": [
+    "provider",
+    "model",
+    "prompt_version",
+    "llm_input_hash",
+    "llm_output_hash",
+    "citation_count"
+  ],
+  "salesforce_governance_case_required_fields": [
+    "before_value",
+    "after_value",
+    "reviewer_id",
+    "decision_reason",
+    "decision_timestamp",
+    "downstream_update_status"
+  ],
+  "activation_rules": {
+    "min_confidence_for_clean_activation": 0.7,
+    "allow_activation_without_source_contribution": false,
+    "allow_activation_without_run_id": false,
+    "allow_activation_without_freshness": false,
+    "allow_llm_narrative_without_citation": false,
+    "allow_model_score_without_feature_snapshot": false
+  },
+  "runtime_checks": [
+    {
+      "check_id": "uc_lineage_account_to_firmographic",
+      "tool": "scripts/check-databricks-lineage-runtime.sh",
+      "upstream": "pulse360_s4.silver_salesforce.crm_account",
+      "downstream": "pulse360_s4.gold.firmographic_profile_export",
+      "status": "pending_runtime_check"
+    },
+    {
+      "check_id": "uc_lineage_feature_to_score",
+      "tool": "scripts/check-databricks-lineage-runtime.sh",
+      "upstream": "pulse360_s4.gold.account_feature_snapshot",
+      "downstream": "pulse360_s4.gold.model_score_output",
+      "status": "pending_runtime_check"
+    },
+    {
+      "check_id": "salesforce_governance_case_metadata",
+      "tool": "scripts/validate-governance-case-metadata.sh",
+      "status": "source_validator"
+    },
+    {
+      "check_id": "data_cloud_field_path",
+      "tool": "scripts/validate-data-cloud-field-path.sh",
+      "status": "source_validator"
+    }
+  ],
+  "known_limitations": [
+    "Live Databricks SQL Warehouse availability is required before Unity Catalog lineage can be confirmed for new tables.",
+    "Salesforce record-level audit export requires target-org data access and should be captured in evidence after admin approval.",
+    "Provider entitlement evidence remains not applicable until a paid/commercial provider is introduced."
+  ]
+}

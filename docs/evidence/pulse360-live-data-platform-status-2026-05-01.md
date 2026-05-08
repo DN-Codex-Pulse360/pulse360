@@ -714,3 +714,34 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-286-feature-model-byom-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-286-feature-model-byom-closure-2026-05-08.md)
+
+## Governance Evidence Closure
+
+On `2026-05-08`, `DAN-290` was closed for the source-controlled governance,
+lineage, audit, and regulator evidence slice.
+
+Current closure position:
+
+- The repo now contains a governance evidence packet contract and sample.
+- Governance gates require Unity Catalog lineage, source contribution,
+  feature/model lineage, Data Cloud mapping, Salesforce audit, Governance Case
+  decision audit, LLM audit metadata, and provider/license evidence when
+  applicable.
+- The Databricks package workspace generator now includes a
+  `pulse360-governance-evidence` bundle.
+- Unity Catalog governance config now includes feature snapshot, model score,
+  and governance evidence tables.
+- Evidence packets distinguish demo readiness from external audit readiness.
+
+Acceptance caveats:
+
+- This is a source-controlled evidence contract and runbook closure, not a live
+  runtime lineage export.
+- Live Unity Catalog lineage remains pending until the Databricks SQL Warehouse
+  issue is resolved and CLI/API lineage output is captured.
+- Salesforce and Data Cloud runtime audit evidence should be captured without
+  changing relationships or folder sharing.
+
+Latest detailed evidence:
+
+- [dan-290-governance-evidence-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-290-governance-evidence-closure-2026-05-08.md)

@@ -1,0 +1,69 @@
+{
+  "evidence_packet_id": "gevid_fprof_001dl0000240t62qaa_annual_revenue_usd_20260508",
+  "subject_type": "firmographic_attribute",
+  "subject_id": "fprof_001dl0000240t62qaa",
+  "source_account_id": "001dL0000240t62QAA",
+  "served_attribute_name": "annual_revenue_usd",
+  "served_attribute_value_hash": "sha256:demo_hash_annual_revenue_usd",
+  "source_contributions": [
+    {
+      "source_id": "evid_001dl0000240t62qaa_annual_revenue",
+      "source_family": "customer_internal",
+      "source_type": "salesforce_crm",
+      "source_url": null,
+      "source_confidence": 0.72,
+      "source_weight": 0.65,
+      "freshness_status": "fresh",
+      "license_or_contract_reference": "crm_internal_use"
+    }
+  ],
+  "lineage_refs": [
+    {
+      "lineage_system": "unity_catalog",
+      "upstream_table": "pulse360_s4.silver_salesforce.crm_account",
+      "downstream_table": "pulse360_s4.gold.firmographic_profile_export",
+      "lineage_status": "pending_runtime_check"
+    },
+    {
+      "lineage_system": "data_cloud_mapping",
+      "upstream_table": "pulse360_s4.gold.firmographic_profile_export",
+      "downstream_table": "Pulse360 Firmographic Profile",
+      "lineage_status": "verified"
+    }
+  ],
+  "model_refs": {
+    "feature_snapshot_id": "fsnap_001dl0000240t62qaa_icp_fit_v1_20260508",
+    "model_family": "icp_fit",
+    "model_version": "icp_fit_v1",
+    "registered_model_name": "pulse360.account_intelligence.icp_fit",
+    "scored_at": "2026-05-08T00:10:00Z"
+  },
+  "llm_audit_refs": {
+    "provider": "openai",
+    "model": "gpt-5.5",
+    "prompt_version": "pulse360-default-v1",
+    "llm_input_hash": "sha256:demo_input_hash",
+    "llm_output_hash": "sha256:demo_output_hash",
+    "citation_count": 1
+  },
+  "salesforce_audit_refs": {
+    "governance_case_id": null,
+    "reviewer_id": null,
+    "decision_reason": null,
+    "downstream_update_status": "not_started"
+  },
+  "confidence": 0.72,
+  "freshness_status": "fresh",
+  "run_id": "run_governance_evidence_20260508",
+  "generated_at": "2026-05-08T00:15:00Z",
+  "validation_status": "review_required",
+  "known_limitations": [
+    "Unity Catalog lineage is pending live runtime check because SQL Warehouse availability is not yet stable.",
+    "External audit readiness remains false until live lineage and target-org audit evidence are captured."
+  ],
+  "regulator_readiness": {
+    "ready_for_demo": true,
+    "ready_for_external_audit": false,
+    "reason": "Demo evidence is source-bound, but external audit readiness requires live lineage and target-org audit export."
+  }
+}
