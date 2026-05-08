@@ -24,6 +24,14 @@ workspace="$temp_dir/workspace"
   || fail "Databricks account-intelligence-export workspace is missing firmographic evidence export SQL"
 [[ -f "$workspace/account-intelligence-export/contracts/databricks_to_datacloud.schema.json" ]] \
   || fail "Databricks account-intelligence-export workspace is missing the handoff contract"
+[[ -f "$workspace/account-hierarchy-intelligence/databricks.yml" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing databricks.yml"
+[[ -f "$workspace/account-hierarchy-intelligence/sql/databricks/account_hierarchy/10_m1_account_hierarchy_edge.sql" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing hierarchy edge SQL"
+[[ -f "$workspace/account-hierarchy-intelligence/sql/databricks/account_hierarchy/20_m1_account_group_rollup.sql" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing group rollup SQL"
+[[ -f "$workspace/account-hierarchy-intelligence/contracts/m1_account_hierarchy_output.schema.json" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing M1 hierarchy contract"
 [[ -f "$workspace/model-serving-byom/databricks.yml" ]] \
   || fail "Databricks model-serving-byom workspace is missing databricks.yml"
 [[ -f "$workspace/model-serving-byom/sql/databricks/model_serving/10_account_feature_snapshot.sql" ]] \
@@ -43,6 +51,8 @@ grep -Fq 'pulse360-salesforce-ingestion' "$workspace/salesforce-ingestion/databr
   || fail "Databricks salesforce-ingestion bundle is missing its bundle name"
 grep -Fq 'pulse360-account-intelligence-export' "$workspace/account-intelligence-export/databricks.yml" \
   || fail "Databricks account-intelligence-export bundle is missing its bundle name"
+grep -Fq 'pulse360-account-hierarchy-intelligence' "$workspace/account-hierarchy-intelligence/databricks.yml" \
+  || fail "Databricks account-hierarchy-intelligence bundle is missing its bundle name"
 grep -Fq 'pulse360-model-serving-byom' "$workspace/model-serving-byom/databricks.yml" \
   || fail "Databricks model-serving-byom bundle is missing its bundle name"
 grep -Fq 'pulse360-governance-evidence' "$workspace/governance-evidence/databricks.yml" \

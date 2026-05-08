@@ -19,4 +19,7 @@ grep -q "engagement_export" "$cfg" || fail "Missing canonical engagement export 
 grep -q "account_feature_snapshot" "$cfg" || fail "Missing account feature snapshot table"
 grep -q "model_score_output" "$cfg" || fail "Missing model score output table"
 grep -q "governance_evidence_packet" "$cfg" || fail "Missing governance evidence packet table"
+grep -q "m1_account_hierarchy_edge" "$cfg" || fail "Missing M1 hierarchy edge table"
+grep -q "m1_account_group_rollup" "$cfg" || fail "Missing M1 account group rollup table"
+grep -q "m1_account_hierarchy_activation" "$cfg" || fail "Missing M1 hierarchy activation table"
 pass "Unity Catalog governance config includes required baseline"

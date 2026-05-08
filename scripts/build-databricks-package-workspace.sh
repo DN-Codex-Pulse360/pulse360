@@ -12,6 +12,7 @@ bundle_slugs=(
   "salesforce-ingestion"
   "account-intelligence-export"
   "firmographic-enrichment"
+  "account-hierarchy-intelligence"
   "model-serving-byom"
   "governance-evidence"
 )
@@ -20,6 +21,7 @@ bundle_names=(
   "pulse360-salesforce-ingestion"
   "pulse360-account-intelligence-export"
   "pulse360-firmographic-enrichment"
+  "pulse360-account-hierarchy-intelligence"
   "pulse360-model-serving-byom"
   "pulse360-governance-evidence"
 )
@@ -28,6 +30,7 @@ member_files=(
   "salesforce-ingestion.members.txt"
   "account-intelligence-export.members.txt"
   "firmographic-enrichment.members.txt"
+  "account-hierarchy-intelligence.members.txt"
   "model-serving-byom.members.txt"
   "governance-evidence.members.txt"
 )
@@ -36,6 +39,7 @@ validate_scripts=(
   "scripts/validate-databricks-salesforce-sql-pack.sh"
   "scripts/validate-contracts.sh && bash scripts/validate-canonical-exports.sh"
   "scripts/validate-databricks-firmographic-genai-pack.sh"
+  "scripts/validate-m1-account-hierarchy-pack.sh"
   "scripts/validate-databricks-model-serving-byom-plan.sh"
   "scripts/validate-governance-evidence-pack.sh && bash scripts/validate-unity-catalog-config.sh"
 )
@@ -44,6 +48,7 @@ run_orders=(
   "sql/databricks/silver_salesforce/00_create_schema.sql sql/databricks/silver_salesforce/10_crm_account.sql sql/databricks/silver_salesforce/20_crm_contact.sql sql/databricks/silver_salesforce/30_crm_opportunity.sql sql/databricks/silver_salesforce/40_crm_opportunity_contact_role.sql sql/databricks/silver_salesforce/50_crm_product.sql sql/databricks/silver_salesforce/60_crm_opportunity_line_item.sql sql/databricks/silver_salesforce/70_crm_account_contact_bridge.sql sql/databricks/silver_salesforce/80_crm_account_hierarchy_edge.sql"
   "sql/databricks/gold/00_create_schemas.sql sql/databricks/gold/10_account_export_base.sql sql/databricks/gold/20_account_core_export.sql sql/databricks/gold/30_datacloud_export_accounts.sql"
   "sql/databricks/firmographic_enrichment/00_create_bronze_schema.sql sql/databricks/firmographic_enrichment/01_create_silver_schema.sql sql/databricks/firmographic_enrichment/02_create_gold_schema.sql sql/databricks/firmographic_enrichment/05_raw_research_document_sample.sql sql/databricks/firmographic_enrichment/10_firmographic_evidence_sample.sql sql/databricks/firmographic_enrichment/15_extracted_firmographic_fact.sql sql/databricks/firmographic_enrichment/20_firmographic_fact.sql sql/databricks/firmographic_enrichment/30_account_genai_enrichment_output.sql notebooks/databricks/firmographic_research_discovery_job.py notebooks/databricks/firmographic_genai_enrichment_job.py"
+  "sql/databricks/account_hierarchy/00_create_schema.sql sql/databricks/account_hierarchy/10_m1_account_hierarchy_edge.sql sql/databricks/account_hierarchy/20_m1_account_group_rollup.sql sql/databricks/account_hierarchy/30_m1_account_hierarchy_activation.sql"
   "sql/databricks/model_serving/00_create_schema.sql sql/databricks/model_serving/10_account_feature_snapshot.sql sql/databricks/model_serving/20_model_score_output.sql sql/databricks/model_serving/30_icp_fit_baseline_score.sql"
   "sql/databricks/governance_evidence/00_create_schema.sql sql/databricks/governance_evidence/10_governance_evidence_packet.sql sql/databricks/governance_evidence/20_governance_evidence_from_firmographic.sql"
 )

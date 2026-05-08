@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/m1_account_hierarchy_output",
+  "title": "Pulse360 M1 Account Hierarchy Intelligence Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "generated_at",
+    "model_version",
+    "account_groups",
+    "hierarchy_edges",
+    "coverage_gaps"
+  ],
+  "properties": {
+    "run_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 },
+    "account_groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/account_group" }
+    },
+    "hierarchy_edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hierarchy_edge" }
+    },
+    "coverage_gaps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/coverage_gap" }
+    }
+  },
+  "$defs": {
+    "account_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account_group_id",
+        "group_anchor_source_account_id",
+        "group_anchor_name",
+        "member_account_count",
+        "known_child_account_count",
+        "group_revenue_usd",
+        "revenue_coverage_ratio",
+        "hierarchy_completeness_score",
+        "coverage_gap_count",
+        "coverage_gap_flag",
+        "confidence",
+        "source_account_ids",
+        "evidence_refs",
+        "run_id",
+        "model_version"
+      ],
+      "properties": {
+        "account_group_id": { "type": "string", "pattern": "^agrp_[a-z0-9_]+$" },
+        "group_anchor_source_account_id": { "type": "string", "minLength": 1 },
+        "group_anchor_name": { "type": "string", "minLength": 1 },
+        "ultimate_parent_name": { "type": ["string", "null"] },
+        "member_account_count": { "type": "integer", "minimum": 1 },
+        "known_child_account_count": { "type": "integer", "minimum": 0 },
+        "group_revenue_local": { "type": ["number", "null"], "minimum": 0 },
+        "group_revenue_usd": { "type": ["number", "null"], "minimum": 0 },
+        "revenue_coverage_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "hierarchy_completeness_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "coverage_gap_count": { "type": "integer", "minimum": 0 },
+        "coverage_gap_flag": { "type": "boolean" },
+        "coverage_gap_summary": { "type": ["string", "null"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_account_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "run_id": { "type": "string", "minLength": 1 },
+        "model_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "hierarchy_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hierarchy_edge_id",
+        "parent_source_account_id",
+        "child_source_account_id",
+        "relationship_type",
+        "relationship_basis",
+        "confidence",
+        "source_url",
+        "run_id",
+        "model_version"
+      ],
+      "properties": {
+        "hierarchy_edge_id": { "type": "string", "pattern": "^m1edge_[a-f0-9]{32}$" },
+        "source_account_id": { "type": "string", "minLength": 1 },
+        "parent_source_account_id": { "type": "string", "minLength": 1 },
+        "child_source_account_id": { "type": "string", "minLength": 1 },
+        "parent_party_id": { "type": ["string", "null"] },
+        "child_party_id": { "type": ["string", "null"] },
+        "parent_name": { "type": "string", "minLength": 1 },
+        "child_name": { "type": "string", "minLength": 1 },
+        "relationship_type": {
+          "type": "string",
+          "enum": ["parent", "subsidiary", "branch", "division", "affiliate"]
+        },
+        "relationship_basis": {
+          "type": "string",
+          "enum": ["crm_parent_account", "official_registry", "filing", "investor_source", "company_website", "gpt_source_bound", "manual_review"]
+        },
+        "hierarchy_level": { "type": "integer", "minimum": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source_url": { "type": "string", "minLength": 1 },
+        "evidence_id": { "type": ["string", "null"] },
+        "evidence_summary": { "type": ["string", "null"] },
+        "lineage_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "run_id": { "type": "string", "minLength": 1 },
+        "model_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "coverage_gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coverage_gap_id",
+        "source_account_id",
+        "account_group_id",
+        "gap_type",
+        "gap_status",
+        "confidence",
+        "evidence_refs",
+        "run_id"
+      ],
+      "properties": {
+        "coverage_gap_id": { "type": "string", "pattern": "^cgap_[a-f0-9]{32}$" },
+        "source_account_id": { "type": "string", "minLength": 1 },
+        "account_group_id": { "type": "string", "pattern": "^agrp_[a-z0-9_]+$" },
+        "gap_type": {
+          "type": "string",
+          "enum": ["missing_revenue", "missing_child_account", "missing_owner", "unlinked_subsidiary", "low_confidence_hierarchy"]
+        },
+        "gap_status": { "type": "string", "enum": ["open", "review", "closed", "not_applicable"] },
+        "gap_summary": { "type": ["string", "null"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "run_id": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

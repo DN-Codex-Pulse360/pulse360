@@ -1,0 +1,73 @@
+{
+  "run_id": "run_m1_20260508_000001",
+  "generated_at": "2026-05-08T12:00:00Z",
+  "model_version": "pulse360-m1-account-hierarchy-v0.1.0",
+  "account_groups": [
+    {
+      "account_group_id": "agrp_001dl000024x19fqaq",
+      "group_anchor_source_account_id": "001dL000024xl9FQAQ",
+      "group_anchor_name": "Singapore Telecommunications Limited",
+      "ultimate_parent_name": "Singapore Telecommunications Limited",
+      "member_account_count": 2,
+      "known_child_account_count": 1,
+      "group_revenue_local": null,
+      "group_revenue_usd": null,
+      "revenue_coverage_ratio": 0,
+      "hierarchy_completeness_score": 0.72,
+      "coverage_gap_count": 1,
+      "coverage_gap_flag": true,
+      "coverage_gap_summary": "Known corporate linkage exists, but revenue and sovereign identifier evidence are incomplete.",
+      "confidence": 0.72,
+      "source_account_ids": [
+        "001dL000024xl9FQAQ",
+        "001dL000024xlArQAI"
+      ],
+      "evidence_refs": [
+        "salesforce://Account/001dL000024xl9FQAQ",
+        "salesforce://Account/001dL000024xlArQAI"
+      ],
+      "run_id": "run_m1_20260508_000001",
+      "model_version": "pulse360-m1-account-hierarchy-v0.1.0"
+    }
+  ],
+  "hierarchy_edges": [
+    {
+      "hierarchy_edge_id": "m1edge_92b4172f8fd8a8dd63cb07c3620ef03f",
+      "source_account_id": "001dL000024xlArQAI",
+      "parent_source_account_id": "001dL000024xl9FQAQ",
+      "child_source_account_id": "001dL000024xlArQAI",
+      "parent_party_id": "party_001dl000024xl9fqaq",
+      "child_party_id": "party_001dl000024xlarqai",
+      "parent_name": "Singapore Telecommunications Limited",
+      "child_name": "NCS Pte. Ltd.",
+      "relationship_type": "subsidiary",
+      "relationship_basis": "crm_parent_account",
+      "hierarchy_level": 1,
+      "confidence": 0.72,
+      "source_url": "salesforce://Account/001dL000024xlArQAI",
+      "evidence_id": null,
+      "evidence_summary": "CRM parent-child account relationship accepted as prototype hierarchy evidence.",
+      "lineage_refs": [
+        "pulse360_s4.silver_salesforce.crm_account_hierarchy_edge",
+        "pulse360_s4.intelligence.corporate_linkage_export"
+      ],
+      "run_id": "run_m1_20260508_000001",
+      "model_version": "pulse360-m1-account-hierarchy-v0.1.0"
+    }
+  ],
+  "coverage_gaps": [
+    {
+      "coverage_gap_id": "cgap_1f6e1bf9f77ce31d1c35ed1c6af6c17e",
+      "source_account_id": "001dL000024xlArQAI",
+      "account_group_id": "agrp_001dl000024x19fqaq",
+      "gap_type": "missing_revenue",
+      "gap_status": "review",
+      "gap_summary": "The child account is linked to a group, but source-backed revenue is missing.",
+      "confidence": 0.72,
+      "evidence_refs": [
+        "salesforce://Account/001dL000024xlArQAI"
+      ],
+      "run_id": "run_m1_20260508_000001"
+    }
+  ]
+}
