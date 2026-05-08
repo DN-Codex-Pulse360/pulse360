@@ -1,0 +1,111 @@
+surface: Account_Record_Page
+mode: source_first_design
+status: planned
+principles:
+  - Data Cloud intelligence is read-only in CRM.
+  - Evidence and provenance stay visible beside GPT-derived facts.
+  - Stewardship decisions remain separate from enriched fact presentation.
+  - Generated Data Cloud relationship field names are validated, not hard-coded.
+sections:
+  - key: firmographic_profile_summary
+    label: Firmographic Profile
+    region: main
+    source_dmo: Pulse360_Firmographic_Profile__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: related_record_or_data_cloud_panel
+    fields:
+      - legal_name__c
+      - trade_name__c
+      - jurisdiction_country_code__c
+      - business_category__c
+      - business_description__c
+      - confidence__c
+      - primary_source_url__c
+      - last_verified_at__c
+    editable: false
+  - key: investor_and_financial_summary
+    label: Investor and Financial Summary
+    region: main
+    source_dmo: Pulse360_Firmographic_Profile__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: conditional_summary_panel
+    fields:
+      - investor_updates_summary__c
+      - latest_financial_results_summary__c
+      - latest_financial_results_period__c
+      - latest_fin_results_presentation_date__c
+      - latest_financial_results_source_url__c
+    editable: false
+    display_rule: show_only_when_source_url_or_summary_present
+  - key: classification_rows
+    label: Company Classification
+    region: main
+    source_dmo: Pulse_360_Company_Classification__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: related_list_or_embedded_report
+    fields:
+      - scheme__c
+      - code__c
+      - description__c
+      - is_primary__c
+      - confidence__c
+      - source_url__c
+    editable: false
+  - key: corporate_linkage_rows
+    label: Corporate Linkage
+    region: main
+    source_dmo: Pulse360_Corporate_Linkage__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: related_list_or_embedded_report
+    fields:
+      - relationship_type__c
+      - related_entity_name__c
+      - ownership_percentage__c
+      - related_identifier_type__c
+      - related_identifier_value__c
+      - confidence__c
+      - source_url__c
+    editable: false
+  - key: firmographic_evidence
+    label: Firmographic Evidence
+    region: sidebar
+    source_dmo: Pulse360_Firmographic_Source_Evidenc__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: evidence_related_list_or_embedded_report
+    fields:
+      - field_path__c
+      - source_type__c
+      - source_name__c
+      - source_url__c
+      - evidence_excerpt__c
+      - confidence__c
+      - retrieved_at__c
+      - model_version__c
+    editable: false
+  - key: sovereign_identifiers
+    label: Sovereign Identifiers
+    region: sidebar
+    source_dmo: Pulse360_Sovereign_Identifier__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: related_list_or_embedded_report
+    fields:
+      - identifier_type__c
+      - identifier_name__c
+      - identifier_value__c
+      - jurisdiction_country_code__c
+      - issuing_authority__c
+      - source_type__c
+      - source_url__c
+      - confidence__c
+      - verification_status__c
+    editable: false
+    empty_state: Expected until official registry, tax-authority, or filing evidence passes the verified gate.
+release_notes:
+  - Do not deploy page changes until the target org proves the selected Data Cloud related-list or embedded-report component behavior.
+  - If native Data Cloud related lists cannot be source-deployed, record the page placement as a runbook-controlled org setup step.

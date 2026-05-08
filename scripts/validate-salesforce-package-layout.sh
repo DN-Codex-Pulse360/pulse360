@@ -19,6 +19,20 @@ workspace="$temp_dir/workspace"
   || fail "Account intelligence package is missing Pulse360HealthScanService"
 [[ -f "$workspace/packages/account-intelligence/main/default/flexipages/Account_Record_Page.flexipage-meta.xml" ]] \
   || fail "Account intelligence package is missing the Account flexipage"
+[[ -f "$workspace/packages/account-intelligence/main/default/reports/Pulse360_Account_Intelligence_Validation-meta.xml" ]] \
+  || fail "Account intelligence package is missing the firmographic validation report folder"
+for report_file in \
+  "$workspace/packages/account-intelligence/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_Firmographic_iIW1.report-meta.xml" \
+  "$workspace/packages/account-intelligence/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_Evidence_4W81.report-meta.xml" \
+  "$workspace/packages/account-intelligence/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_Classification_qlX1.report-meta.xml" \
+  "$workspace/packages/account-intelligence/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_Corporate_Linkage_U4F1.report-meta.xml" \
+  "$workspace/packages/account-intelligence/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_Sovereign_Identifier_NOY1.report-meta.xml"; do
+  [[ -f "$report_file" ]] || fail "Account intelligence package is missing firmographic validation report: $report_file"
+done
+[[ -f "$workspace/packages/account-intelligence/main/default/dashboards/Pulse360_Account_Intelligence_Validation-meta.xml" ]] \
+  || fail "Account intelligence package is missing the firmographic validation dashboard folder"
+[[ -f "$workspace/packages/account-intelligence/main/default/dashboards/Pulse360_Account_Intelligence_Validation/zZUAzaLhrPFnOpTDCJvUEUvPEQIohz.dashboard-meta.xml" ]] \
+  || fail "Account intelligence package is missing the firmographic validation dashboard metadata"
 [[ -d "$workspace/packages/governance/main/default/objects/Governance_Case__c" ]] \
   || fail "Governance package is missing Governance_Case__c metadata"
 [[ -f "$workspace/packages/governance/main/default/triggers/GovernanceCaseDecisionStamping.trigger" ]] \

@@ -201,3 +201,151 @@ Post-relationship validation:
 - Row counts remained aligned after relationship creation:
   `18`, `11`, `2`, `37`, and `0`.
 - `source_account_id__c` remained populated on every populated Pulse360 DMO row.
+
+## Salesforce Report Validation After GPT Refresh
+
+On `2026-05-07`, after the OpenAI GPT enrichment runtime and gold export rebuild,
+the Salesforce/Data Cloud surface was revalidated against org alias
+`pulse360-agent-target`.
+
+Operator health:
+
+- Codex CLI authenticated.
+- Salesforce CLI reached `pulse360-agent-target`.
+- Databricks CLI listed the workspace root.
+- GitHub CLI auth was healthy.
+- Hosted MCP registrations for Linear, Notion, Data Cloud, and Databricks SQL
+  were present.
+
+Observed Data Cloud streams:
+
+| Stream | Import status | Last refresh | Rows processed | New fields |
+| --- | --- | --- | ---: | --- |
+| `firmographic_profile_export_Pulse360_Dat` | `SUCCESS` | `2026-05-07T11:12:02Z` | 18 | false |
+| `firmographic_source_evidence_export_Puls` | `SUCCESS` | `2026-05-07T11:12:01Z` | 140 | false |
+| `company_classification_export_Pulse360_D` | `SUCCESS` | `2026-05-07T11:12:06Z` | 11 | false |
+| `corporate_linkage_export_Pulse360_Databr` | `SUCCESS` | `2026-05-07T11:12:01Z` | 2 | false |
+| `sovereign_identifier_export_Pulse360_Dat` | `SUCCESS` | `2026-05-07T12:12:01Z` | 0 | false |
+| `Pulse360_Activation_Review_Queue` | `SUCCESS` | `2026-05-07T11:45:02Z` | 11 | false |
+
+Observed Data Lake Object instances:
+
+| DLO | Status | Sync status | Records | Fields | Hydration |
+| --- | --- | --- | ---: | ---: | --- |
+| `firmographic_profile_export Pulse360 Dat` | `ACTIVE` | `ACTIVE` | 18 | 53 | `Hydrated` |
+| `firmographic_source_evidence_export Puls` | `ACTIVE` | `ACTIVE` | 140 | 17 | `Hydrated` |
+| `company_classification_export Pulse360 D` | `ACTIVE` | `ACTIVE` | 11 | 16 | `Hydrated` |
+| `corporate_linkage_export Pulse360 Databr` | `ACTIVE` | `ACTIVE` | 2 | 19 | `Hydrated` |
+| `sovereign_identifier_export Pulse360 Dat` | `ACTIVE` | `ACTIVE` | 0 | 27 | `Hydrated` |
+
+Report execution validation through the Salesforce Analytics REST API:
+
+| Report | Report Id | Rows | Filters | Status |
+| --- | --- | ---: | --- | --- |
+| `Account and Firmographic` | `00OdL00000PHrzBUAT` | 18 | none | pass |
+| `Account and Evidence` | `00OdL00000PHtxlUAD` | 140 | none | pass |
+| `Account and Classification` | `00OdL00000PHuKLUA1` | 11 | none | pass |
+| `Account and Corporate Linkage` | `00OdL00000PIt1FUAT` | 2 | none | pass |
+| `Account and Sovereign Identifier` | `00OdL00000PIuerUAD` | 0 | none | pass, expected empty |
+
+DMO field validation:
+
+- `Pulse360_Firmographic_Profile__dlm` exposes 55 fields, including
+  `jurisdiction_country_code__c`, investor-summary fields, financial-result
+  fields, `KQ_source_account_id__c`, and generated Account relationship field
+  `rel_1777989007569_end__c`.
+- `Pulse360_Sovereign_Identifier__dlm` exposes 29 fields, including
+  source-bound sovereign identifier fields, `source_type__c`, `source_url__c`,
+  `KQ_source_account_id__c`, and generated Account relationship field
+  `rel_1777990642329_end__c`.
+- `Pulse_360_Company_Classification__dlm` exposes 18 fields and generated
+  Account relationship field `rel_1777990282217_end__c`.
+- `Pulse360_Corporate_Linkage__dlm` exposes 21 fields and generated Account
+  relationship field `rel_1777990382517_end__c`.
+- `Pulse360_Firmographic_Source_Evidenc__dlm` exposes 19 fields and generated
+  Account relationship field `rel_1777990482469_end__c`.
+
+Sample DMO data checks:
+
+- `Pulse360_Firmographic_Profile__dlm` returned 18 report rows and queryable
+  profile records with refreshed `last_verified_at__c` values from
+  `2026-05-07T04:08:34Z` through `2026-05-07T04:19:53Z` in the sample checked.
+- `Pulse360_Firmographic_Source_Evidenc__dlm` returned 140 report rows and
+  source-backed evidence records with `source_url__c` populated.
+- `Pulse360_Corporate_Linkage__dlm` returned the expected Singtel/NCS linkage
+  rows.
+- `Pulse360_Sovereign_Identifier__dlm` remained empty, which is expected until
+  official registry, tax-authority, or filing evidence satisfies the verified
+  sovereign identifier gate.
+
+Salesforce-side next work:
+
+1. Design the CRM Account page surfacing pattern for read-only Data Cloud
+   intelligence, keeping evidence/provenance read-only and any stewardship
+   decisions separate.
+2. Add permission-set coverage for report/dashboard visibility once the target
+   report folder and page placement are finalized.
+
+## Salesforce Report Promotion
+
+On `2026-05-07`, the five private validation reports were cloned into a
+dedicated report folder and retrieved into source control.
+
+Created folders:
+
+| Folder | Type | Id | Developer name | Access note |
+| --- | --- | --- | --- | --- |
+| `Pulse360 Account Intelligence Validation` | Report | `00ldL00000NixwnQAB` | `Pulse360_Account_Intelligence_Validation` | API keeps `AccessType=Hidden`; folder sharing remains an admin/UI step |
+| `Pulse360 Account Intelligence Validation` | Dashboard | `00ldL00000NixyPQAR` | `Pulse360_Account_Intelligence_Validation` | API keeps `AccessType=Hidden`; folder sharing remains an admin/UI step |
+
+Promoted reports:
+
+| Report | Source report Id | Promoted report Id | Promoted developer name | Rows | Status |
+| --- | --- | --- | --- | ---: | --- |
+| `Account and Firmographic` | `00OdL00000PHrzBUAT` | `00OdL00000PKsInUAL` | `Account_and_Firmographic_iIW1` | 18 | pass |
+| `Account and Evidence` | `00OdL00000PHtxlUAD` | `00OdL00000PKsXJUA1` | `Account_and_Evidence_4W81` | 140 | pass |
+| `Account and Classification` | `00OdL00000PHuKLUA1` | `00OdL00000PKsc9UAD` | `Account_and_Classification_qlX1` | 11 | pass |
+| `Account and Corporate Linkage` | `00OdL00000PIt1FUAT` | `00OdL00000PKsaXUAT` | `Account_and_Corporate_Linkage_U4F1` | 2 | pass |
+| `Account and Sovereign Identifier` | `00OdL00000PIuerUAD` | `00OdL00000PKsYvUAL` | `Account_and_Sovereign_Identifier_NOY1` | 0 | pass, expected empty |
+
+Source-controlled metadata:
+
+- `force-app/main/default/reports/Pulse360_Account_Intelligence_Validation-meta.xml`
+- `force-app/main/default/reports/Pulse360_Account_Intelligence_Validation/*.report-meta.xml`
+- `force-app/main/default/dashboards/Pulse360_Account_Intelligence_Validation-meta.xml`
+- `force-app/main/default/dashboards/Pulse360_Account_Intelligence_Validation/zZUAzaLhrPFnOpTDCJvUEUvPEQIohz.dashboard-meta.xml`
+
+The source folder metadata intentionally omits user-specific folder shares.
+Folder access must be assigned by admin-managed folder sharing or a future
+permission/set group decision.
+
+## Salesforce Dashboard Hardening
+
+On `2026-05-08`, the live validation dashboard was retrieved and normalized
+into source control.
+
+Dashboard validation:
+
+| Dashboard | Id | Developer name | Folder | Components | Status |
+| --- | --- | --- | --- | ---: | --- |
+| `Pulse360 Account Intelligence Validation` | `01ZdL00000ABncLUAT` | `zZUAzaLhrPFnOpTDCJvUEUvPEQIohz` | `Pulse360 Account Intelligence Validation` | 10 | pass |
+
+Component design:
+
+- Top scorecard row: Accounts Enriched, Evidence Rows, Classifications,
+  Corporate Linkages, and Sovereign IDs.
+- Detail table row set: Account and Classification, Account and Corporate
+  Linkage, Account and Sovereign Identifier, Account and Evidence, and Account
+  and Firmographic.
+- The sovereign identifier component intentionally remains visible with no data
+  until official registry, tax-authority, or filing evidence satisfies the gate.
+
+Folder visibility:
+
+- Report folder `00ldL00000NixwnQAB` remains `AccessType=Hidden`.
+- Dashboard folder `00ldL00000NixyPQAR` remains `AccessType=Hidden`.
+- Metadata retrieval showed the current operator user
+  `dnortje.37cf563036b7@agentforce.com` has `Manage` folder access in the live
+  org.
+- Source metadata excludes user-specific `folderShares`, `owner`, and
+  `runningUser`; target-org folder sharing remains an admin/UI step.

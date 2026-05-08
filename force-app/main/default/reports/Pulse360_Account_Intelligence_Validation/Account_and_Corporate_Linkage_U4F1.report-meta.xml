@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <columns>
+        <field>ssot__Account__dlm.ssot__Id__c</field>
+    </columns>
+    <columns>
+        <field>ssot__Account__dlm.ssot__Name__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Pulse360_Corporate_Linkage__dlm.confidence__c</field>
+    </columns>
+    <columns>
+        <field>Pulse360_Corporate_Linkage__dlm.model_version__c</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>Pulse360_Corporate_Linkage__dlm.ownership_percentage__c</field>
+    </columns>
+    <columns>
+        <field>Pulse360_Corporate_Linkage__dlm.related_entity_name__c</field>
+    </columns>
+    <columns>
+        <field>Pulse360_Corporate_Linkage__dlm.related_identifier_type__c</field>
+    </columns>
+    <columns>
+        <field>Pulse360_Corporate_Linkage__dlm.related_identifier_value__c</field>
+    </columns>
+    <columns>
+        <field>Pulse360_Corporate_Linkage__dlm.relationship_type__c</field>
+    </columns>
+    <description>Pulse360 validation report promoted from private report 00OdL00000PIt1FUAT after GPT firmographic refresh.</description>
+    <format>Tabular</format>
+    <isSmartTotalDisabled>false</isSmartTotalDisabled>
+    <name>Account and Corporate Linkage</name>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CustomEntityCustomEntity$ssot__Account__dlm$Pulse360_Corporate_Linkage__dlm</reportType>
+    <showDetails>true</showDetails>
+    <showGrandTotal>true</showGrandTotal>
+    <showSubTotals>true</showSubTotals>
+    <timeFrameFilter>
+        <dateColumn>ssot__Account__dlm.ssot__CreatedDate__c</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

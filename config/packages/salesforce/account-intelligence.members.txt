@@ -9,3 +9,7 @@ force-app/main/default/lwc/pulse360NextBestAction
 force-app/main/default/lwc/pulse360GroupRevenueReveal
 force-app/main/default/flexipages/Account_Record_Page.flexipage-meta.xml
 force-app/main/default/permissionsets/Pulse360_Account_Intelligence_User.permissionset-meta.xml
+force-app/main/default/reports/Pulse360_Account_Intelligence_Validation-meta.xml
+force-app/main/default/reports/Pulse360_Account_Intelligence_Validation
+force-app/main/default/dashboards/Pulse360_Account_Intelligence_Validation-meta.xml
+force-app/main/default/dashboards/Pulse360_Account_Intelligence_Validation
