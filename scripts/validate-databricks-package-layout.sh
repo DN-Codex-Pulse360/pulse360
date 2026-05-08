@@ -24,10 +24,20 @@ workspace="$temp_dir/workspace"
   || fail "Databricks account-intelligence-export workspace is missing firmographic evidence export SQL"
 [[ -f "$workspace/account-intelligence-export/contracts/databricks_to_datacloud.schema.json" ]] \
   || fail "Databricks account-intelligence-export workspace is missing the handoff contract"
+[[ -f "$workspace/model-serving-byom/databricks.yml" ]] \
+  || fail "Databricks model-serving-byom workspace is missing databricks.yml"
+[[ -f "$workspace/model-serving-byom/sql/databricks/model_serving/10_account_feature_snapshot.sql" ]] \
+  || fail "Databricks model-serving-byom workspace is missing account feature snapshot SQL"
+[[ -f "$workspace/model-serving-byom/sql/databricks/model_serving/20_model_score_output.sql" ]] \
+  || fail "Databricks model-serving-byom workspace is missing model score output SQL"
+[[ -f "$workspace/model-serving-byom/contracts/model_score_output.schema.json" ]] \
+  || fail "Databricks model-serving-byom workspace is missing model score contract"
 
 grep -Fq 'pulse360-salesforce-ingestion' "$workspace/salesforce-ingestion/databricks.yml" \
   || fail "Databricks salesforce-ingestion bundle is missing its bundle name"
 grep -Fq 'pulse360-account-intelligence-export' "$workspace/account-intelligence-export/databricks.yml" \
   || fail "Databricks account-intelligence-export bundle is missing its bundle name"
+grep -Fq 'pulse360-model-serving-byom' "$workspace/model-serving-byom/databricks.yml" \
+  || fail "Databricks model-serving-byom bundle is missing its bundle name"
 
 pass "Databricks package layout validation completed"

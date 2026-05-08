@@ -1,0 +1,113 @@
+{
+  "version": "2026-05-08",
+  "linear_issue": "DAN-286",
+  "runtime_posture": "source_controlled_plan_first",
+  "primary_model_family": "icp_fit",
+  "serving_strategy": {
+    "default_mode": "batch",
+    "real_time_mode": "gated",
+    "reason": "Batch scoring is sufficient for Data Cloud profile enrichment and Salesforce validation reports. Real-time endpoints should be enabled only for routing or interactive use cases that prove latency need and entitlement readiness."
+  },
+  "feature_tables": [
+    {
+      "table_name": "pulse360_s4.gold.account_feature_snapshot",
+      "primary_key": [
+        "feature_snapshot_id"
+      ],
+      "lookup_key": "source_account_id",
+      "time_key": "snapshot_as_of",
+      "feature_set_versions": [
+        "icp_fit_v1",
+        "whitespace_v1",
+        "intent_routing_v1",
+        "renewal_risk_v1",
+        "entity_resolution_v1"
+      ],
+      "point_in_time_policy": "as_of_snapshot_only"
+    }
+  ],
+  "model_output_tables": [
+    {
+      "table_name": "pulse360_s4.gold.model_score_output",
+      "primary_key": [
+        "score_id"
+      ],
+      "lookup_key": "source_account_id",
+      "required_fields": [
+        "score",
+        "confidence",
+        "score_band",
+        "top_drivers_json",
+        "explanation_text",
+        "model_version",
+        "run_id",
+        "scored_at",
+        "activation_eligible_flag"
+      ]
+    }
+  ],
+  "model_families": [
+    {
+      "model_family": "icp_fit",
+      "priority": 1,
+      "registered_model_name": "pulse360.account_intelligence.icp_fit",
+      "initial_implementation": "batch_train_batch_score",
+      "target_consumption_path": "data_cloud_batch_enrichment",
+      "salesforce_surface": "Account score panel and validation report",
+      "acceptance_gate": "At least one score per eligible account with confidence, top drivers, model version, run ID, and timestamp."
+    },
+    {
+      "model_family": "cross_sell_propensity",
+      "priority": 2,
+      "registered_model_name": "pulse360.account_intelligence.cross_sell_propensity",
+      "initial_implementation": "blocked_until_product_or_entitlement_sources",
+      "target_consumption_path": "data_cloud_batch_enrichment",
+      "salesforce_surface": "Whitespace grid",
+      "acceptance_gate": "No propensity score without product ownership or entitlement evidence."
+    },
+    {
+      "model_family": "intent_routing",
+      "priority": 3,
+      "registered_model_name": "pulse360.account_intelligence.intent_routing",
+      "initial_implementation": "blocked_until_intent_sources",
+      "target_consumption_path": "salesforce_flow_or_apex_callout",
+      "salesforce_surface": "Intent routing queue",
+      "acceptance_gate": "No route recommendation without threshold, confidence, freshness, and human approval state."
+    },
+    {
+      "model_family": "renewal_risk",
+      "priority": 4,
+      "registered_model_name": "pulse360.account_intelligence.renewal_risk",
+      "initial_implementation": "blocked_until_engagement_support_usage_contract_sources",
+      "target_consumption_path": "data_cloud_batch_enrichment",
+      "salesforce_surface": "Renewal risk panel",
+      "acceptance_gate": "No renewal risk score without engagement, support, usage, or contract source lineage."
+    },
+    {
+      "model_family": "entity_resolution",
+      "priority": 5,
+      "registered_model_name": "pulse360.account_intelligence.entity_resolution",
+      "initial_implementation": "batch_candidate_scoring",
+      "target_consumption_path": "salesforce_report_dashboard_only",
+      "salesforce_surface": "Steward review queue",
+      "acceptance_gate": "Candidate scores remain review recommendations and never auto-merge records."
+    }
+  ],
+  "salesforce_byom_gate": {
+    "status": "gated",
+    "required_before_claiming_success": [
+      "Databricks serving endpoint exists and is reachable from Salesforce setup.",
+      "Salesforce org entitlement for Model Builder or BYOM is verified.",
+      "Authentication pattern is approved for the target org.",
+      "Prediction output maps to Data Cloud or Salesforce fields without changing DMO relationships.",
+      "Rollback path exists to batch activation if endpoint integration is unavailable."
+    ],
+    "default_fallback": "data_cloud_batch_enrichment"
+  },
+  "security_and_audit": {
+    "secret_storage": "Databricks secret scope for endpoint credentials; Salesforce named credential or BYOM connection where enabled.",
+    "lineage_required": true,
+    "human_review_required_for_external_actions": true,
+    "unsupported_claim_policy": "emit insufficient_evidence or review_required instead of a clean score"
+  }
+}

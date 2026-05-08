@@ -648,7 +648,9 @@ Acceptance caveats:
 - This is a deterministic contract/SQL slice and does not change Data Cloud
   export tables yet.
 - Live Databricks SQL execution remains subject to SQL Warehouse availability.
-- Model serving and BYOM feature-table work remains tracked under `DAN-286`.
+- Live model serving endpoint creation and Salesforce BYOM setup remain runtime
+  gates, while the source-controlled feature/model plan is tracked under
+  `DAN-286`.
 
 Latest detailed evidence:
 
@@ -667,8 +669,8 @@ Current closure position:
   report/dashboard foundation already present in the build.
 - The durable sequence contract is source-controlled in
   `config/databricks/revops-module-delivery-sequence.json`.
-- `M2`, `M3`, `M5`, and `M6` remain explicitly gated by `DAN-286` feature
-  engineering, model serving, and Salesforce BYOM planning.
+- `M2`, `M3`, `M5`, and `M6` depend on the `DAN-286` feature engineering,
+  model serving, and Salesforce BYOM plan, which is now source-controlled.
 - `M4` remains gated by contact/person, role, and consent source availability.
 
 Acceptance caveats:
@@ -683,3 +685,32 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-291-six-module-delivery-sequence-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-291-six-module-delivery-sequence-closure-2026-05-08.md)
+
+## Feature, Model Serving, and BYOM Plan Closure
+
+On `2026-05-08`, `DAN-286` was closed for the source-controlled feature
+engineering, model serving, and Salesforce BYOM plan.
+
+Current closure position:
+
+- The repo now contains feature snapshot and model score output contracts.
+- The first planned model family is `icp_fit`.
+- The default runtime posture is batch-first Data Cloud enrichment, with
+  real-time Databricks serving and Salesforce BYOM explicitly gated.
+- The Databricks package workspace generator now includes a
+  `pulse360-model-serving-byom` bundle.
+- Model score output requires score, confidence, score band, top drivers,
+  explanation text, model version, run ID, score timestamp, and activation
+  eligibility.
+
+Acceptance caveats:
+
+- This is a source-controlled plan and SQL-contract closure, not a live endpoint
+  deployment.
+- Salesforce BYOM remains gated by target-org entitlement, endpoint
+  connectivity, authentication, and output mapping.
+- Live Databricks SQL execution remains subject to SQL Warehouse availability.
+
+Latest detailed evidence:
+
+- [dan-286-feature-model-byom-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-286-feature-model-byom-closure-2026-05-08.md)

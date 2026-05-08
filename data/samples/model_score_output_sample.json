@@ -1,0 +1,38 @@
+{
+  "score_id": "score_001dl0000240t62qaa_icp_fit_icp_fit_v1",
+  "source_account_id": "001dL0000240t62QAA",
+  "feature_snapshot_id": "fsnap_001dl0000240t62qaa_icp_fit_v1_20260508",
+  "model_family": "icp_fit",
+  "model_name": "pulse360_icp_fit_baseline",
+  "model_version": "icp_fit_v1",
+  "registered_model_name": "pulse360.account_intelligence.icp_fit",
+  "score": 0.68,
+  "confidence": 0.72,
+  "score_band": "medium",
+  "top_drivers": [
+    {
+      "driver_name": "business_category",
+      "direction": "positive",
+      "weight": 0.22,
+      "evidence_ref": "class_001dl0000240t62qaa_industry"
+    },
+    {
+      "driver_name": "annual_revenue_usd",
+      "direction": "positive",
+      "weight": 0.18,
+      "evidence_ref": "fprof_001dl0000240t62qaa"
+    }
+  ],
+  "explanation_text": "Medium ICP fit based on source-backed industry and revenue features. Treat as validation output until model serving and BYOM gates are verified.",
+  "serving_mode": "batch",
+  "consumption_path": "data_cloud_batch_enrichment",
+  "run_id": "run_model_plan_20260508",
+  "scored_at": "2026-05-08T00:10:00Z",
+  "activation_eligible_flag": true,
+  "gates": {
+    "databricks_endpoint_ready": false,
+    "salesforce_byom_entitlement_verified": false,
+    "data_cloud_mapping_verified": false,
+    "human_review_required": true
+  }
+}

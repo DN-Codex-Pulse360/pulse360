@@ -71,7 +71,7 @@
         "DAN-288"
       ],
       "open_blockers": [
-        "DAN-286"
+        "Live model training and scoring runtime validation"
       ],
       "data_products": [
         "account_feature_snapshot",
@@ -91,7 +91,7 @@
         "Top drivers reference source-backed attributes, not unsupported GPT inference.",
         "Scores can be regenerated deterministically for the same feature snapshot."
       ],
-      "status": "blocked_by_feature_engineering_and_model_serving"
+      "status": "ready_for_feature_scaffold_validation"
     },
     {
       "module_id": "M3",
@@ -112,7 +112,6 @@
         "DAN-289"
       ],
       "open_blockers": [
-        "DAN-286",
         "Product ownership or entitlement source availability"
       ],
       "data_products": [
@@ -133,7 +132,7 @@
         "Coverage gaps distinguish no evidence from negative evidence.",
         "Action recommendations are source-bound and carry confidence and freshness."
       ],
-      "status": "blocked_by_m1_and_feature_engineering"
+      "status": "blocked_by_product_or_entitlement_sources"
     },
     {
       "module_id": "M4",
@@ -195,8 +194,8 @@
         "DAN-289"
       ],
       "open_blockers": [
-        "DAN-286",
-        "Intent source availability"
+        "Intent source availability",
+        "Real-time endpoint and action runtime validation"
       ],
       "data_products": [
         "account_feature_snapshot",
@@ -216,7 +215,7 @@
         "No native Agentforce or Slack automation claim is made until the target runtime is proven.",
         "Human approval is required before any externally visible action."
       ],
-      "status": "blocked_by_feature_engineering_and_intent_sources"
+      "status": "blocked_by_intent_sources_and_runtime_validation"
     },
     {
       "module_id": "M6",
@@ -237,7 +236,6 @@
         "DAN-288"
       ],
       "open_blockers": [
-        "DAN-286",
         "Engagement, support, usage, or contract source availability"
       ],
       "data_products": [
@@ -258,11 +256,10 @@
         "Save plays are advisory and require user review.",
         "Data Cloud and Salesforce outputs preserve source system ownership boundaries."
       ],
-      "status": "blocked_by_feature_engineering_and_renewal_sources"
+      "status": "blocked_by_renewal_sources"
     }
   ],
   "next_linear_sequence": [
-    "DAN-286",
     "DAN-290",
     "DAN-292"
   ]

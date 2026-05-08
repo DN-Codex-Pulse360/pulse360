@@ -67,15 +67,13 @@ require(not by_id["M1"].get("open_blockers"), "M1 must not have open blockers")
 
 for module_id in ["M2", "M3", "M5", "M6"]:
     deps = set(by_id[module_id].get("source_dependencies", []))
-    blockers = set(by_id[module_id].get("open_blockers", []))
     require("DAN-286" in deps, f"{module_id} must depend on DAN-286")
-    require("DAN-286" in blockers, f"{module_id} must list DAN-286 as an open blocker")
 
 m3_deps = set(by_id["M3"].get("source_dependencies", []))
 require("DAN-291:M1" in m3_deps, "M3 must explicitly depend on the M1 slice")
 
 next_sequence = payload.get("next_linear_sequence", [])
-require(next_sequence == ["DAN-286", "DAN-290", "DAN-292"], "next_linear_sequence must be DAN-286, DAN-290, DAN-292")
+require(next_sequence == ["DAN-290", "DAN-292"], "next_linear_sequence must be DAN-290, DAN-292")
 
 serialized = json.dumps(payload)
 for forbidden in ["Provider ID as sovereign", "native Agentforce success"]:

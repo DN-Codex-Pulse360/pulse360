@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pulse360.local/contracts/account_feature_snapshot.schema.json",
+  "title": "Pulse360 Account Feature Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "feature_snapshot_id",
+    "source_account_id",
+    "snapshot_as_of",
+    "feature_set_version",
+    "feature_namespace",
+    "point_in_time_policy",
+    "features",
+    "source_refs",
+    "lineage",
+    "quality"
+  ],
+  "properties": {
+    "feature_snapshot_id": {
+      "type": "string",
+      "description": "Deterministic ID such as fsnap_<source_account_id_lower>_<feature_set_version>_<yyyymmdd>."
+    },
+    "source_account_id": {
+      "type": "string",
+      "description": "Salesforce Account ID used as the CRM activation key."
+    },
+    "snapshot_as_of": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "feature_set_version": {
+      "type": "string"
+    },
+    "feature_namespace": {
+      "type": "string",
+      "enum": [
+        "icp_fit",
+        "whitespace",
+        "intent_routing",
+        "renewal_risk",
+        "entity_resolution"
+      ]
+    },
+    "point_in_time_policy": {
+      "type": "string",
+      "enum": [
+        "as_of_snapshot_only",
+        "no_future_leakage",
+        "latest_available_for_demo"
+      ]
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "number",
+          "integer",
+          "string",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_type",
+          "source_table",
+          "source_id",
+          "field_path",
+          "freshness_status"
+        ],
+        "properties": {
+          "source_type": {
+            "type": "string"
+          },
+          "source_table": {
+            "type": "string"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "field_path": {
+            "type": "string"
+          },
+          "freshness_status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "job_name",
+        "input_table_versions",
+        "created_at"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "job_name": {
+          "type": "string"
+        },
+        "input_table_versions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_completeness",
+        "evidence_coverage",
+        "conflict_count",
+        "activation_eligible_flag"
+      ],
+      "properties": {
+        "feature_completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "conflict_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "activation_eligible_flag": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

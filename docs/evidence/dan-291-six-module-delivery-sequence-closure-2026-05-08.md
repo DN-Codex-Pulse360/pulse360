@@ -23,11 +23,11 @@ M1 leads because it uses the already validated account identity, Data Cloud rela
 | Module | Status | Gate |
 | --- | --- | --- |
 | `M1` Account Hierarchy Intelligence | Ready for demo hardening | Corporate linkage and firmographic evidence reports render through Account joins. |
-| `M2` ICP Fit and Account Scoring | Blocked | Requires `DAN-286` feature engineering and model serving plan. |
-| `M3` Whitespace and Expansion | Blocked | Requires M1 and `DAN-286`; also needs product/entitlement source availability. |
+| `M2` ICP Fit and Account Scoring | Ready for feature scaffold validation | `DAN-286` now supplies the feature/model/BYOM plan; live model runtime remains gated. |
+| `M3` Whitespace and Expansion | Blocked | Requires product/entitlement source availability. |
 | `M4` Buying Committee | Blocked | Requires contact/person and consent source availability. |
-| `M5` Intent Routing | Blocked | Requires `DAN-286` and intent source availability. |
-| `M6` Renewal Risk | Blocked | Requires `DAN-286` and engagement/support/usage/contract source availability. |
+| `M5` Intent Routing | Blocked | Requires intent source availability plus real-time endpoint/action runtime validation. |
+| `M6` Renewal Risk | Blocked | Requires engagement/support/usage/contract source availability. |
 
 ## Validation
 
@@ -42,7 +42,7 @@ Expected checks:
 - exactly six modules are declared in order `M1` through `M6`;
 - `M1` is selected as the first slice;
 - M1 depends on the already-closed identity, hierarchy, weighted attribute, Data Cloud, and Salesforce UX slices;
-- `M2`, `M3`, `M5`, and `M6` remain explicitly gated by `DAN-286`;
+- `M2`, `M3`, `M5`, and `M6` depend on `DAN-286` for the model plan;
 - the planning document references `DAN-291`, M1, `DAN-286`, and the native Agentforce runtime gate.
 
 ## Recommended Linear Outcome
@@ -51,6 +51,5 @@ Move `DAN-291` to Done after validator success.
 
 The remaining open sequence should be:
 
-1. `DAN-286` feature engineering, model serving, and BYOM plan;
-2. `DAN-290` governance, lineage, audit, and regulator evidence hardening;
-3. `DAN-292` final acceptance gate and readout evidence.
+1. `DAN-290` governance, lineage, audit, and regulator evidence hardening;
+2. `DAN-292` final acceptance gate and readout evidence.

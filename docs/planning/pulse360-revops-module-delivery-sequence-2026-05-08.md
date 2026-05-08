@@ -31,11 +31,11 @@ The validator lives in:
 | Priority | Module | First Slice | Primary Business Outcome | Current Posture |
 | --- | --- | --- | --- | --- |
 | 1 | `M1` Account Hierarchy Intelligence | Hierarchy foundation | Seller sees trusted parent-child structure, group revenue context, and coverage gaps. | Ready for demo hardening |
-| 2 | `M2` ICP Fit and Account Scoring | Scoring foundation | Seller sees account fit score, top drivers, and source-bound confidence. | Blocked by `DAN-286` |
-| 3 | `M3` Whitespace and Expansion | Group whitespace grid | Seller sees product or subsidiary gaps across known account groups. | Blocked by M1 and `DAN-286` |
+| 2 | `M2` ICP Fit and Account Scoring | Scoring foundation | Seller sees account fit score, top drivers, and source-bound confidence. | Ready for feature scaffold validation after `DAN-286` |
+| 3 | `M3` Whitespace and Expansion | Group whitespace grid | Seller sees product or subsidiary gaps across known account groups. | Blocked by product/entitlement sources |
 | 4 | `M4` Buying Committee | Role coverage foundation | Seller sees stakeholder coverage and role gaps. | Blocked by contact/person source availability |
-| 5 | `M5` Intent Routing | Governed routing queue | Seller or queue receives source-bound intent recommendations. | Blocked by `DAN-286` and intent source availability |
-| 6 | `M6` Renewal Risk | Risk evidence foundation | Seller sees renewal risk and source-backed save plays. | Blocked by `DAN-286` and renewal source availability |
+| 5 | `M5` Intent Routing | Governed routing queue | Seller or queue receives source-bound intent recommendations. | Blocked by intent sources and runtime validation |
+| 6 | `M6` Renewal Risk | Risk evidence foundation | Seller sees renewal risk and source-backed save plays. | Blocked by renewal source availability |
 
 ## M1 Build Boundary
 
@@ -63,9 +63,8 @@ M1 is accepted when:
 
 The next open build sequence is:
 
-1. `DAN-286`: build the feature engineering, model serving, and Salesforce BYOM plan. This gates `M2`, `M3`, `M5`, and `M6`.
-2. `DAN-290`: harden governance, lineage, audit, and regulator evidence across Databricks and Salesforce.
-3. `DAN-292`: create the final acceptance gate and readout evidence for the full feasible architecture build plan.
+1. `DAN-290`: harden governance, lineage, audit, and regulator evidence across Databricks and Salesforce.
+2. `DAN-292`: create the final acceptance gate and readout evidence for the full feasible architecture build plan.
 
 ## Agentforce Boundary
 

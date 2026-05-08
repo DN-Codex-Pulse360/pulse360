@@ -136,6 +136,13 @@ selected first slice is `M1 Account Hierarchy Intelligence`; the next blocking
 implementation issue is `DAN-286` for feature engineering, model serving, and
 Salesforce BYOM planning.
 
+`DAN-286` closure note: the source-controlled model-serving plan is now defined
+in `config/databricks/model-serving-byom-plan.json`, with feature and score
+contracts in `contracts/account_feature_snapshot.schema.json` and
+`contracts/model_score_output.schema.json`. The first planned model family is
+`icp_fit`, using a batch-first Data Cloud enrichment path while live Databricks
+Model Serving and Salesforce BYOM remain runtime-gated.
+
 | Module | First Slice | Dependencies | Delivery Posture |
 | --- | --- | --- | --- |
 | M1 Account Hierarchy Intelligence | Sovereign/CRM-safe account identity, hierarchy edge, group revenue, coverage gap, Group Revenue Reveal | `DAN-282`, `DAN-284`, `DAN-287`, `DAN-288` | Start here |
@@ -215,6 +222,5 @@ Salesforce BYOM planning.
 
 ## Immediate Next Work
 
-1. `DAN-286`: add feature engineering, model serving, and Salesforce BYOM planning so `M2`, `M3`, `M5`, and `M6` can progress.
-2. `DAN-290`: harden governance, lineage, audit, and regulator evidence across Databricks and Salesforce.
-3. `DAN-292`: create final acceptance gate and readout evidence for the full feasible architecture build plan.
+1. `DAN-290`: harden governance, lineage, audit, and regulator evidence across Databricks and Salesforce.
+2. `DAN-292`: create final acceptance gate and readout evidence for the full feasible architecture build plan.

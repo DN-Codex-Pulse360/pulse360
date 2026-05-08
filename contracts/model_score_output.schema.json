@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pulse360.local/contracts/model_score_output.schema.json",
+  "title": "Pulse360 Model Score Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "score_id",
+    "source_account_id",
+    "feature_snapshot_id",
+    "model_family",
+    "model_name",
+    "model_version",
+    "registered_model_name",
+    "score",
+    "confidence",
+    "score_band",
+    "top_drivers",
+    "explanation_text",
+    "serving_mode",
+    "consumption_path",
+    "run_id",
+    "scored_at",
+    "activation_eligible_flag"
+  ],
+  "properties": {
+    "score_id": {
+      "type": "string",
+      "description": "Deterministic ID such as score_<source_account_id_lower>_<model_family>_<model_version>."
+    },
+    "source_account_id": {
+      "type": "string",
+      "description": "Salesforce Account ID used as the CRM activation key."
+    },
+    "feature_snapshot_id": {
+      "type": "string"
+    },
+    "model_family": {
+      "type": "string",
+      "enum": [
+        "icp_fit",
+        "cross_sell_propensity",
+        "intent_routing",
+        "renewal_risk",
+        "entity_resolution"
+      ]
+    },
+    "model_name": {
+      "type": "string"
+    },
+    "model_version": {
+      "type": "string"
+    },
+    "registered_model_name": {
+      "type": "string"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "score_band": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "insufficient_evidence"
+      ]
+    },
+    "top_drivers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "driver_name",
+          "direction",
+          "weight",
+          "evidence_ref"
+        ],
+        "properties": {
+          "driver_name": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "positive",
+              "negative",
+              "neutral"
+            ]
+          },
+          "weight": {
+            "type": "number"
+          },
+          "evidence_ref": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "explanation_text": {
+      "type": "string"
+    },
+    "serving_mode": {
+      "type": "string",
+      "enum": [
+        "batch",
+        "near_real_time",
+        "real_time_endpoint"
+      ]
+    },
+    "consumption_path": {
+      "type": "string",
+      "enum": [
+        "data_cloud_batch_enrichment",
+        "salesforce_byom_prediction_job",
+        "salesforce_flow_or_apex_callout",
+        "salesforce_report_dashboard_only"
+      ]
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "scored_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "activation_eligible_flag": {
+      "type": "boolean"
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "databricks_endpoint_ready": {
+          "type": "boolean"
+        },
+        "salesforce_byom_entitlement_verified": {
+          "type": "boolean"
+        },
+        "data_cloud_mapping_verified": {
+          "type": "boolean"
+        },
+        "human_review_required": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
