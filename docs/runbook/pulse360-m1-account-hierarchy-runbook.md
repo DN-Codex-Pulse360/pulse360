@@ -30,17 +30,36 @@ then run:
 - Revenue rollups must distinguish zero revenue from missing revenue evidence.
 - Sovereign identifier counts can remain zero when official evidence is absent.
 
+## Runtime Check
+
+After the prerequisite gold outputs exist in the target Databricks workspace,
+run:
+
+```bash
+./scripts/run-m1-account-hierarchy-runtime-check.sh
+```
+
+The script executes the M1 SQL run order through the Databricks SQL Statements
+API and returns row counts for:
+
+- `pulse360_s4.intelligence.m1_account_hierarchy_edge`
+- `pulse360_s4.intelligence.m1_account_group_rollup`
+- `pulse360_s4.intelligence.m1_account_hierarchy_activation`
+
+The first successful runtime validation was captured in
+`docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md`.
+
 ## Salesforce/Data Cloud Handoff
 
 Use the existing Account-centered Data Cloud relationships and validation
 dashboard first. Do not add new DMO relationships unless a live validation report
 proves the current Account join cannot render M1 hierarchy data.
 
-## Runtime Gates
+## Remaining Runtime Gates
 
-The source package does not claim:
+The source package has validated live Databricks SQL Warehouse execution for
+the M1 tables. It does not yet claim:
 
-- live Databricks SQL Warehouse execution;
 - live Unity Catalog lineage export for the new M1 tables;
 - Data Cloud stream creation for new M1 outputs;
 - Salesforce BYOM or native Agentforce runtime success.

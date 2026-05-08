@@ -12,6 +12,8 @@ members="$repo_root/config/packages/databricks/account-hierarchy-intelligence.me
 sql_dir="$repo_root/sql/databricks/account_hierarchy"
 runbook="$repo_root/docs/runbook/pulse360-m1-account-hierarchy-runbook.md"
 evidence="$repo_root/docs/evidence/dan-330-m1-account-hierarchy-kickoff-2026-05-08.md"
+runtime_evidence="$repo_root/docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md"
+runtime_check="$repo_root/scripts/run-m1-account-hierarchy-runtime-check.sh"
 
 [[ -f "$contract" ]] || fail "Missing M1 hierarchy contract"
 [[ -f "$sample" ]] || fail "Missing M1 hierarchy sample"
@@ -19,6 +21,8 @@ evidence="$repo_root/docs/evidence/dan-330-m1-account-hierarchy-kickoff-2026-05-
 [[ -d "$sql_dir" ]] || fail "Missing M1 SQL directory"
 [[ -f "$runbook" ]] || fail "Missing M1 runbook"
 [[ -f "$evidence" ]] || fail "Missing M1 kickoff evidence"
+[[ -f "$runtime_evidence" ]] || fail "Missing M1 runtime evidence"
+[[ -f "$runtime_check" ]] || fail "Missing M1 runtime check"
 pass "M1 source files exist"
 
 for file in \
@@ -63,14 +67,17 @@ pass "M1 package members resolve"
 for required in \
   "sql/databricks/account_hierarchy" \
   "contracts/m1_account_hierarchy_output.schema.json" \
-  "scripts/validate-m1-account-hierarchy-pack.sh"; do
+  "scripts/validate-m1-account-hierarchy-pack.sh" \
+  "scripts/run-m1-account-hierarchy-runtime-check.sh"; do
   grep -q "$required" "$members" || fail "M1 package missing member: $required"
 done
 pass "M1 package membership includes critical assets"
 
 grep -q "DAN-330" "$evidence" || fail "Evidence missing DAN-330"
 grep -q "codex/m1-account-hierarchy-intelligence" "$evidence" || fail "Evidence missing branch name"
-pass "M1 evidence references Linear and branch context"
+grep -q "DAN-332" "$runtime_evidence" || fail "Runtime evidence missing DAN-332"
+grep -q "m1_account_hierarchy_activation" "$runtime_evidence" || fail "Runtime evidence missing activation table"
+pass "M1 evidence references Linear, branch, and runtime context"
 
 if grep -R "PROVIDER_BOLDDATA_ID\|PROVIDER_INFOBEL_ID\|CRM_ACCOUNT_ID" "$contract" "$sample" "$sql_dir" >/dev/null; then
   fail "M1 assets must not promote provider/search/CRM pseudo-identifiers as sovereign identifiers"

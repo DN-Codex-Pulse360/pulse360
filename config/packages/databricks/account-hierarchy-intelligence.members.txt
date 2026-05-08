@@ -7,4 +7,7 @@ contracts/weighted_attribute_resolution.schema.json
 data/samples/account_hierarchy/m1_account_hierarchy_output_sample.json
 docs/planning/pulse360-revops-module-delivery-sequence-2026-05-08.md
 docs/runbook/pulse360-m1-account-hierarchy-runbook.md
+docs/evidence/dan-330-m1-account-hierarchy-kickoff-2026-05-08.md
+docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md
 scripts/validate-m1-account-hierarchy-pack.sh
+scripts/run-m1-account-hierarchy-runtime-check.sh

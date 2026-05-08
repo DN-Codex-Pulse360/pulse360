@@ -52,17 +52,17 @@ edge_rollup AS (
   GROUP BY parent_source_account_id
 )
 SELECT
-  concat('agrp_', lower(group_anchor_source_account_id)) AS account_group_id,
-  group_anchor_source_account_id,
-  MAX(CASE WHEN source_account_id = group_anchor_source_account_id THEN crm_account_name END) AS group_anchor_name,
-  MAX(CASE WHEN source_account_id = group_anchor_source_account_id THEN crm_account_name END) AS ultimate_parent_name,
-  COUNT(DISTINCT source_account_id) AS member_account_count,
+  concat('agrp_', lower(mp.group_anchor_source_account_id)) AS account_group_id,
+  mp.group_anchor_source_account_id,
+  MAX(CASE WHEN mp.source_account_id = mp.group_anchor_source_account_id THEN mp.crm_account_name END) AS group_anchor_name,
+  MAX(CASE WHEN mp.source_account_id = mp.group_anchor_source_account_id THEN mp.crm_account_name END) AS ultimate_parent_name,
+  COUNT(DISTINCT mp.source_account_id) AS member_account_count,
   COALESCE(MAX(er.known_child_account_count), 0) AS known_child_account_count,
-  SUM(COALESCE(annual_revenue_local, 0)) AS group_revenue_local,
-  SUM(COALESCE(annual_revenue_usd, 0)) AS group_revenue_usd,
+  SUM(COALESCE(mp.annual_revenue_local, 0)) AS group_revenue_local,
+  SUM(COALESCE(mp.annual_revenue_usd, 0)) AS group_revenue_usd,
   CAST(
-    SUM(CASE WHEN annual_revenue_usd IS NOT NULL OR annual_revenue_local IS NOT NULL THEN 1 ELSE 0 END)
-    / COUNT(DISTINCT source_account_id)
+    SUM(CASE WHEN mp.annual_revenue_usd IS NOT NULL OR mp.annual_revenue_local IS NOT NULL THEN 1 ELSE 0 END)
+    / COUNT(DISTINCT mp.source_account_id)
     AS DOUBLE
   ) AS revenue_coverage_ratio,
   CAST(
@@ -70,29 +70,29 @@ SELECT
       1.0,
       0.30
       + CASE WHEN COALESCE(MAX(er.known_child_account_count), 0) > 0 THEN 0.25 ELSE 0 END
-      + (SUM(CASE WHEN annual_revenue_usd IS NOT NULL OR annual_revenue_local IS NOT NULL THEN 1 ELSE 0 END)
-        / COUNT(DISTINCT source_account_id)) * 0.25
-      + COALESCE(MAX(er.edge_confidence), AVG(profile_confidence), 0.50) * 0.20
+      + (SUM(CASE WHEN mp.annual_revenue_usd IS NOT NULL OR mp.annual_revenue_local IS NOT NULL THEN 1 ELSE 0 END)
+        / COUNT(DISTINCT mp.source_account_id)) * 0.25
+      + COALESCE(MAX(er.edge_confidence), AVG(mp.profile_confidence), 0.50) * 0.20
     )
     AS DOUBLE
   ) AS hierarchy_completeness_score,
-  SUM(CASE WHEN annual_revenue_usd IS NULL AND annual_revenue_local IS NULL THEN 1 ELSE 0 END) AS coverage_gap_count,
+  SUM(CASE WHEN mp.annual_revenue_usd IS NULL AND mp.annual_revenue_local IS NULL THEN 1 ELSE 0 END) AS coverage_gap_count,
   CASE
-    WHEN SUM(CASE WHEN annual_revenue_usd IS NULL AND annual_revenue_local IS NULL THEN 1 ELSE 0 END) > 0 THEN true
+    WHEN SUM(CASE WHEN mp.annual_revenue_usd IS NULL AND mp.annual_revenue_local IS NULL THEN 1 ELSE 0 END) > 0 THEN true
     ELSE false
   END AS coverage_gap_flag,
   CASE
-    WHEN SUM(CASE WHEN annual_revenue_usd IS NULL AND annual_revenue_local IS NULL THEN 1 ELSE 0 END) > 0
+    WHEN SUM(CASE WHEN mp.annual_revenue_usd IS NULL AND mp.annual_revenue_local IS NULL THEN 1 ELSE 0 END) > 0
       THEN 'One or more group members lack source-backed revenue evidence.'
     ELSE 'All current group members have revenue evidence in the M1 profile output.'
   END AS coverage_gap_summary,
-  CAST(COALESCE(MAX(er.edge_confidence), AVG(profile_confidence), 0.55) AS DOUBLE) AS confidence,
-  to_json(collect_set(source_account_id)) AS source_account_ids_json,
-  to_json(array_distinct(flatten(collect_list(COALESCE(er.edge_evidence_refs, array(primary_source_url)))))) AS evidence_refs_json,
+  CAST(COALESCE(MAX(er.edge_confidence), AVG(mp.profile_confidence), 0.55) AS DOUBLE) AS confidence,
+  to_json(collect_set(mp.source_account_id)) AS source_account_ids_json,
+  to_json(array_distinct(flatten(collect_list(COALESCE(er.edge_evidence_refs, array(mp.primary_source_url)))))) AS evidence_refs_json,
   concat('run_m1_', date_format(current_timestamp(), 'yyyyMMdd_HHmmss')) AS run_id,
   'pulse360-m1-account-hierarchy-v0.1.0' AS model_version,
   current_timestamp() AS generated_at
 FROM member_profile mp
 LEFT JOIN edge_rollup er
   ON mp.group_anchor_source_account_id = er.group_anchor_source_account_id
-GROUP BY group_anchor_source_account_id;
+GROUP BY mp.group_anchor_source_account_id;
