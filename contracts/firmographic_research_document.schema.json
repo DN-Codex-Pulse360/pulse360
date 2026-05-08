@@ -20,9 +20,30 @@
   ],
   "properties": {
     "research_document_id": { "type": "string", "minLength": 1 },
+    "source_family": {
+      "type": "string",
+      "enum": [
+        "national_registry",
+        "commercial_provider_marketplace",
+        "customer_internal",
+        "internet_research",
+        "clean_room_collaboration"
+      ]
+    },
+    "source_adapter_id": { "type": ["string", "null"], "pattern": "^src_adapter_[a-z0-9_]+$" },
     "source_type": {
       "type": "string",
-      "enum": ["approved_public_url", "approved_public_pdf", "approved_provider_export", "manual_research_note"]
+      "enum": [
+        "approved_public_url",
+        "approved_public_pdf",
+        "approved_provider_export",
+        "manual_research_note",
+        "approved_registry_export",
+        "approved_regulatory_filing",
+        "approved_marketplace_delta_share",
+        "approved_customer_internal_export",
+        "approved_clean_room_output"
+      ]
     },
     "source_url": { "type": ["string", "null"], "format": "uri" },
     "document_title": { "type": "string", "minLength": 1 },

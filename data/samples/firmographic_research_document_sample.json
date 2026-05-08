@@ -1,5 +1,7 @@
 {
   "research_document_id": "research_doc_ayala_integrated_report_2024",
+  "source_family": "internet_research",
+  "source_adapter_id": "src_adapter_internet_research_document_extraction_demo_v1",
   "source_type": "approved_public_pdf",
   "source_url": "https://www.ayala.com/investors/reports",
   "document_title": "Ayala Corporation Integrated Report 2024",

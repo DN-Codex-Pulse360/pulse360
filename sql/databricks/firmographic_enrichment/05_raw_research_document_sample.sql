@@ -1,6 +1,8 @@
 CREATE OR REPLACE VIEW pulse360_s4.bronze_firmographic.raw_research_document AS
 SELECT
   'research_doc_ayala_integrated_report_2024' AS research_document_id,
+  'internet_research' AS source_family,
+  'src_adapter_internet_research_document_extraction_demo_v1' AS source_adapter_id,
   'approved_public_pdf' AS source_type,
   'https://www.ayala.com/investors/reports' AS source_url,
   'Ayala Corporation Integrated Report 2024' AS document_title,

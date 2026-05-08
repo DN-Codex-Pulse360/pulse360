@@ -276,6 +276,13 @@ Acceptance thresholds:
 | GPT enrichment job design | OpenAI prompt contracts, confidence scoring, source-bound outputs, run/cost metadata | `DAN-286` |
 | Governance evidence | Source logs, license refs, LLM run metadata, confidence components, lineage checks | `DAN-290` |
 
+`DAN-283` is closed for the first governed source adapter slice by
+`contracts/firmographic_source_adapter.schema.json`,
+`data/samples/firmographic_source_adapters.json`, and
+`config/databricks/firmographic-source-adapters.json`. Runtime connector setup
+for commercial providers, customer-internal systems, and clean rooms remains
+gated by entitlement, customer approval, and collaboration agreements.
+
 ## Acceptance Criteria
 
 1. No paid-provider endpoint or vendor-specific runtime is hardwired into the Pulse360 design.

@@ -593,3 +593,33 @@ Acceptance caveats:
 Latest detailed evidence:
 
 - [dan-105-milestone-b-acceptance-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-105-milestone-b-acceptance-2026-05-08.md)
+
+## Plural Enrichment Ingestion Closure
+
+On `2026-05-08`, `DAN-283` was closed for the first governed implementation
+slice of plural firmographic enrichment ingestion.
+
+Current closure position:
+
+- The repo now contains a source adapter contract for the five enrichment source
+  families: national registry, commercial provider Marketplace/Delta Sharing,
+  customer-internal, internet research, and clean-room collaboration.
+- The sample adapter registry includes one governed adapter per source family.
+- Databricks adapter controls require license/use basis, lineage, run metadata,
+  raw payload references, xref-only commercial provider IDs, aggregate-by-default
+  clean-room outputs, and official-source gates for sovereign identifiers.
+- The research document contract and fixture now carry `source_family` and
+  `source_adapter_id`.
+- Silver extraction scoring recognizes registry, filing, Marketplace, internal,
+  and clean-room source types without adding a paid provider dependency.
+
+Acceptance caveats:
+
+- Marketplace, internal-system, and clean-room adapters remain contract-gated
+  until the customer approves the relevant entitlement or data-sharing path.
+- Internet research remains the active demo source family for GPT enrichment.
+- Weighted attribute resolution remains tracked separately under `DAN-285`.
+
+Latest detailed evidence:
+
+- [dan-283-plural-enrichment-ingestion-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-283-plural-enrichment-ingestion-closure-2026-05-08.md)

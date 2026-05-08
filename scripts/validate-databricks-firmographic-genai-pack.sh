@@ -16,12 +16,15 @@ search_fixed() {
 }
 
 required_files=(
+  "contracts/firmographic_source_adapter.schema.json"
   "contracts/firmographic_research_document.schema.json"
   "contracts/firmographic_evidence_packet.schema.json"
   "contracts/genai_firmographic_enrichment_output.schema.json"
+  "data/samples/firmographic_source_adapters.json"
   "data/samples/firmographic_research_document_sample.json"
   "data/samples/firmographic_evidence_packet_sample.json"
   "data/samples/genai_firmographic_enrichment_output_sample.json"
+  "config/databricks/firmographic-source-adapters.json"
   "config/openai/pulse360-gpt-enrichment-spec.json"
   "notebooks/databricks/firmographic_research_discovery_job.py"
   "notebooks/databricks/firmographic_genai_enrichment_job.py"
@@ -44,18 +47,24 @@ pass "Firmographic/GPT package artifacts exist"
 
 python3 -m json.tool contracts/firmographic_research_document.schema.json >/dev/null \
   || fail "Invalid firmographic research document schema JSON"
+python3 -m json.tool contracts/firmographic_source_adapter.schema.json >/dev/null \
+  || fail "Invalid firmographic source adapter schema JSON"
 python3 -m json.tool contracts/firmographic_evidence_packet.schema.json >/dev/null \
   || fail "Invalid firmographic evidence schema JSON"
 python3 -m json.tool contracts/genai_firmographic_enrichment_output.schema.json >/dev/null \
   || fail "Invalid Gen AI enrichment output schema JSON"
 python3 -m json.tool data/samples/firmographic_research_document_sample.json >/dev/null \
   || fail "Invalid firmographic research document sample JSON"
+python3 -m json.tool data/samples/firmographic_source_adapters.json >/dev/null \
+  || fail "Invalid firmographic source adapter sample JSON"
 python3 -m json.tool data/samples/firmographic_evidence_packet_sample.json >/dev/null \
   || fail "Invalid firmographic evidence sample JSON"
 python3 -m json.tool data/samples/genai_firmographic_enrichment_output_sample.json >/dev/null \
   || fail "Invalid Gen AI enrichment sample JSON"
 python3 -m json.tool config/openai/pulse360-gpt-enrichment-spec.json >/dev/null \
   || fail "Invalid OpenAI enrichment config JSON"
+python3 -m json.tool config/databricks/firmographic-source-adapters.json >/dev/null \
+  || fail "Invalid Databricks source adapter config JSON"
 pass "Firmographic/GPT JSON artifacts parse"
 
 python3 - <<'PY'
@@ -83,6 +92,8 @@ PY
 pass "OpenAI Responses configuration is locked"
 
 for token in \
+  "source_family" \
+  "source_adapter_id" \
   "research_document_id" \
   "source_type" \
   "source_url" \
@@ -95,6 +106,24 @@ for token in \
     || fail "Firmographic research document contract/sample missing token: $token"
 done
 pass "Firmographic research document contract preserves source governance metadata"
+
+for token in \
+  "national_registry" \
+  "commercial_provider_marketplace" \
+  "customer_internal" \
+  "internet_research" \
+  "clean_room_collaboration" \
+  "provider_or_source_id_role" \
+  "identity_key_policy" \
+  "xref_only" \
+  "aggregate_only" \
+  "sovereign_candidate_official_only" \
+  "license_or_use_basis" \
+  "lineage_required"; do
+  search_fixed "$token" contracts/firmographic_source_adapter.schema.json data/samples/firmographic_source_adapters.json config/databricks/firmographic-source-adapters.json \
+    || fail "Firmographic source adapter contract/sample/config missing token: $token"
+done
+pass "Firmographic source adapter contract preserves plural ingestion controls"
 
 for token in \
   "firmographic_facts" \
@@ -138,6 +167,10 @@ for token in \
   "license_or_use_basis" \
   "source_excerpt" \
   "extraction_confidence" \
+  "approved_registry_export" \
+  "approved_marketplace_delta_share" \
+  "approved_customer_internal_export" \
+  "approved_clean_room_output" \
   "approval_status" \
   "llm_result_confidence" \
   "business_action_confidence" \
@@ -147,6 +180,9 @@ for token in \
     || fail "Firmographic/GPT SQL missing token: $token"
 done
 pass "Firmographic/GPT SQL emits source-bound confidence fields"
+
+bash "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/validate-firmographic-source-adapters.sh"
+pass "Firmographic source adapter validator passed"
 
 for token in \
   "OPENAI_API_KEY" \
@@ -265,8 +301,10 @@ for forbidden in \
     contracts/firmographic_evidence_packet.schema.json \
     contracts/genai_firmographic_enrichment_output.schema.json \
     data/samples/firmographic_research_document_sample.json \
+    data/samples/firmographic_source_adapters.json \
     data/samples/firmographic_evidence_packet_sample.json \
     data/samples/genai_firmographic_enrichment_output_sample.json \
+    config/databricks/firmographic-source-adapters.json \
     notebooks/databricks/firmographic_genai_enrichment_job.py \
     sql/databricks/firmographic_enrichment \
     docs/planning/pulse360-databricks-firmographic-provider-genai-design-2026-04-25.md; then

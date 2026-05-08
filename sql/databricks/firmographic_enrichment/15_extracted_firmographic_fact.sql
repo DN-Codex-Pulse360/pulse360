@@ -43,8 +43,12 @@ scored AS (
     fact.source_excerpt,
     fact.extraction_confidence,
     CASE
+      WHEN source_type IN ('approved_registry_export', 'approved_regulatory_filing') THEN CAST(0.94 AS DOUBLE)
+      WHEN source_type = 'approved_marketplace_delta_share' THEN CAST(0.90 AS DOUBLE)
       WHEN source_type IN ('approved_public_pdf', 'approved_public_url') THEN CAST(0.86 AS DOUBLE)
       WHEN source_type = 'approved_provider_export' THEN CAST(0.90 AS DOUBLE)
+      WHEN source_type = 'approved_customer_internal_export' THEN CAST(0.88 AS DOUBLE)
+      WHEN source_type = 'approved_clean_room_output' THEN CAST(0.82 AS DOUBLE)
       ELSE CAST(0.70 AS DOUBLE)
     END AS source_reliability_score,
     CASE

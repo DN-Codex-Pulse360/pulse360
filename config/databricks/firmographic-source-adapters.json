@@ -1,0 +1,24 @@
+{
+  "version": "2026-05-08",
+  "target_catalog": "pulse360_s4",
+  "bronze_schema": "bronze_firmographic",
+  "silver_schema": "silver_firmographic",
+  "adapter_contract": "contracts/firmographic_source_adapter.schema.json",
+  "adapter_registry_sample": "data/samples/firmographic_source_adapters.json",
+  "source_families": [
+    "national_registry",
+    "commercial_provider_marketplace",
+    "customer_internal",
+    "internet_research",
+    "clean_room_collaboration"
+  ],
+  "default_controls": {
+    "preserve_raw_payload_reference": true,
+    "require_license_or_contract_reference": true,
+    "require_run_metadata": true,
+    "require_lineage": true,
+    "commercial_provider_ids_are_xrefs_only": true,
+    "clean_room_outputs_are_aggregate_by_default": true,
+    "sovereign_identifiers_require_official_source": true
+  }
+}
