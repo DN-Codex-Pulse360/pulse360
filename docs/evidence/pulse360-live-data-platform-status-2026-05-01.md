@@ -391,6 +391,46 @@ Latest detailed evidence:
 
 - [dan-59-data-cloud-stream-health-latest.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-59-data-cloud-stream-health-latest.md)
 
+## Public Regional GPT Enrichment Closure
+
+On `2026-05-08`, `DAN-219` was revalidated against the live
+`pulse360-agent-target` org and current source-controlled Salesforce/Data Cloud
+contracts.
+
+Current closure position:
+
+- `DAN-220`, `DAN-221`, and `DAN-222` are already closed as prerequisite
+  implementation and validation slices.
+- `DC Export Accounts P360 V2` remains `ACTIVE/SUCCESS`, with `18` processed
+  rows.
+- Copy Field Enrichment remains active through Data Action
+  `3o9dL0000000IL7QAM`; latest job `1A5dL0000001BFxSAM` completed with `18`
+  processed, `18` updated, `0` failed, and `0` skipped.
+- Regional GPT sample Accounts for Singapore and the Philippines are present
+  with GPT/provenance fields populated where source evidence supports them:
+  `Singtel Group`, `NCS Pte. Ltd.`, `Ayala Corporation`, `Ayala Corp.`, and
+  `JG Summit Holdings, Inc.`.
+- Salesforce runtime surfaces are present: `Pulse360HealthScanService`,
+  `pulse360HealthScan`, `pulse360NextBestAction`, `pulse360NarrativeCard`,
+  `pulse360GroupRevenueReveal`, `governanceCaseReview`,
+  `Account_Record_Page`, and `Governance_Case_Record_Page`.
+- Targeted Apex tests for Health Scan and governance decision behavior passed
+  `5/5`.
+
+Acceptance caveats:
+
+- Native Copy Field remains limited to the supported scalar/native-compatible
+  field set; payload, long-text, and revenue exception fields remain governed
+  by the documented exception path.
+- Sovereign identifier coverage remains `0`, expected until official registry,
+  tax-authority, or filing evidence satisfies the verification gate.
+- This closure pass was read-only; no Salesforce deployment, permission change,
+  seeded data load, or Data Cloud configuration mutation was performed.
+
+Latest detailed evidence:
+
+- [dan-219-public-regional-gpt-enrichment-closure-2026-05-08.md](/Users/danielnortje/Documents/Pulse360-ai-firmographic-enrichment-v2/docs/evidence/dan-219-public-regional-gpt-enrichment-closure-2026-05-08.md)
+
 ## Milestone C Acceptance Closure
 
 On `2026-05-08`, the remaining Milestone C acceptance blockers were validated
