@@ -480,6 +480,27 @@ Current closure position:
   `./scripts/validate-governance-ops-metrics-runtime.sh`.
 - The broader closeout gate includes both Milestone B validators.
 
+## Milestone B Intelligence Planning Closure
+
+On `2026-05-08`, the older Milestone B intelligence planning tickets `DAN-117`
+through `DAN-120` were reconciled against the repo source. The closure evidence
+is captured in
+`docs/evidence/dan-117-120-milestone-b-intelligence-planning-closure-2026-05-08.md`.
+
+Outcome:
+
+- `DAN-117` is satisfied for the first execution slice by the stewardship
+  intelligence blueprint and Databricks output spec.
+- `DAN-118` is satisfied for steward trust by explicit duplicate, validity,
+  hierarchy, and low-confidence explanation payload requirements.
+- `DAN-119` is satisfied for the governance action loop by approve, reject,
+  defer, reason capture, and audit requirements.
+- `DAN-120` is satisfied for Milestone B by the explainable account truth
+  resolution proof-of-value narrative.
+- Broader seller, planner, six-module RevOps, and native Agentforce expansion
+  remain tracked separately under the future architecture backlog, especially
+  `DAN-280`.
+
 Acceptance caveats:
 
 - API validation confirms the dashboards are active, structured, and not empty
