@@ -7,7 +7,14 @@ contracts/weighted_attribute_resolution.schema.json
 data/samples/account_hierarchy/m1_account_hierarchy_output_sample.json
 docs/planning/pulse360-revops-module-delivery-sequence-2026-05-08.md
 docs/runbook/pulse360-m1-account-hierarchy-runbook.md
+docs/runbook/salesforce-m1-account-hierarchy-validation-runbook.md
 docs/evidence/dan-330-m1-account-hierarchy-kickoff-2026-05-08.md
 docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md
+docs/evidence/dan-334-m1-data-cloud-salesforce-validation-2026-05-09.md
+config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv
+config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv
+config/salesforce/m1-account-hierarchy-validation-reports.csv
+config/salesforce/m1-account-hierarchy-surface.yaml
 scripts/validate-m1-account-hierarchy-pack.sh
 scripts/run-m1-account-hierarchy-runtime-check.sh
+scripts/validate-m1-data-cloud-salesforce-surface.sh

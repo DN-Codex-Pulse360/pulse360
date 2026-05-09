@@ -1,0 +1,75 @@
+surface: Account_Record_Page
+mode: source_first_design
+status: planned
+linear_scope: DAN-334
+principles:
+  - M1 hierarchy intelligence is read-only in CRM.
+  - Account joins use Salesforce Account Ids, not sovereign or provider identifiers.
+  - Group rollup values preserve coverage-gap state instead of forcing false precision.
+  - Data Cloud setup remains runbook-controlled until M1 Direct Access stream metadata is available in source.
+sections:
+  - key: m1_hierarchy_activation
+    label: M1 Hierarchy Activation
+    region: main
+    source_dmo: Pulse360_M1_Hierarchy_Activation__dlm
+    join_key: source_account_id__c
+    parent_key: Account.Id
+    recommended_component: embedded_report_or_data_cloud_panel
+    expected_rows: 18
+    fields:
+      - account_group_id__c
+      - group_anchor_source_account_id__c
+      - group_anchor_name__c
+      - ultimate_parent_name__c
+      - member_account_count__c
+      - group_revenue_usd__c
+      - hierarchy_completeness_score__c
+      - coverage_gap_flag__c
+      - coverage_gap_summary__c
+      - confidence__c
+      - generated_at__c
+    editable: false
+  - key: m1_group_rollup
+    label: M1 Account Group Rollup
+    region: main
+    source_dmo: Pulse360_M1_Account_Group_Rollup__dlm
+    join_key: group_anchor_source_account_id__c
+    parent_key: Account.Id
+    recommended_component: validation_report
+    expected_rows: 17
+    fields:
+      - account_group_id__c
+      - group_anchor_name__c
+      - member_account_count__c
+      - known_child_account_count__c
+      - group_revenue_usd__c
+      - hierarchy_completeness_score__c
+      - coverage_gap_count__c
+      - coverage_gap_flag__c
+      - source_account_ids_json__c
+      - evidence_refs_json__c
+    editable: false
+  - key: m1_hierarchy_edges
+    label: M1 Hierarchy Edges
+    region: sidebar
+    source_dmo: Pulse360_M1_Hierarchy_Edge__dlm
+    join_key: child_source_account_id__c
+    parent_key: Account.Id
+    recommended_component: validation_report
+    expected_rows: 2
+    fields:
+      - hierarchy_edge_id__c
+      - parent_source_account_id__c
+      - child_source_account_id__c
+      - parent_name__c
+      - child_name__c
+      - relationship_type__c
+      - relationship_basis__c
+      - confidence__c
+      - source_url__c
+      - evidence_summary__c
+    editable: false
+release_notes:
+  - Do not change existing firmographic DMO relationships for M1.
+  - Create M1 Direct Access streams first, then promote reports into the existing validation folder.
+  - Keep M1 dashboard separate until report metadata can be retrieved and validated.

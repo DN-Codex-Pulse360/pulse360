@@ -1,0 +1,80 @@
+# DAN-334 M1 Data Cloud and Salesforce Validation Evidence
+
+## Summary
+
+`DAN-334` is source-prepared but not live-complete. Read-only MCP validation on
+2026-05-09 confirms the existing firmographic Salesforce validation layer is
+healthy, while M1-specific Data Cloud streams and Salesforce report/dashboard
+metadata still need to be created in the live org.
+
+## MCP Checks
+
+### Existing Data Streams
+
+`list_data_streams` against `pulse360-agent-target` returned 9 streams.
+Relevant active firmographic streams:
+
+| Stream | Status | Last refresh | Rows |
+| --- | --- | --- | ---: |
+| `firmographic_profile_export_Pulse360_Dat` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:02.000+0000` | 18 |
+| `firmographic_source_evidence_export_Puls` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:00.000+0000` | 140 |
+| `company_classification_export_Pulse360_D` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:01.000+0000` | 11 |
+| `corporate_linkage_export_Pulse360_Databr` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:02.000+0000` | 2 |
+| `sovereign_identifier_export_Pulse360_Dat` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:01.000+0000` | 0 |
+
+### M1 Stream Gap
+
+The following `get_data_stream_status` checks returned `total_size: 0`:
+
+- `m1_account_hierarchy_activation_Pulse360_Databricks`
+- `m1_account_group_rollup_Pulse360_Databricks`
+- `m1_account_hierarchy_edge_Pulse360_Databricks`
+
+### Existing Salesforce Reports and Dashboard
+
+SOQL confirmed the five promoted firmographic reports still exist in
+`Pulse360 Account Intelligence Validation`:
+
+- `Account_and_Firmographic_iIW1`
+- `Account_and_Evidence_4W81`
+- `Account_and_Classification_qlX1`
+- `Account_and_Corporate_Linkage_U4F1`
+- `Account_and_Sovereign_Identifier_NOY1`
+
+SOQL also confirmed the dashboard:
+
+- Id: `01ZdL00000ABncLUAT`
+- DeveloperName: `zZUAzaLhrPFnOpTDCJvUEUvPEQIohz`
+- Title: `Pulse360 Account Intelligence Validation`
+- Folder: `Pulse360 Account Intelligence Validation`
+
+M1 report/dashboard searches returned zero rows, which is expected before M1
+Data Cloud streams are created.
+
+### Account Field Readiness
+
+`list_account_fields` confirmed the target org has the Account fields needed for
+M1 activation review:
+
+- `Group_Revenue_Rollup__c`
+- `Group_Known_Subsidiary_Count__c`
+- `Coverage_Gap_Flag__c`
+- `Group_Revenue_Visible__c`
+- `Hierarchy_Payload__c`
+- `DataCloud_Last_Synced__c`
+
+## Source Artifacts Added
+
+- `config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv`
+- `config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv`
+- `config/salesforce/m1-account-hierarchy-validation-reports.csv`
+- `config/salesforce/m1-account-hierarchy-surface.yaml`
+- `docs/runbook/salesforce-m1-account-hierarchy-validation-runbook.md`
+- `scripts/validate-m1-data-cloud-salesforce-surface.sh`
+
+## Current Decision
+
+No existing Data Cloud DMO relationship changes are required for the five
+firmographic reports or dashboard. M1 should be introduced through new
+runbook-controlled Direct Access streams and a separate M1 validation dashboard
+after live stream creation.

@@ -11,18 +11,32 @@ sample="$repo_root/data/samples/account_hierarchy/m1_account_hierarchy_output_sa
 members="$repo_root/config/packages/databricks/account-hierarchy-intelligence.members.txt"
 sql_dir="$repo_root/sql/databricks/account_hierarchy"
 runbook="$repo_root/docs/runbook/pulse360-m1-account-hierarchy-runbook.md"
+salesforce_runbook="$repo_root/docs/runbook/salesforce-m1-account-hierarchy-validation-runbook.md"
 evidence="$repo_root/docs/evidence/dan-330-m1-account-hierarchy-kickoff-2026-05-08.md"
 runtime_evidence="$repo_root/docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md"
+salesforce_evidence="$repo_root/docs/evidence/dan-334-m1-data-cloud-salesforce-validation-2026-05-09.md"
 runtime_check="$repo_root/scripts/run-m1-account-hierarchy-runtime-check.sh"
+salesforce_surface_check="$repo_root/scripts/validate-m1-data-cloud-salesforce-surface.sh"
+m1_data_cloud_setup="$repo_root/config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv"
+m1_activation_mapping="$repo_root/config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv"
+m1_report_config="$repo_root/config/salesforce/m1-account-hierarchy-validation-reports.csv"
+m1_surface_config="$repo_root/config/salesforce/m1-account-hierarchy-surface.yaml"
 
 [[ -f "$contract" ]] || fail "Missing M1 hierarchy contract"
 [[ -f "$sample" ]] || fail "Missing M1 hierarchy sample"
 [[ -f "$members" ]] || fail "Missing M1 Databricks package membership"
 [[ -d "$sql_dir" ]] || fail "Missing M1 SQL directory"
 [[ -f "$runbook" ]] || fail "Missing M1 runbook"
+[[ -f "$salesforce_runbook" ]] || fail "Missing M1 Salesforce/Data Cloud runbook"
 [[ -f "$evidence" ]] || fail "Missing M1 kickoff evidence"
 [[ -f "$runtime_evidence" ]] || fail "Missing M1 runtime evidence"
+[[ -f "$salesforce_evidence" ]] || fail "Missing M1 Salesforce/Data Cloud evidence"
 [[ -f "$runtime_check" ]] || fail "Missing M1 runtime check"
+[[ -f "$salesforce_surface_check" ]] || fail "Missing M1 Salesforce/Data Cloud validator"
+[[ -f "$m1_data_cloud_setup" ]] || fail "Missing M1 Data Cloud setup config"
+[[ -f "$m1_activation_mapping" ]] || fail "Missing M1 Account activation mapping"
+[[ -f "$m1_report_config" ]] || fail "Missing M1 Salesforce report config"
+[[ -f "$m1_surface_config" ]] || fail "Missing M1 Salesforce surface config"
 pass "M1 source files exist"
 
 for file in \
@@ -67,8 +81,11 @@ pass "M1 package members resolve"
 for required in \
   "sql/databricks/account_hierarchy" \
   "contracts/m1_account_hierarchy_output.schema.json" \
+  "config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv" \
+  "config/salesforce/m1-account-hierarchy-validation-reports.csv" \
   "scripts/validate-m1-account-hierarchy-pack.sh" \
-  "scripts/run-m1-account-hierarchy-runtime-check.sh"; do
+  "scripts/run-m1-account-hierarchy-runtime-check.sh" \
+  "scripts/validate-m1-data-cloud-salesforce-surface.sh"; do
   grep -q "$required" "$members" || fail "M1 package missing member: $required"
 done
 pass "M1 package membership includes critical assets"
@@ -77,7 +94,9 @@ grep -q "DAN-330" "$evidence" || fail "Evidence missing DAN-330"
 grep -q "codex/m1-account-hierarchy-intelligence" "$evidence" || fail "Evidence missing branch name"
 grep -q "DAN-332" "$runtime_evidence" || fail "Runtime evidence missing DAN-332"
 grep -q "m1_account_hierarchy_activation" "$runtime_evidence" || fail "Runtime evidence missing activation table"
-pass "M1 evidence references Linear, branch, and runtime context"
+grep -q "DAN-334" "$salesforce_evidence" || fail "Salesforce evidence missing DAN-334"
+grep -q "not live-complete" "$salesforce_evidence" || fail "Salesforce evidence must distinguish source prep from live completion"
+pass "M1 evidence references Linear, branch, runtime, and Salesforce/Data Cloud context"
 
 if grep -R "PROVIDER_BOLDDATA_ID\|PROVIDER_INFOBEL_ID\|CRM_ACCOUNT_ID" "$contract" "$sample" "$sql_dir" >/dev/null; then
   fail "M1 assets must not promote provider/search/CRM pseudo-identifiers as sovereign identifiers"
