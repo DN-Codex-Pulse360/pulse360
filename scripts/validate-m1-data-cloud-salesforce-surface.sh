@@ -13,6 +13,7 @@ surface_config="$repo_root/config/salesforce/m1-account-hierarchy-surface.yaml"
 runbook="$repo_root/docs/runbook/salesforce-m1-account-hierarchy-validation-runbook.md"
 evidence="$repo_root/docs/evidence/dan-334-m1-data-cloud-salesforce-validation-2026-05-09.md"
 runtime_evidence="$repo_root/docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md"
+account_hierarchy_sql_dir="$repo_root/sql/databricks/account_hierarchy"
 
 [[ -f "$data_cloud_setup" ]] || fail "Missing M1 Data Cloud setup config"
 [[ -f "$activation_mapping" ]] || fail "Missing M1 activation field mapping"
@@ -24,13 +25,13 @@ runtime_evidence="$repo_root/docs/evidence/dan-332-m1-account-hierarchy-runtime-
 pass "M1 Salesforce/Data Cloud source files exist"
 
 for table in \
-  "m1_account_hierarchy_activation" \
-  "m1_account_group_rollup" \
-  "m1_account_hierarchy_edge"; do
+  "m1_account_hierarchy_activation_export" \
+  "m1_account_group_rollup_export" \
+  "m1_account_hierarchy_edge_export"; do
   grep -Fq "$table" "$data_cloud_setup" || fail "Data Cloud setup missing table: $table"
-  grep -Fq "$table" "$runtime_evidence" || fail "Runtime evidence missing table: $table"
+  grep -Fq "$table" "$evidence" || fail "Salesforce evidence missing export table: $table"
 done
-pass "M1 Data Cloud setup references runtime-validated tables"
+pass "M1 Data Cloud setup references source-controlled export tables"
 
 for dmo in \
   "Pulse360_M1_Hierarchy_Activation__dlm" \
@@ -71,11 +72,13 @@ grep -Fq "Keep M1 dashboard separate" "$runbook" \
 grep -Fq "editable: false" "$surface_config" \
   || fail "M1 surface config must keep hierarchy intelligence read-only"
 
-python3 - "$data_cloud_setup" "$activation_mapping" "$report_config" <<'PY'
+python3 - "$data_cloud_setup" "$activation_mapping" "$report_config" "$account_hierarchy_sql_dir" <<'PY'
 import csv
+import re
 import sys
+from pathlib import Path
 
-setup_path, mapping_path, report_path = sys.argv[1:4]
+setup_path, mapping_path, report_path, sql_dir = sys.argv[1:5]
 
 with open(setup_path, newline="", encoding="utf-8") as handle:
     setup_rows = list(csv.DictReader(handle))
@@ -83,9 +86,9 @@ if len(setup_rows) != 3:
     raise SystemExit(f"Expected 3 M1 Data Cloud setup rows, found {len(setup_rows)}")
 
 expected_setup = {
-    "m1_account_hierarchy_activation": ("source_account_id__c", "18"),
-    "m1_account_group_rollup": ("group_anchor_source_account_id__c", "17"),
-    "m1_account_hierarchy_edge": ("child_source_account_id__c", "2"),
+    "m1_account_hierarchy_activation_export": ("source_account_id__c", "18"),
+    "m1_account_group_rollup_export": ("group_anchor_source_account_id__c", "17"),
+    "m1_account_hierarchy_edge_export": ("child_source_account_id__c", "2"),
 }
 for row in setup_rows:
     table = row["source_object_name"]
@@ -141,6 +144,86 @@ if dashboard["developer_name"] != "M1_Account_Hierarchy_Validation":
     raise SystemExit("Unexpected M1 dashboard developer name")
 if dashboard["promoted_report_id"] or dashboard["promoted_developer_name"]:
     raise SystemExit("M1 dashboard must not claim live metadata before creation")
+
+expected_export_columns = {
+    "40_m1_account_hierarchy_activation_export.sql": {
+        "activation_id",
+        "source_account_id",
+        "account_name",
+        "account_group_id",
+        "group_anchor_source_account_id",
+        "group_anchor_name",
+        "ultimate_parent_name",
+        "member_account_count",
+        "known_child_account_count",
+        "group_revenue_local",
+        "group_revenue_usd",
+        "revenue_coverage_ratio",
+        "hierarchy_completeness_score",
+        "coverage_gap_count",
+        "coverage_gap_flag",
+        "coverage_gap_summary",
+        "confidence",
+        "evidence_refs_json",
+        "hierarchy_payload",
+        "run_id",
+        "model_version",
+        "generated_at",
+    },
+    "50_m1_account_group_rollup_export.sql": {
+        "account_group_id",
+        "group_anchor_source_account_id",
+        "group_anchor_name",
+        "ultimate_parent_name",
+        "member_account_count",
+        "known_child_account_count",
+        "group_revenue_local",
+        "group_revenue_usd",
+        "revenue_coverage_ratio",
+        "hierarchy_completeness_score",
+        "coverage_gap_count",
+        "coverage_gap_flag",
+        "coverage_gap_summary",
+        "confidence",
+        "source_account_ids_json",
+        "evidence_refs_json",
+        "run_id",
+        "model_version",
+        "generated_at",
+    },
+    "60_m1_account_hierarchy_edge_export.sql": {
+        "hierarchy_edge_id",
+        "source_account_id",
+        "parent_source_account_id",
+        "child_source_account_id",
+        "parent_party_id",
+        "child_party_id",
+        "parent_name",
+        "child_name",
+        "relationship_type",
+        "relationship_basis",
+        "hierarchy_level",
+        "confidence",
+        "source_url",
+        "evidence_id",
+        "evidence_summary",
+        "lineage_refs_json",
+        "run_id",
+        "model_version",
+        "generated_at",
+    },
+}
+
+for filename, columns in expected_export_columns.items():
+    sql_path = Path(sql_dir) / filename
+    if not sql_path.exists():
+        raise SystemExit(f"Missing M1 export SQL file: {filename}")
+    sql_text = sql_path.read_text(encoding="utf-8")
+    for column in sorted(columns):
+        if len(column) > 40:
+            raise SystemExit(f"{filename} has Data Cloud field over 40 chars: {column}")
+        if not re.search(rf"\b{re.escape(column)}\b", sql_text):
+            raise SystemExit(f"{filename} missing expected export column: {column}")
 
 print("[PASS] M1 Salesforce/Data Cloud CSV contracts are valid")
 PY

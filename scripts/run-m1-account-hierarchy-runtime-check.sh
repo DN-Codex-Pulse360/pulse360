@@ -16,6 +16,9 @@ SQL_FILES = [
     "sql/databricks/account_hierarchy/10_m1_account_hierarchy_edge.sql",
     "sql/databricks/account_hierarchy/20_m1_account_group_rollup.sql",
     "sql/databricks/account_hierarchy/30_m1_account_hierarchy_activation.sql",
+    "sql/databricks/account_hierarchy/40_m1_account_hierarchy_activation_export.sql",
+    "sql/databricks/account_hierarchy/50_m1_account_group_rollup_export.sql",
+    "sql/databricks/account_hierarchy/60_m1_account_hierarchy_edge_export.sql",
 ]
 METRIC_QUERIES = {
     "m1_account_hierarchy_edge": """
@@ -49,6 +52,38 @@ METRIC_QUERIES = {
           MAX(generated_at) AS max_generated_at,
           MAX(model_version) AS model_version
         FROM pulse360_s4.intelligence.m1_account_hierarchy_activation
+    """,
+    "m1_account_hierarchy_activation_export": """
+        SELECT
+          COUNT(*) AS row_count,
+          COUNT(DISTINCT source_account_id) AS distinct_source_account_count,
+          COUNT(DISTINCT account_group_id) AS account_group_count,
+          SUM(CASE WHEN coverage_gap_flag THEN 1 ELSE 0 END) AS coverage_gap_account_count,
+          AVG(confidence) AS avg_confidence,
+          MAX(generated_at) AS max_generated_at,
+          MAX(model_version) AS model_version
+        FROM pulse360_s4.intelligence.m1_account_hierarchy_activation_export
+    """,
+    "m1_account_group_rollup_export": """
+        SELECT
+          COUNT(*) AS row_count,
+          SUM(member_account_count) AS total_member_count,
+          SUM(known_child_account_count) AS known_child_account_count,
+          SUM(coverage_gap_count) AS coverage_gap_count,
+          AVG(hierarchy_completeness_score) AS avg_hierarchy_completeness_score,
+          MAX(generated_at) AS max_generated_at,
+          MAX(model_version) AS model_version
+        FROM pulse360_s4.intelligence.m1_account_group_rollup_export
+    """,
+    "m1_account_hierarchy_edge_export": """
+        SELECT
+          COUNT(*) AS row_count,
+          COUNT(DISTINCT parent_source_account_id) AS parent_count,
+          COUNT(DISTINCT child_source_account_id) AS child_count,
+          AVG(confidence) AS avg_confidence,
+          MAX(generated_at) AS max_generated_at,
+          MAX(model_version) AS model_version
+        FROM pulse360_s4.intelligence.m1_account_hierarchy_edge_export
     """,
 }
 
@@ -153,6 +188,18 @@ def main():
     activation = metrics["m1_account_hierarchy_activation"]
     if as_int(activation.get("distinct_source_account_count")) <= 0:
         raise SystemExit("[FAIL] M1 activation output has no Account join keys")
+
+    activation_export = metrics["m1_account_hierarchy_activation_export"]
+    if as_int(activation_export.get("distinct_source_account_count")) != as_int(activation.get("distinct_source_account_count")):
+        raise SystemExit("[FAIL] M1 activation export does not preserve Account join-key coverage")
+
+    for base_table, export_table in [
+        ("m1_account_hierarchy_edge", "m1_account_hierarchy_edge_export"),
+        ("m1_account_group_rollup", "m1_account_group_rollup_export"),
+        ("m1_account_hierarchy_activation", "m1_account_hierarchy_activation_export"),
+    ]:
+        if as_int(metrics[base_table].get("row_count")) != as_int(metrics[export_table].get("row_count")):
+            raise SystemExit(f"[FAIL] {export_table} row count does not match {base_table}")
 
     print(json.dumps({
         "warehouse_id": WAREHOUSE_ID,

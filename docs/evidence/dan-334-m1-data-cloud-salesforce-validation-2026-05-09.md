@@ -16,19 +16,44 @@ Relevant active firmographic streams:
 
 | Stream | Status | Last refresh | Rows |
 | --- | --- | --- | ---: |
-| `firmographic_profile_export_Pulse360_Dat` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:02.000+0000` | 18 |
-| `firmographic_source_evidence_export_Puls` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:00.000+0000` | 140 |
-| `company_classification_export_Pulse360_D` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:01.000+0000` | 11 |
-| `corporate_linkage_export_Pulse360_Databr` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:02.000+0000` | 2 |
-| `sovereign_identifier_export_Pulse360_Dat` | `ACTIVE/SUCCESS` | `2026-05-09T00:12:01.000+0000` | 0 |
+| `firmographic_profile_export_Pulse360_Dat` | `ACTIVE/SUCCESS` | `2026-05-09T02:12:06.000+0000` | 18 |
+| `firmographic_source_evidence_export_Puls` | `ACTIVE/SUCCESS` | `2026-05-09T02:12:00.000+0000` | 140 |
+| `company_classification_export_Pulse360_D` | `ACTIVE/SUCCESS` | `2026-05-09T02:12:01.000+0000` | 11 |
+| `corporate_linkage_export_Pulse360_Databr` | `ACTIVE/SUCCESS` | `2026-05-09T02:12:00.000+0000` | 2 |
+| `sovereign_identifier_export_Pulse360_Dat` | `ACTIVE/SUCCESS` | `2026-05-09T02:12:01.000+0000` | 0 |
+| `Pulse360_Activation_Review_Queue` | `ACTIVE/SUCCESS` | `2026-05-09T02:15:01.000+0000` | 11 |
 
 ### M1 Stream Gap
 
-The following `get_data_stream_status` checks returned `total_size: 0`:
+The following `get_data_stream_status` checks returned `total_size: 0` before
+the dedicated `_export` table contract was added:
 
 - `m1_account_hierarchy_activation_Pulse360_Databricks`
 - `m1_account_group_rollup_Pulse360_Databricks`
 - `m1_account_hierarchy_edge_Pulse360_Databricks`
+
+The source contract now points new Data Cloud streams at:
+
+- `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
+- `pulse360_s4.intelligence.m1_account_group_rollup_export`
+- `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
+
+Runtime validation on 2026-05-09 created/replaced these three export tables and
+confirmed they match the base M1 table row counts:
+
+| Export table | Rows | Key validation |
+| --- | ---: | --- |
+| `m1_account_hierarchy_activation_export` | 18 | 18 distinct Account join keys, matching `m1_account_hierarchy_activation`. |
+| `m1_account_group_rollup_export` | 17 | 18 total members and 10 coverage gaps, matching `m1_account_group_rollup`. |
+| `m1_account_hierarchy_edge_export` | 2 | 1 parent and 1 child, matching `m1_account_hierarchy_edge`. |
+
+MCP checks for the proposed export stream names still returned `total_size: 0`
+after Databricks export-table creation, confirming that the next live step is
+Data Cloud stream creation:
+
+- `m1_account_hierarchy_activation_export_Pulse360_Databricks`
+- `m1_account_group_rollup_export_Pulse360_Databricks`
+- `m1_account_hierarchy_edge_export_Pulse360_Databricks`
 
 ### Existing Salesforce Reports and Dashboard
 
@@ -71,6 +96,16 @@ M1 activation review:
 - `config/salesforce/m1-account-hierarchy-surface.yaml`
 - `docs/runbook/salesforce-m1-account-hierarchy-validation-runbook.md`
 - `scripts/validate-m1-data-cloud-salesforce-surface.sh`
+
+Follow-on hardening added dedicated Databricks export tables with field names
+kept at or below 40 characters:
+
+- `m1_account_hierarchy_activation_export`
+- `m1_account_group_rollup_export`
+- `m1_account_hierarchy_edge_export`
+
+The source validator now checks these export SQL files directly so Data Cloud
+field-name length and expected handoff columns stay source-controlled.
 
 ## Current Decision
 

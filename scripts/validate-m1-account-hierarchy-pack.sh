@@ -43,7 +43,10 @@ for file in \
   "00_create_schema.sql" \
   "10_m1_account_hierarchy_edge.sql" \
   "20_m1_account_group_rollup.sql" \
-  "30_m1_account_hierarchy_activation.sql"; do
+  "30_m1_account_hierarchy_activation.sql" \
+  "40_m1_account_hierarchy_activation_export.sql" \
+  "50_m1_account_group_rollup_export.sql" \
+  "60_m1_account_hierarchy_edge_export.sql"; do
   [[ -f "$sql_dir/$file" ]] || fail "Missing M1 SQL file: $file"
 done
 pass "M1 SQL run-order files exist"
@@ -94,6 +97,7 @@ grep -q "DAN-330" "$evidence" || fail "Evidence missing DAN-330"
 grep -q "codex/m1-account-hierarchy-intelligence" "$evidence" || fail "Evidence missing branch name"
 grep -q "DAN-332" "$runtime_evidence" || fail "Runtime evidence missing DAN-332"
 grep -q "m1_account_hierarchy_activation" "$runtime_evidence" || fail "Runtime evidence missing activation table"
+grep -q "m1_account_hierarchy_activation_export" "$salesforce_evidence" || fail "Salesforce evidence missing activation export table"
 grep -q "DAN-334" "$salesforce_evidence" || fail "Salesforce evidence missing DAN-334"
 grep -q "not live-complete" "$salesforce_evidence" || fail "Salesforce evidence must distinguish source prep from live completion"
 pass "M1 evidence references Linear, branch, runtime, and Salesforce/Data Cloud context"

@@ -30,6 +30,7 @@ SELECT
   r.account_group_id,
   r.group_anchor_source_account_id,
   r.group_anchor_name,
+  r.ultimate_parent_name,
   r.member_account_count,
   r.known_child_account_count,
   r.group_revenue_local,

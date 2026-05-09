@@ -27,18 +27,21 @@ Read-only MCP checks on 2026-05-09 confirmed:
 
 Create the M1 Direct Access streams from Databricks in this order:
 
-1. `pulse360_s4.intelligence.m1_account_hierarchy_activation`
-2. `pulse360_s4.intelligence.m1_account_group_rollup`
-3. `pulse360_s4.intelligence.m1_account_hierarchy_edge`
+1. `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
+2. `pulse360_s4.intelligence.m1_account_group_rollup_export`
+3. `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
 
 Use `config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv` as the setup
 contract. The expected row counts are:
 
 | Table | Expected rows | Account relationship |
 | --- | ---: | --- |
-| `m1_account_hierarchy_activation` | 18 | `source_account_id__c -> Account.Id` |
-| `m1_account_group_rollup` | 17 | `group_anchor_source_account_id__c -> Account.Id` |
-| `m1_account_hierarchy_edge` | 2 | `child_source_account_id__c -> Account.Id` |
+| `m1_account_hierarchy_activation_export` | 18 | `source_account_id__c -> Account.Id` |
+| `m1_account_group_rollup_export` | 17 | `group_anchor_source_account_id__c -> Account.Id` |
+| `m1_account_hierarchy_edge_export` | 2 | `child_source_account_id__c -> Account.Id` |
+
+The non-export M1 tables remain Databricks analytical tables. Data Cloud should
+ingest the `_export` tables only.
 
 Do not modify the five existing firmographic DMO relationships for M1. They are
 already sufficient for the current firmographic validation dashboard and should
