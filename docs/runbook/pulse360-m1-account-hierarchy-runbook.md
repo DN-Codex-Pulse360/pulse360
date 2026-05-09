@@ -76,6 +76,16 @@ Keep the non-export M1 tables as Databricks analytical tables. They are useful
 for debugging lineage and rollup logic, but the export tables are the governed
 Data Cloud handoff contract.
 
+The field-level Data Cloud mapping is source-controlled in:
+
+```text
+config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv
+```
+
+Use that file during DLO/DMO setup so the primary keys, Account relationship
+keys, field types, and Data Cloud-safe field names match the runtime export
+tables.
+
 ## Remaining Runtime Gates
 
 The source package has validated live Databricks SQL Warehouse execution for

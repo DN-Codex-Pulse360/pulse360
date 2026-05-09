@@ -32,7 +32,9 @@ Create the M1 Direct Access streams from Databricks in this order:
 3. `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
 
 Use `config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv` as the setup
-contract. The expected row counts are:
+contract, and use
+`config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv` as the
+field-level DLO-to-DMO mapping guide. The expected row counts are:
 
 | Table | Expected rows | Account relationship |
 | --- | ---: | --- |
@@ -42,6 +44,17 @@ contract. The expected row counts are:
 
 The non-export M1 tables remain Databricks analytical tables. Data Cloud should
 ingest the `_export` tables only.
+
+Field mapping rules:
+
+- Map every source column listed for the relevant export object in
+  `m1-account-hierarchy-dmo-field-mapping.csv`.
+- Mark the table primary key as the primary key/key qualifier.
+- Mark only the configured Account join key as the Account relationship key:
+  `source_account_id__c`, `group_anchor_source_account_id__c`, or
+  `child_source_account_id__c`.
+- Keep Data Cloud field names exactly as listed in the mapping file; they are
+  source-controlled to stay under the Data Cloud 40-character field-name limit.
 
 Do not modify the five existing firmographic DMO relationships for M1. They are
 already sufficient for the current firmographic validation dashboard and should

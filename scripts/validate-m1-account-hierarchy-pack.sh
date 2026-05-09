@@ -18,6 +18,7 @@ salesforce_evidence="$repo_root/docs/evidence/dan-334-m1-data-cloud-salesforce-v
 runtime_check="$repo_root/scripts/run-m1-account-hierarchy-runtime-check.sh"
 salesforce_surface_check="$repo_root/scripts/validate-m1-data-cloud-salesforce-surface.sh"
 m1_data_cloud_setup="$repo_root/config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv"
+m1_dmo_field_mapping="$repo_root/config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv"
 m1_activation_mapping="$repo_root/config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv"
 m1_report_config="$repo_root/config/salesforce/m1-account-hierarchy-validation-reports.csv"
 m1_surface_config="$repo_root/config/salesforce/m1-account-hierarchy-surface.yaml"
@@ -34,6 +35,7 @@ m1_surface_config="$repo_root/config/salesforce/m1-account-hierarchy-surface.yam
 [[ -f "$runtime_check" ]] || fail "Missing M1 runtime check"
 [[ -f "$salesforce_surface_check" ]] || fail "Missing M1 Salesforce/Data Cloud validator"
 [[ -f "$m1_data_cloud_setup" ]] || fail "Missing M1 Data Cloud setup config"
+[[ -f "$m1_dmo_field_mapping" ]] || fail "Missing M1 DMO field mapping"
 [[ -f "$m1_activation_mapping" ]] || fail "Missing M1 Account activation mapping"
 [[ -f "$m1_report_config" ]] || fail "Missing M1 Salesforce report config"
 [[ -f "$m1_surface_config" ]] || fail "Missing M1 Salesforce surface config"
@@ -85,6 +87,7 @@ for required in \
   "sql/databricks/account_hierarchy" \
   "contracts/m1_account_hierarchy_output.schema.json" \
   "config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv" \
+  "config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv" \
   "config/salesforce/m1-account-hierarchy-validation-reports.csv" \
   "scripts/validate-m1-account-hierarchy-pack.sh" \
   "scripts/run-m1-account-hierarchy-runtime-check.sh" \

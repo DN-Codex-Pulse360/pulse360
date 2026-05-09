@@ -91,6 +91,7 @@ M1 activation review:
 ## Source Artifacts Added
 
 - `config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv`
+- `config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv`
 - `config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv`
 - `config/salesforce/m1-account-hierarchy-validation-reports.csv`
 - `config/salesforce/m1-account-hierarchy-surface.yaml`
@@ -106,6 +107,11 @@ kept at or below 40 characters:
 
 The source validator now checks these export SQL files directly so Data Cloud
 field-name length and expected handoff columns stay source-controlled.
+
+Follow-on field-mapping hardening added
+`config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv` so the live Data
+Cloud setup has an exact source-controlled mapping for all export fields,
+primary keys, relationship keys, field types, and key qualifiers.
 
 ## Current Decision
 

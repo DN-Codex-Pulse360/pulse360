@@ -31,6 +31,9 @@ governance:
     - m1_account_hierarchy_edge
     - m1_account_group_rollup
     - m1_account_hierarchy_activation
+    - m1_account_hierarchy_edge_export
+    - m1_account_group_rollup_export
+    - m1_account_hierarchy_activation_export
 lineage:
   required_table_links:
     - upstream: pulse360_s4.intelligence.crm_accounts_raw
@@ -69,3 +72,9 @@ lineage:
       downstream: pulse360_s4.intelligence.m1_account_group_rollup
     - upstream: pulse360_s4.intelligence.m1_account_group_rollup
       downstream: pulse360_s4.intelligence.m1_account_hierarchy_activation
+    - upstream: pulse360_s4.intelligence.m1_account_hierarchy_edge
+      downstream: pulse360_s4.intelligence.m1_account_hierarchy_edge_export
+    - upstream: pulse360_s4.intelligence.m1_account_group_rollup
+      downstream: pulse360_s4.intelligence.m1_account_group_rollup_export
+    - upstream: pulse360_s4.intelligence.m1_account_hierarchy_activation
+      downstream: pulse360_s4.intelligence.m1_account_hierarchy_activation_export

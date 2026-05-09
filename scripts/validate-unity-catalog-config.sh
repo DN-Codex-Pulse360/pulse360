@@ -22,4 +22,7 @@ grep -q "governance_evidence_packet" "$cfg" || fail "Missing governance evidence
 grep -q "m1_account_hierarchy_edge" "$cfg" || fail "Missing M1 hierarchy edge table"
 grep -q "m1_account_group_rollup" "$cfg" || fail "Missing M1 account group rollup table"
 grep -q "m1_account_hierarchy_activation" "$cfg" || fail "Missing M1 hierarchy activation table"
+grep -q "m1_account_hierarchy_edge_export" "$cfg" || fail "Missing M1 hierarchy edge export table"
+grep -q "m1_account_group_rollup_export" "$cfg" || fail "Missing M1 account group rollup export table"
+grep -q "m1_account_hierarchy_activation_export" "$cfg" || fail "Missing M1 hierarchy activation export table"
 pass "Unity Catalog governance config includes required baseline"

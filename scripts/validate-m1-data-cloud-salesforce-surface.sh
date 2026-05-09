@@ -7,6 +7,7 @@ pass() { echo "[PASS] $1"; }
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 data_cloud_setup="$repo_root/config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv"
+dmo_field_mapping="$repo_root/config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv"
 activation_mapping="$repo_root/config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv"
 report_config="$repo_root/config/salesforce/m1-account-hierarchy-validation-reports.csv"
 surface_config="$repo_root/config/salesforce/m1-account-hierarchy-surface.yaml"
@@ -16,6 +17,7 @@ runtime_evidence="$repo_root/docs/evidence/dan-332-m1-account-hierarchy-runtime-
 account_hierarchy_sql_dir="$repo_root/sql/databricks/account_hierarchy"
 
 [[ -f "$data_cloud_setup" ]] || fail "Missing M1 Data Cloud setup config"
+[[ -f "$dmo_field_mapping" ]] || fail "Missing M1 DMO field mapping"
 [[ -f "$activation_mapping" ]] || fail "Missing M1 activation field mapping"
 [[ -f "$report_config" ]] || fail "Missing M1 Salesforce report config"
 [[ -f "$surface_config" ]] || fail "Missing M1 Salesforce surface config"
@@ -72,13 +74,13 @@ grep -Fq "Keep M1 dashboard separate" "$runbook" \
 grep -Fq "editable: false" "$surface_config" \
   || fail "M1 surface config must keep hierarchy intelligence read-only"
 
-python3 - "$data_cloud_setup" "$activation_mapping" "$report_config" "$account_hierarchy_sql_dir" <<'PY'
+python3 - "$data_cloud_setup" "$dmo_field_mapping" "$activation_mapping" "$report_config" "$account_hierarchy_sql_dir" <<'PY'
 import csv
 import re
 import sys
 from pathlib import Path
 
-setup_path, mapping_path, report_path, sql_dir = sys.argv[1:5]
+setup_path, dmo_mapping_path, mapping_path, report_path, sql_dir = sys.argv[1:6]
 
 with open(setup_path, newline="", encoding="utf-8") as handle:
     setup_rows = list(csv.DictReader(handle))
@@ -103,6 +105,24 @@ for row in setup_rows:
         raise SystemExit(f"{table} expected rows must be {expected_rows}")
     if row["setup_status"] != "not_created_live":
         raise SystemExit(f"{table} must remain marked not_created_live until MCP proves it exists")
+
+with open(dmo_mapping_path, newline="", encoding="utf-8") as handle:
+    dmo_mapping_rows = list(csv.DictReader(handle))
+if not dmo_mapping_rows:
+    raise SystemExit("M1 DMO field mapping must contain rows")
+expected_mapping_header = [
+    "source_object_name",
+    "dmo_api_name",
+    "source_field",
+    "dmo_field_api_name",
+    "data_type",
+    "required",
+    "key_qualifier",
+    "relationship_key",
+    "notes",
+]
+if list(dmo_mapping_rows[0].keys()) != expected_mapping_header:
+    raise SystemExit(f"M1 DMO field mapping header mismatch: {list(dmo_mapping_rows[0].keys())}")
 
 with open(mapping_path, newline="", encoding="utf-8") as handle:
     mapping_rows = list(csv.DictReader(handle))
@@ -214,6 +234,29 @@ expected_export_columns = {
     },
 }
 
+setup_by_source = {row["source_object_name"]: row for row in setup_rows}
+mapping_by_source = {}
+seen_mapping_targets = set()
+for row in dmo_mapping_rows:
+    source = row["source_object_name"]
+    if source not in setup_by_source:
+        raise SystemExit(f"M1 DMO mapping references unknown source object: {source}")
+    if row["dmo_api_name"] != setup_by_source[source]["dmo_api_name"]:
+        raise SystemExit(f"{source} maps to wrong DMO: {row['dmo_api_name']}")
+    if len(row["source_field"]) > 40:
+        raise SystemExit(f"{source} source field exceeds 40 chars: {row['source_field']}")
+    if len(row["dmo_field_api_name"]) > 40:
+        raise SystemExit(f"{source} DMO field exceeds 40 chars: {row['dmo_field_api_name']}")
+    if row["required"].lower() not in {"true", "false"}:
+        raise SystemExit(f"{source}.{row['source_field']} required must be true or false")
+    if row["relationship_key"].lower() not in {"true", "false"}:
+        raise SystemExit(f"{source}.{row['source_field']} relationship_key must be true or false")
+    target_key = (row["dmo_api_name"], row["dmo_field_api_name"])
+    if target_key in seen_mapping_targets:
+        raise SystemExit(f"Duplicate M1 DMO target field mapping: {target_key}")
+    seen_mapping_targets.add(target_key)
+    mapping_by_source.setdefault(source, {})[row["source_field"]] = row
+
 for filename, columns in expected_export_columns.items():
     sql_path = Path(sql_dir) / filename
     if not sql_path.exists():
@@ -224,6 +267,29 @@ for filename, columns in expected_export_columns.items():
             raise SystemExit(f"{filename} has Data Cloud field over 40 chars: {column}")
         if not re.search(rf"\b{re.escape(column)}\b", sql_text):
             raise SystemExit(f"{filename} missing expected export column: {column}")
+
+sql_to_source = {
+    "40_m1_account_hierarchy_activation_export.sql": "m1_account_hierarchy_activation_export",
+    "50_m1_account_group_rollup_export.sql": "m1_account_group_rollup_export",
+    "60_m1_account_hierarchy_edge_export.sql": "m1_account_hierarchy_edge_export",
+}
+for filename, source in sql_to_source.items():
+    expected_columns = expected_export_columns[filename]
+    mapped_columns = set(mapping_by_source.get(source, {}))
+    if mapped_columns != expected_columns:
+        missing = sorted(expected_columns - mapped_columns)
+        extra = sorted(mapped_columns - expected_columns)
+        raise SystemExit(f"{source} DMO mapping mismatch. Missing={missing}; Extra={extra}")
+    setup_row = setup_by_source[source]
+    primary_source_field = setup_row["primary_key"].removesuffix("__c")
+    relationship_source_field = setup_row["account_join_key"].removesuffix("__c")
+    if mapping_by_source[source][primary_source_field]["key_qualifier"] != "Primary Key":
+        raise SystemExit(f"{source} primary key mapping must be marked Primary Key")
+    relationship_row = mapping_by_source[source][relationship_source_field]
+    if relationship_row["relationship_key"].lower() != "true":
+        raise SystemExit(f"{source} relationship key mapping must be marked true")
+    if not relationship_row["key_qualifier"].startswith("KQ_"):
+        raise SystemExit(f"{source} relationship key mapping must define a KQ_ qualifier")
 
 print("[PASS] M1 Salesforce/Data Cloud CSV contracts are valid")
 PY
