@@ -30,8 +30,16 @@ workspace="$temp_dir/workspace"
   || fail "Databricks account-hierarchy-intelligence workspace is missing hierarchy edge SQL"
 [[ -f "$workspace/account-hierarchy-intelligence/sql/databricks/account_hierarchy/20_m1_account_group_rollup.sql" ]] \
   || fail "Databricks account-hierarchy-intelligence workspace is missing group rollup SQL"
+[[ -f "$workspace/account-hierarchy-intelligence/sql/databricks/account_hierarchy/40_m1_account_hierarchy_activation_export.sql" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing activation export SQL"
+[[ -f "$workspace/account-hierarchy-intelligence/sql/databricks/account_hierarchy/50_m1_account_group_rollup_export.sql" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing group rollup export SQL"
+[[ -f "$workspace/account-hierarchy-intelligence/sql/databricks/account_hierarchy/60_m1_account_hierarchy_edge_export.sql" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing hierarchy edge export SQL"
 [[ -f "$workspace/account-hierarchy-intelligence/contracts/m1_account_hierarchy_output.schema.json" ]] \
   || fail "Databricks account-hierarchy-intelligence workspace is missing M1 hierarchy contract"
+[[ -f "$workspace/account-hierarchy-intelligence/config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv" ]] \
+  || fail "Databricks account-hierarchy-intelligence workspace is missing M1 DMO field mapping"
 [[ -f "$workspace/model-serving-byom/databricks.yml" ]] \
   || fail "Databricks model-serving-byom workspace is missing databricks.yml"
 [[ -f "$workspace/model-serving-byom/sql/databricks/model_serving/10_account_feature_snapshot.sql" ]] \
@@ -53,6 +61,12 @@ grep -Fq 'pulse360-account-intelligence-export' "$workspace/account-intelligence
   || fail "Databricks account-intelligence-export bundle is missing its bundle name"
 grep -Fq 'pulse360-account-hierarchy-intelligence' "$workspace/account-hierarchy-intelligence/databricks.yml" \
   || fail "Databricks account-hierarchy-intelligence bundle is missing its bundle name"
+grep -Fq '40_m1_account_hierarchy_activation_export.sql' "$workspace/account-hierarchy-intelligence/databricks.yml" \
+  || fail "Databricks account-hierarchy-intelligence bundle is missing activation export run-order step"
+grep -Fq '50_m1_account_group_rollup_export.sql' "$workspace/account-hierarchy-intelligence/databricks.yml" \
+  || fail "Databricks account-hierarchy-intelligence bundle is missing group rollup export run-order step"
+grep -Fq '60_m1_account_hierarchy_edge_export.sql' "$workspace/account-hierarchy-intelligence/databricks.yml" \
+  || fail "Databricks account-hierarchy-intelligence bundle is missing edge export run-order step"
 grep -Fq 'pulse360-model-serving-byom' "$workspace/model-serving-byom/databricks.yml" \
   || fail "Databricks model-serving-byom bundle is missing its bundle name"
 grep -Fq 'pulse360-governance-evidence' "$workspace/governance-evidence/databricks.yml" \

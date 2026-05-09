@@ -113,6 +113,11 @@ Follow-on field-mapping hardening added
 Cloud setup has an exact source-controlled mapping for all export fields,
 primary keys, relationship keys, field types, and key qualifiers.
 
+Package-layout validation now also checks that the generated Databricks bundle
+contains the three M1 export SQL files, includes them in `databricks.yml`
+run-order output, and carries the M1 DMO field mapping into the generated
+workspace.
+
 ## Current Decision
 
 No existing Data Cloud DMO relationship changes are required for the five
