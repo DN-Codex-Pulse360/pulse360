@@ -15,6 +15,7 @@ runbook="$repo_root/docs/runbook/salesforce-m1-account-hierarchy-validation-runb
 evidence="$repo_root/docs/evidence/dan-334-m1-data-cloud-salesforce-validation-2026-05-09.md"
 runtime_evidence="$repo_root/docs/evidence/dan-332-m1-account-hierarchy-runtime-validation-2026-05-08.md"
 account_hierarchy_sql_dir="$repo_root/sql/databricks/account_hierarchy"
+m1_report_metadata="$repo_root/force-app/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_M1_Hierarchy_Activation_s6B.report-meta.xml"
 
 [[ -f "$data_cloud_setup" ]] || fail "Missing M1 Data Cloud setup config"
 [[ -f "$dmo_field_mapping" ]] || fail "Missing M1 DMO field mapping"
@@ -24,6 +25,7 @@ account_hierarchy_sql_dir="$repo_root/sql/databricks/account_hierarchy"
 [[ -f "$runbook" ]] || fail "Missing M1 Salesforce/Data Cloud runbook"
 [[ -f "$evidence" ]] || fail "Missing M1 Salesforce/Data Cloud evidence"
 [[ -f "$runtime_evidence" ]] || fail "Missing M1 Databricks runtime evidence"
+[[ -f "$m1_report_metadata" ]] || fail "Missing retrieved M1 activation report metadata"
 pass "M1 Salesforce/Data Cloud source files exist"
 
 for table in \
@@ -59,14 +61,24 @@ for field in \
 done
 pass "M1 Account activation fields are mapped and evidenced"
 
-grep -Fq "not_created_live" "$data_cloud_setup" \
-  || fail "Data Cloud setup must mark live M1 stream gap"
+grep -Fq "live_ready" "$data_cloud_setup" \
+  || fail "Data Cloud setup must mark the M1 activation stream as live_ready"
 grep -Fq "No existing Data Cloud DMO relationship changes are required" "$evidence" \
   || fail "Evidence must document existing DMO relationship posture"
 grep -Fq "Keep M1 dashboard separate" "$runbook" \
   || fail "Runbook must keep M1 dashboard separate until metadata exists"
 grep -Fq "editable: false" "$surface_config" \
   || fail "M1 surface config must keep hierarchy intelligence read-only"
+grep -Fq "00OdL00000POQZFUA5" "$report_config" \
+  || fail "M1 report config must capture live activation report ID"
+grep -Fq "Account_and_M1_Hierarchy_Activation_s6B" "$report_config" \
+  || fail "M1 report config must capture live activation report developer name"
+grep -Fq "CustomEntityCustomEntity\$ssot__Account__dlm\$Pulse360_M1_Hierarchy_Activation__dlm" "$m1_report_metadata" \
+  || fail "M1 report metadata must use Account-to-activation report type"
+grep -Fq "Pulse360_M1_Hierarchy_Activation__dlm.activation_id__c" "$m1_report_metadata" \
+  || fail "M1 report metadata must include activation_id__c"
+grep -Fq "Pulse360_M1_Hierarchy_Activation__dlm.group_revenue_usd__c" "$m1_report_metadata" \
+  || fail "M1 report metadata must include group_revenue_usd__c"
 
 python3 - "$data_cloud_setup" "$dmo_field_mapping" "$activation_mapping" "$report_config" "$account_hierarchy_sql_dir" <<'PY'
 import csv
@@ -95,8 +107,8 @@ for row in setup_rows:
         raise SystemExit(f"{table} must relate to Account.Id")
     if row["expected_rows"] != expected_rows:
         raise SystemExit(f"{table} expected rows must be {expected_rows}")
-    if row["setup_status"] != "not_created_live":
-        raise SystemExit(f"{table} must remain marked not_created_live until MCP proves it exists")
+    if row["setup_status"] != "live_ready":
+        raise SystemExit(f"{table} must be marked live_ready after Data Cloud relationship and report validation")
 
 with open(dmo_mapping_path, newline="", encoding="utf-8") as handle:
     dmo_mapping_rows = list(csv.DictReader(handle))
@@ -144,8 +156,10 @@ for row in reports:
         raise SystemExit(f"{name} expected count must be {expected_count}")
     if row["relationship_key"] != expected_key:
         raise SystemExit(f"{name} relationship key must be {expected_key}")
-    if row["promoted_report_id"] or row["promoted_developer_name"]:
-        raise SystemExit(f"{name} must not claim live report metadata before creation")
+    if row["promoted_report_id"] != "00OdL00000POQZFUA5":
+        raise SystemExit(f"{name} must capture live report ID")
+    if row["promoted_developer_name"] != "Account_and_M1_Hierarchy_Activation_s6B":
+        raise SystemExit(f"{name} must capture live report developer name")
     if "confidence__c" not in row["required_columns"]:
         raise SystemExit(f"{name} must expose confidence__c")
 

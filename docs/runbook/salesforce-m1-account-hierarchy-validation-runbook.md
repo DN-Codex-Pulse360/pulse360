@@ -76,7 +76,7 @@ Recommended Account field review:
 
 ## Report Promotion
 
-After the M1 activation stream and DMO are live, create the report listed in
+After the M1 activation stream and DMO are live, create or validate the report listed in
 `config/salesforce/m1-account-hierarchy-validation-reports.csv` in the existing
 folder:
 
@@ -88,15 +88,22 @@ Target report:
 
 1. `Account and M1 Hierarchy Activation`
 
+Current live report:
+
+- Id: `00OdL00000POQZFUA5`
+- DeveloperName: `Account_and_M1_Hierarchy_Activation_s6B`
+- Retrieved source file:
+  `force-app/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_M1_Hierarchy_Activation_s6B.report-meta.xml`
+
 The report must render `Account.Id` or `Account.Name` as a Salesforce record
 link and expose confidence, coverage-gap, generated timestamp, and compact
 evidence payload fields where available.
 
 ## Dashboard Promotion
 
-Create a separate `M1 Account Hierarchy Validation` dashboard after the
-activation report exists. Keep M1 dashboard separate from the existing
-firmographic dashboard until the report metadata can be retrieved into source.
+Create a separate `M1 Account Hierarchy Validation` dashboard from the live
+activation report. Keep M1 dashboard separate from the existing firmographic
+dashboard until the dashboard metadata can be retrieved into source.
 
 Recommended scorecard row:
 

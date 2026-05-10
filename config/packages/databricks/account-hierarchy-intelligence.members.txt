@@ -16,6 +16,7 @@ config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv
 config/data-cloud/m1-account-hierarchy-activation-field-mapping.csv
 config/salesforce/m1-account-hierarchy-validation-reports.csv
 config/salesforce/m1-account-hierarchy-surface.yaml
+force-app/main/default/reports/Pulse360_Account_Intelligence_Validation/Account_and_M1_Hierarchy_Activation_s6B.report-meta.xml
 scripts/validate-m1-account-hierarchy-pack.sh
 scripts/run-m1-account-hierarchy-runtime-check.sh
 scripts/validate-m1-data-cloud-salesforce-surface.sh
