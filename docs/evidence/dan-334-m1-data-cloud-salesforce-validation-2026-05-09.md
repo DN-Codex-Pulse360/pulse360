@@ -32,11 +32,9 @@ the dedicated `_export` table contract was added:
 - `m1_account_group_rollup_Pulse360_Databricks`
 - `m1_account_hierarchy_edge_Pulse360_Databricks`
 
-The source contract now points new Data Cloud streams at:
+The source contract now points the first M1 Data Cloud stream at:
 
 - `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
-- `pulse360_s4.intelligence.m1_account_group_rollup_export`
-- `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
 
 Runtime validation on 2026-05-09 created/replaced these three export tables and
 confirmed they match the base M1 table row counts:
@@ -47,13 +45,16 @@ confirmed they match the base M1 table row counts:
 | `m1_account_group_rollup_export` | 17 | 18 total members and 10 coverage gaps, matching `m1_account_group_rollup`. |
 | `m1_account_hierarchy_edge_export` | 2 | 1 parent and 1 child, matching `m1_account_hierarchy_edge`. |
 
-MCP checks for the proposed export stream names still returned `total_size: 0`
-after Databricks export-table creation, confirming that the next live step is
-Data Cloud stream creation:
+The group rollup and hierarchy edge exports remain Databricks-only for the
+current Salesforce UX. They should not be promoted to Data Cloud DLO/DMO
+objects unless a future report, segment, or activation workflow proves that
+Salesforce users need those grains directly.
+
+MCP checks for the proposed activation export stream name still returned
+`total_size: 0` after Databricks export-table creation, confirming that the next
+live step is Data Cloud stream creation:
 
 - `m1_account_hierarchy_activation_export_Pulse360_Databricks`
-- `m1_account_group_rollup_export_Pulse360_Databricks`
-- `m1_account_hierarchy_edge_export_Pulse360_Databricks`
 
 ### Existing Salesforce Reports and Dashboard
 
@@ -110,17 +111,23 @@ field-name length and expected handoff columns stay source-controlled.
 
 Follow-on field-mapping hardening added
 `config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv` so the live Data
-Cloud setup has an exact source-controlled mapping for all export fields,
-primary keys, relationship keys, field types, and key qualifiers.
+Cloud setup has an exact source-controlled mapping for the activation export
+fields, primary key, relationship key, field types, and key qualifier.
 
 Package-layout validation now also checks that the generated Databricks bundle
 contains the three M1 export SQL files, includes them in `databricks.yml`
-run-order output, and carries the M1 DMO field mapping into the generated
-workspace.
+run-order output, and carries the M1 activation DMO field mapping into the
+generated workspace.
+
+The Salesforce/Data Cloud surface was then simplified so only
+`Pulse360_M1_Hierarchy_Activation__dlm` is planned for the live Data Cloud
+surface. `m1_account_group_rollup_export` and
+`m1_account_hierarchy_edge_export` stay in Databricks as lineage/debugging
+outputs until a Salesforce use case proves that a separate DLO/DMO is needed.
 
 ## Current Decision
 
 No existing Data Cloud DMO relationship changes are required for the five
-firmographic reports or dashboard. M1 should be introduced through new
-runbook-controlled Direct Access streams and a separate M1 validation dashboard
-after live stream creation.
+firmographic reports or dashboard. M1 should be introduced through one new
+runbook-controlled activation Direct Access stream and a separate M1 validation
+dashboard after live stream creation.

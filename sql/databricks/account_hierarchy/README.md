@@ -19,9 +19,12 @@ outputs for Data Cloud and Salesforce validation.
 - `pulse360_s4.intelligence.m1_account_hierarchy_edge`
 - `pulse360_s4.intelligence.m1_account_group_rollup`
 - `pulse360_s4.intelligence.m1_account_hierarchy_activation`
-- `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
-- `pulse360_s4.intelligence.m1_account_group_rollup_export`
-- `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
+- `pulse360_s4.intelligence.m1_account_hierarchy_activation_export` (current
+  Data Cloud handoff)
+- `pulse360_s4.intelligence.m1_account_group_rollup_export` (Databricks-only
+  until a Salesforce UX/reporting need is proven)
+- `pulse360_s4.intelligence.m1_account_hierarchy_edge_export` (Databricks-only
+  until a Salesforce UX/reporting need is proven)
 
 ## Contract Rules
 
@@ -31,7 +34,8 @@ outputs for Data Cloud and Salesforce validation.
   `relationship_basis = crm_parent_account`.
 - Source-bound external or GPT-derived hierarchy facts must carry evidence URLs
   and confidence.
-- Data Cloud Direct Access streams should target the `_export` tables, not the
-  internal analytical tables.
+- The current Data Cloud Direct Access stream should target
+  `m1_account_hierarchy_activation_export`. Keep group rollup and hierarchy edge
+  exports in Databricks until they need first-class Data Cloud reporting.
 - Export field names must stay at or below 40 characters before Data Cloud adds
   source-object suffixes.

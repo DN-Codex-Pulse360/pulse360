@@ -27,31 +27,25 @@ account_hierarchy_sql_dir="$repo_root/sql/databricks/account_hierarchy"
 pass "M1 Salesforce/Data Cloud source files exist"
 
 for table in \
-  "m1_account_hierarchy_activation_export" \
-  "m1_account_group_rollup_export" \
-  "m1_account_hierarchy_edge_export"; do
+  "m1_account_hierarchy_activation_export"; do
   grep -Fq "$table" "$data_cloud_setup" || fail "Data Cloud setup missing table: $table"
   grep -Fq "$table" "$evidence" || fail "Salesforce evidence missing export table: $table"
 done
-pass "M1 Data Cloud setup references source-controlled export tables"
+pass "M1 Data Cloud setup references source-controlled activation export table"
 
 for dmo in \
-  "Pulse360_M1_Hierarchy_Activation__dlm" \
-  "Pulse360_M1_Account_Group_Rollup__dlm" \
-  "Pulse360_M1_Hierarchy_Edge__dlm"; do
+  "Pulse360_M1_Hierarchy_Activation__dlm"; do
   grep -Fq "$dmo" "$data_cloud_setup" || fail "Data Cloud setup missing DMO: $dmo"
   grep -Fq "$dmo" "$surface_config" || fail "Surface config missing DMO: $dmo"
   grep -Fq "$dmo" "$report_config" || fail "Report config missing DMO: $dmo"
 done
-pass "M1 DMO names are consistently referenced"
+pass "M1 activation DMO name is consistently referenced"
 
 for field in \
-  "source_account_id__c -> Account.Id" \
-  "group_anchor_source_account_id__c -> Account.Id" \
-  "child_source_account_id__c -> Account.Id"; do
+  "source_account_id__c -> Account.Id"; do
   grep -Fq "$field" "$runbook" || fail "Runbook missing relationship rule: $field"
 done
-pass "M1 Account relationship rules are documented"
+pass "M1 activation Account relationship rule is documented"
 
 for field in \
   "Group_Revenue_Rollup__c" \
@@ -84,13 +78,11 @@ setup_path, dmo_mapping_path, mapping_path, report_path, sql_dir = sys.argv[1:6]
 
 with open(setup_path, newline="", encoding="utf-8") as handle:
     setup_rows = list(csv.DictReader(handle))
-if len(setup_rows) != 3:
-    raise SystemExit(f"Expected 3 M1 Data Cloud setup rows, found {len(setup_rows)}")
+if len(setup_rows) != 1:
+    raise SystemExit(f"Expected 1 M1 Data Cloud setup row, found {len(setup_rows)}")
 
 expected_setup = {
     "m1_account_hierarchy_activation_export": ("source_account_id__c", "18"),
-    "m1_account_group_rollup_export": ("group_anchor_source_account_id__c", "17"),
-    "m1_account_hierarchy_edge_export": ("child_source_account_id__c", "2"),
 }
 for row in setup_rows:
     table = row["source_object_name"]
@@ -135,15 +127,13 @@ with open(report_path, newline="", encoding="utf-8") as handle:
     report_rows = list(csv.DictReader(handle))
 reports = [row for row in report_rows if row["artifact_type"] == "report"]
 dashboards = [row for row in report_rows if row["artifact_type"] == "dashboard"]
-if len(reports) != 3:
-    raise SystemExit(f"Expected 3 M1 report rows, found {len(reports)}")
+if len(reports) != 1:
+    raise SystemExit(f"Expected 1 M1 report row, found {len(reports)}")
 if len(dashboards) != 1:
     raise SystemExit(f"Expected 1 M1 dashboard row, found {len(dashboards)}")
 
 expected_reports = {
     "M1_Account_Hierarchy_Activation": ("18", "source_account_id__c"),
-    "M1_Account_Group_Rollup": ("17", "group_anchor_source_account_id__c"),
-    "M1_Hierarchy_Edges": ("2", "child_source_account_id__c"),
 }
 for row in reports:
     name = row["developer_name"]
@@ -190,48 +180,6 @@ expected_export_columns = {
         "model_version",
         "generated_at",
     },
-    "50_m1_account_group_rollup_export.sql": {
-        "account_group_id",
-        "group_anchor_source_account_id",
-        "group_anchor_name",
-        "ultimate_parent_name",
-        "member_account_count",
-        "known_child_account_count",
-        "group_revenue_local",
-        "group_revenue_usd",
-        "revenue_coverage_ratio",
-        "hierarchy_completeness_score",
-        "coverage_gap_count",
-        "coverage_gap_flag",
-        "coverage_gap_summary",
-        "confidence",
-        "source_account_ids_json",
-        "evidence_refs_json",
-        "run_id",
-        "model_version",
-        "generated_at",
-    },
-    "60_m1_account_hierarchy_edge_export.sql": {
-        "hierarchy_edge_id",
-        "source_account_id",
-        "parent_source_account_id",
-        "child_source_account_id",
-        "parent_party_id",
-        "child_party_id",
-        "parent_name",
-        "child_name",
-        "relationship_type",
-        "relationship_basis",
-        "hierarchy_level",
-        "confidence",
-        "source_url",
-        "evidence_id",
-        "evidence_summary",
-        "lineage_refs_json",
-        "run_id",
-        "model_version",
-        "generated_at",
-    },
 }
 
 setup_by_source = {row["source_object_name"]: row for row in setup_rows}
@@ -270,8 +218,6 @@ for filename, columns in expected_export_columns.items():
 
 sql_to_source = {
     "40_m1_account_hierarchy_activation_export.sql": "m1_account_hierarchy_activation_export",
-    "50_m1_account_group_rollup_export.sql": "m1_account_group_rollup_export",
-    "60_m1_account_hierarchy_edge_export.sql": "m1_account_hierarchy_edge_export",
 }
 for filename, source in sql_to_source.items():
     expected_columns = expected_export_columns[filename]

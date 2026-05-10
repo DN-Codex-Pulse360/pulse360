@@ -66,15 +66,14 @@ dashboard pattern first. Do not add new DMO relationships unless a live
 validation report proves the current Account join cannot render M1 hierarchy
 data.
 
-Create M1 Data Cloud streams from these export tables:
+Create the first M1 Data Cloud stream from this export table:
 
 - `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
-- `pulse360_s4.intelligence.m1_account_group_rollup_export`
-- `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
 
-Keep the non-export M1 tables as Databricks analytical tables. They are useful
-for debugging lineage and rollup logic, but the export tables are the governed
-Data Cloud handoff contract.
+Keep the group rollup and hierarchy edge tables as Databricks analytical tables
+until a Salesforce workflow proves they need to be queryable or reportable as
+first-class Data Cloud objects. The activation export is the governed Data
+Cloud handoff contract for the current Account-centered UX.
 
 The field-level Data Cloud mapping is source-controlled in:
 
@@ -92,5 +91,5 @@ The source package has validated live Databricks SQL Warehouse execution for
 the M1 tables. It does not yet claim:
 
 - live Unity Catalog lineage export for the new M1 tables;
-- Data Cloud stream creation for new M1 outputs;
+- Data Cloud stream creation for the M1 activation output;
 - Salesforce BYOM or native Agentforce runtime success.

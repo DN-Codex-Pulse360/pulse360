@@ -25,34 +25,31 @@ Read-only MCP checks on 2026-05-09 confirmed:
 
 ## Data Cloud Setup
 
-Create the M1 Direct Access streams from Databricks in this order:
+Create one M1 Direct Access stream from Databricks first:
 
-1. `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
-2. `pulse360_s4.intelligence.m1_account_group_rollup_export`
-3. `pulse360_s4.intelligence.m1_account_hierarchy_edge_export`
+- `pulse360_s4.intelligence.m1_account_hierarchy_activation_export`
 
 Use `config/data-cloud/m1-account-hierarchy-dlo-dmo-setup.csv` as the setup
 contract, and use
 `config/data-cloud/m1-account-hierarchy-dmo-field-mapping.csv` as the
-field-level DLO-to-DMO mapping guide. The expected row counts are:
+field-level DLO-to-DMO mapping guide. The expected row count is:
 
 | Table | Expected rows | Account relationship |
 | --- | ---: | --- |
 | `m1_account_hierarchy_activation_export` | 18 | `source_account_id__c -> Account.Id` |
-| `m1_account_group_rollup_export` | 17 | `group_anchor_source_account_id__c -> Account.Id` |
-| `m1_account_hierarchy_edge_export` | 2 | `child_source_account_id__c -> Account.Id` |
 
-The non-export M1 tables remain Databricks analytical tables. Data Cloud should
-ingest the `_export` tables only.
+The group rollup and hierarchy edge outputs remain Databricks analytical
+tables for now. They are useful for lineage, debugging, and future drill-through,
+but should not become first-class Data Cloud DLOs/DMOs until a Salesforce
+workflow proves that users need to query or segment directly on that grain.
 
 Field mapping rules:
 
-- Map every source column listed for the relevant export object in
+- Map every source column listed for the activation export object in
   `m1-account-hierarchy-dmo-field-mapping.csv`.
 - Mark the table primary key as the primary key/key qualifier.
-- Mark only the configured Account join key as the Account relationship key:
-  `source_account_id__c`, `group_anchor_source_account_id__c`, or
-  `child_source_account_id__c`.
+- Mark only `source_account_id__c` as the Account relationship key:
+  `source_account_id__c -> Account.Id`.
 - Keep Data Cloud field names exactly as listed in the mapping file; they are
   source-controlled to stay under the Data Cloud 40-character field-name limit.
 
@@ -79,7 +76,7 @@ Recommended Account field review:
 
 ## Report Promotion
 
-After the three M1 streams and DMOs are live, create the reports listed in
+After the M1 activation stream and DMO are live, create the report listed in
 `config/salesforce/m1-account-hierarchy-validation-reports.csv` in the existing
 folder:
 
@@ -87,30 +84,26 @@ folder:
 Pulse360 Account Intelligence Validation
 ```
 
-Target reports:
+Target report:
 
 1. `Account and M1 Hierarchy Activation`
-2. `Account and M1 Group Rollup`
-3. `Account and M1 Hierarchy Edges`
 
-Each report must render `Account.Id` or `Account.Name` as a Salesforce record
-link and expose confidence, coverage-gap, generated timestamp, and evidence URL
-or evidence summary fields where available.
+The report must render `Account.Id` or `Account.Name` as a Salesforce record
+link and expose confidence, coverage-gap, generated timestamp, and compact
+evidence payload fields where available.
 
 ## Dashboard Promotion
 
-Create a separate `M1 Account Hierarchy Validation` dashboard after all three
-M1 reports exist. Keep M1 dashboard separate from the existing firmographic dashboard
-until the report metadata can be retrieved into source.
+Create a separate `M1 Account Hierarchy Validation` dashboard after the
+activation report exists. Keep M1 dashboard separate from the existing
+firmographic dashboard until the report metadata can be retrieved into source.
 
 Recommended scorecard row:
 
 - Activation coverage: `18`
-- Account group coverage: `17`
-- Hierarchy edges: `2`
 - Coverage-gap accounts: `10`
 
-The detail components should use the three M1 reports listed above.
+The detail component should use the activation report listed above.
 
 ## Source Retrieval
 

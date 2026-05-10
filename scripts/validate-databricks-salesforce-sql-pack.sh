@@ -36,6 +36,7 @@ required_files=(
   "sql/databricks/gold/70_corporate_linkage_export.sql"
   "sql/databricks/gold/80_firmographic_source_evidence_export.sql"
   "sql/databricks/gold/README.md"
+  "config/databricks/salesforce-extract-job.json"
   "docs/setup/databricks-silver-salesforce-runbook.md"
   "docs/setup/databricks-gold-account-export-runbook.md"
 )
@@ -57,6 +58,7 @@ gold_profile_sql="sql/databricks/gold/50_firmographic_profile_export.sql"
 gold_classification_sql="sql/databricks/gold/60_company_classification_export.sql"
 gold_linkage_sql="sql/databricks/gold/70_corporate_linkage_export.sql"
 gold_evidence_sql="sql/databricks/gold/80_firmographic_source_evidence_export.sql"
+salesforce_extract_job="config/databricks/salesforce-extract-job.json"
 
 for token in \
   "00_create_schema.sql" \
@@ -154,7 +156,19 @@ done
 pass "SQL definitions include sovereign and firmographic export tables"
 
 for token in \
+  '"pulse360-salesforce-extract job"' \
+  '"pipeline_id": "b3f7f05a-2ba0-4f0b-b16a-66f72bd4fe1e"' \
+  '"periodic"' \
+  '"interval": 6' \
+  '"unit": "HOURS"'; do
+  search_fixed "$token" "$salesforce_extract_job" || fail "Missing token in Salesforce extract job config: $token"
+done
+pass "Salesforce extract job config is source-controlled"
+
+for token in \
   "crm_account_id" \
+  "pulse360-salesforce-extract job" \
+  "OAuth token exchange failed" \
   "pulse360_s4.silver_salesforce.crm_account_hierarchy_edge" \
   "The pipeline is ready for gold export refactoring"; do
   search_fixed "$token" "$silver_runbook" || fail "Missing token in silver runbook: $token"

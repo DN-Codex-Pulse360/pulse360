@@ -1,4 +1,5 @@
 sql/databricks/silver_salesforce
+config/databricks/salesforce-extract-job.json
 config/databricks/lineage-targets.env.sample
 config/databricks/unity-catalog-governance.yaml
 docs/contracts/salesforce-crm-to-databricks-account-ingestion-contract.md

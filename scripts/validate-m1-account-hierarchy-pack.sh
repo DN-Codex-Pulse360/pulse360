@@ -110,6 +110,11 @@ if grep -R "PROVIDER_BOLDDATA_ID\|PROVIDER_INFOBEL_ID\|CRM_ACCOUNT_ID" "$contrac
 fi
 pass "M1 assets do not promote provider/search/CRM IDs as sovereign identifiers"
 
+if grep -q "m1_account_group_rollup_export\|m1_account_hierarchy_edge_export" "$m1_data_cloud_setup" "$m1_dmo_field_mapping"; then
+  fail "M1 Data Cloud setup must remain activation-only until a proven Salesforce need exists"
+fi
+pass "M1 Data Cloud setup remains activation-only"
+
 python3 - "$contract" "$sample" <<'PY'
 import json
 import sys

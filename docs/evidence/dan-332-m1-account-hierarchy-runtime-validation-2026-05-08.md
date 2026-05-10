@@ -59,6 +59,51 @@ All commands passed after qualifying ambiguous rollup SQL references in
 `20_m1_account_group_rollup.sql`. The 2026-05-09 validation also passed after
 adding the three Data Cloud export-table SQL files.
 
+## Salesforce Extract Debug Addendum
+
+Latest extract investigation: `2026-05-10`.
+
+The Databricks Salesforce extract job is source-controlled in
+`config/databricks/salesforce-extract-job.json` and points to job
+`779306185996717` / pipeline `b3f7f05a-2ba0-4f0b-b16a-66f72bd4fe1e`.
+
+Observed Databricks job runs:
+
+| Run ID | Status | Notes |
+| --- | --- | --- |
+| `789643216715952` | `SUCCESS` | Latest observed run. |
+| `464561860017093` | `FAILED` | Pipeline update `b8823352-ae38-4625-9ece-2c868946a100`. |
+
+Failed pipeline update `b8823352-ae38-4625-9ece-2c868946a100` failed while
+resolving `pulse360_s4.bronze_salesforce.opportunitycontactrole` because the
+Unity Catalog Salesforce connection `pulse360` hit
+`[SAAS_CONNECTOR_UC_CONNECTION_OAUTH_EXCHANGE_FAILED]`. The failure was an OAuth
+token exchange failure, not a missing Salesforce object or a Data Cloud DMO
+design issue.
+
+Salesforce validation against org `pulse360-agent-target` confirmed that
+`Account`, `Contact`, `Opportunity`, `OpportunityContactRole`,
+`OpportunityLineItem`, and `Product2` exist. A direct
+`OpportunityContactRole` query returned zero rows, but the object query itself
+succeeded.
+
+Current table counts observed during the same debug pass:
+
+| Table | Row Count |
+| --- | ---: |
+| `bronze_salesforce.account` | 18 |
+| `bronze_salesforce.contact` | 20 |
+| `bronze_salesforce.opportunity` | 32 |
+| `bronze_salesforce.opportunitycontactrole` | 0 |
+| `bronze_salesforce.opportunitylineitem` | 0 |
+| `bronze_salesforce.product2` | 17 |
+| `silver_salesforce.crm_account` | 18 |
+| `intelligence.m1_account_hierarchy_activation_export` | 18 |
+
+Recovery path: re-authenticate the Unity Catalog connection `pulse360` if this
+OAuth exchange error returns, rerun the extract pipeline/job, and only rebuild
+M1 outputs from a successful extract run.
+
 ## Caveats
 
 - `./scripts/check-codex-operator-health.sh` is referenced by the repo operating
