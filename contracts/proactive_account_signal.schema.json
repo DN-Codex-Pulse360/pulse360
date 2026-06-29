@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pulse360/contracts/proactive_account_signal",
+  "title": "Pulse360 Proactive Account Signal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "signal_id",
+    "synthetic_flag",
+    "customer",
+    "hero_group",
+    "source_account_id",
+    "account_name",
+    "signal_type",
+    "source_event_type",
+    "priority",
+    "confidence_score",
+    "why_now",
+    "trigger_source_events",
+    "evidence_summary",
+    "data_cloud_projection",
+    "agentforce_execution_policy",
+    "unsupported_claim_count",
+    "run_id",
+    "run_timestamp",
+    "model_version"
+  ],
+  "properties": {
+    "signal_id": { "type": "string", "minLength": 1 },
+    "synthetic_flag": { "type": "boolean" },
+    "customer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "industry", "region"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "industry": { "type": "string", "minLength": 1 },
+        "region": { "type": "string", "minLength": 1 }
+      }
+    },
+    "hero_group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "group_entity_id",
+        "group_name",
+        "country_scope",
+        "crm_anchor_status"
+      ],
+      "properties": {
+        "group_entity_id": { "type": "string", "pattern": "^grp_[a-z0-9_]+$" },
+        "group_name": { "type": "string", "minLength": 1 },
+        "country_scope": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "crm_anchor_status": {
+          "type": "string",
+          "enum": ["anchored", "review_required", "blocked"]
+        }
+      }
+    },
+    "source_account_id": { "type": "string", "minLength": 15, "maxLength": 18 },
+    "account_name": { "type": "string", "minLength": 1 },
+    "signal_type": {
+      "type": "string",
+      "enum": [
+        "maintenance_coverage_gap",
+        "hierarchy_review_needed",
+        "renewal_expansion_signal",
+        "coverage_risk_signal"
+      ]
+    },
+    "source_event_type": { "type": "string", "minLength": 1 },
+    "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+    "confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "why_now": { "type": "string", "minLength": 1 },
+    "trigger_source_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "evidence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_event_count",
+        "supporting_source_families",
+        "conflicting_evidence_present",
+        "freshness_window_days"
+      ],
+      "properties": {
+        "source_event_count": { "type": "integer", "minimum": 1 },
+        "supporting_source_families": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "conflicting_evidence_present": { "type": "boolean" },
+        "freshness_window_days": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "data_cloud_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intent_signal_payload",
+        "coverage_gap_flag",
+        "ai_narrative",
+        "ai_recommended_actions",
+        "source_refs",
+        "last_synced_timestamp",
+        "run_id",
+        "run_timestamp",
+        "model_version"
+      ],
+      "properties": {
+        "intent_signal_payload": { "type": "object" },
+        "coverage_gap_flag": { "type": "boolean" },
+        "ai_narrative": { "type": "string", "minLength": 1 },
+        "ai_recommended_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "object" }
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "last_synced_timestamp": { "type": "string", "format": "date-time" },
+        "run_id": { "type": "string", "minLength": 1 },
+        "run_timestamp": { "type": "string", "format": "date-time" },
+        "model_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "agentforce_execution_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "native_runtime_verified",
+        "fallback_surface",
+        "approval_policy_enforced",
+        "recommended_actions"
+      ],
+      "properties": {
+        "native_runtime_verified": { "type": "boolean" },
+        "fallback_surface": { "type": "string", "minLength": 1 },
+        "approval_policy_enforced": { "type": "boolean" },
+        "recommended_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "rank",
+              "action_type",
+              "target_record_id",
+              "approval_required",
+              "reason"
+            ],
+            "properties": {
+              "rank": { "type": "integer", "minimum": 1 },
+              "action_type": { "type": "string", "minLength": 1 },
+              "target_record_id": { "type": ["string", "null"] },
+              "approval_required": { "type": "boolean" },
+              "reason": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "unsupported_claim_count": { "type": "integer", "minimum": 0 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "run_timestamp": { "type": "string", "format": "date-time" },
+    "model_version": { "type": "string", "minLength": 1 }
+  }
+}
