@@ -1,0 +1,126 @@
+{
+  "fixture_id": "fixture_northstar_proactive_signal_20260629",
+  "synthetic_flag": true,
+  "customer": {
+    "name": "Meridian Industrial Systems",
+    "industry": "industrial manufacturing",
+    "region": "ASEAN"
+  },
+  "hero_group": {
+    "group_entity_id": "grp_northstar_foods",
+    "group_name": "Northstar Foods Group",
+    "country_scope": ["ID", "TH", "SG", "PH"],
+    "crm_anchor_status": "anchored"
+  },
+  "simulation_run_id": "run_proactive_signal_demo_20260629",
+  "source_events": [
+    {
+      "source_event_id": "evt_product_installed_base_id_20260629_001",
+      "source_family": "product_telemetry",
+      "source_system": "synthetic_installed_base_feed",
+      "source_event_type": "installed_base_event",
+      "event_timestamp": "2026-06-29T01:00:00Z",
+      "entity_key": "northstar-foods-id-plant-07",
+      "group_entity_id": "grp_northstar_foods",
+      "change_summary": "New Indonesia plant line detected with six connected assets and no linked maintenance plan.",
+      "impact_hint": "Installed base is expanding faster than service coverage.",
+      "source_refs": [
+        {
+          "source_id": "src_installed_base_id_plant_07",
+          "source_label": "Installed base fixture for Indonesia plant 07",
+          "source_uri": "fixture://northstar/installed-base/id-plant-07"
+        }
+      ]
+    },
+    {
+      "source_event_id": "evt_service_warranty_id_20260629_002",
+      "source_family": "service",
+      "source_system": "synthetic_service_warranty_feed",
+      "source_event_type": "warranty_expiring",
+      "event_timestamp": "2026-06-29T01:15:00Z",
+      "entity_key": "northstar-foods-id-plant-07",
+      "group_entity_id": "grp_northstar_foods",
+      "change_summary": "Warranty for the primary packing line expires in 45 days.",
+      "impact_hint": "Seller should engage before warranty expiry creates service risk.",
+      "source_refs": [
+        {
+          "source_id": "src_warranty_id_pack_line_45d",
+          "source_label": "Warranty expiry fixture for ID packing line",
+          "source_uri": "fixture://northstar/service/warranty-id-pack-line"
+        }
+      ]
+    },
+    {
+      "source_event_id": "evt_erp_contract_id_20260629_003",
+      "source_family": "erp",
+      "source_system": "synthetic_contract_entitlement_feed",
+      "source_event_type": "no_active_contract",
+      "event_timestamp": "2026-06-29T01:30:00Z",
+      "entity_key": "northstar-foods-id-plant-07",
+      "group_entity_id": "grp_northstar_foods",
+      "change_summary": "No active maintenance contract found for the Indonesia plant account or known subsidiaries.",
+      "impact_hint": "Coverage gap is commercially actionable and not just a data quality issue.",
+      "source_refs": [
+        {
+          "source_id": "src_contract_gap_id_plant_07",
+          "source_label": "Contract entitlement fixture for Northstar Indonesia",
+          "source_uri": "fixture://northstar/erp/contracts/id-plant-07"
+        }
+      ]
+    },
+    {
+      "source_event_id": "evt_partner_spares_th_20260629_004",
+      "source_family": "partner",
+      "source_system": "synthetic_distributor_order_feed",
+      "source_event_type": "spare_parts_spike",
+      "event_timestamp": "2026-06-29T02:00:00Z",
+      "entity_key": "northstar-foods-th-distributor-a",
+      "group_entity_id": "grp_northstar_foods",
+      "change_summary": "Thailand distributor orders for replacement belts increased by 38 percent in the last 30 days.",
+      "impact_hint": "Regional wear pattern suggests preventive maintenance opportunity across the group.",
+      "source_refs": [
+        {
+          "source_id": "src_partner_spares_th_belts",
+          "source_label": "Distributor spare parts fixture for Thailand",
+          "source_uri": "fixture://northstar/partner/spares-th-belts"
+        }
+      ]
+    },
+    {
+      "source_event_id": "evt_crm_duplicate_sg_20260629_005",
+      "source_family": "crm",
+      "source_system": "synthetic_salesforce_account_feed",
+      "source_event_type": "duplicate_subsidiary_candidate",
+      "event_timestamp": "2026-06-29T02:20:00Z",
+      "entity_key": "northstar-foods-sg-procurement",
+      "group_entity_id": "grp_northstar_foods",
+      "change_summary": "Singapore procurement account appears as a duplicate subsidiary with partial hierarchy coverage.",
+      "impact_hint": "Recommended action should route stewardship before any group-level CRM writeback.",
+      "source_refs": [
+        {
+          "source_id": "src_crm_duplicate_sg_procurement",
+          "source_label": "Salesforce account fixture for Singapore procurement duplicate",
+          "source_uri": "fixture://northstar/crm/account-sg-procurement"
+        }
+      ]
+    },
+    {
+      "source_event_id": "evt_service_cases_ph_20260629_006",
+      "source_family": "service",
+      "source_system": "synthetic_case_management_feed",
+      "source_event_type": "service_case_increase",
+      "event_timestamp": "2026-06-29T02:45:00Z",
+      "entity_key": "northstar-foods-ph-cold-chain",
+      "group_entity_id": "grp_northstar_foods",
+      "change_summary": "Philippines cold-chain service cases increased from two to seven in the last quarter.",
+      "impact_hint": "Case trend strengthens the preventive maintenance signal across ASEAN subsidiaries.",
+      "source_refs": [
+        {
+          "source_id": "src_service_cases_ph_cold_chain",
+          "source_label": "Service case fixture for Philippines cold-chain assets",
+          "source_uri": "fixture://northstar/service/cases-ph-cold-chain"
+        }
+      ]
+    }
+  ]
+}

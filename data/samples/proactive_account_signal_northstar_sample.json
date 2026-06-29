@@ -1,0 +1,138 @@
+{
+  "signal_id": "sig_maintenance_coverage_gap_northstar_20260629",
+  "synthetic_flag": true,
+  "customer": {
+    "name": "Meridian Industrial Systems",
+    "industry": "industrial manufacturing",
+    "region": "ASEAN"
+  },
+  "hero_group": {
+    "group_entity_id": "grp_northstar_foods",
+    "group_name": "Northstar Foods Group",
+    "country_scope": ["ID", "TH", "SG", "PH"],
+    "crm_anchor_status": "anchored"
+  },
+  "source_account_id": "001NST000000001AAA",
+  "account_name": "Northstar Foods Group",
+  "signal_type": "maintenance_coverage_gap",
+  "source_event_type": "cross_source_coverage_gap",
+  "priority": "high",
+  "confidence_score": 0.82,
+  "why_now": "A new Indonesia installed-base signal, warranty expiry in 45 days, missing service entitlement, rising Thailand spare-parts demand, duplicate subsidiary risk, and Philippines service-case growth now point to the same group-level maintenance coverage gap.",
+  "trigger_source_events": [
+    "evt_product_installed_base_id_20260629_001",
+    "evt_service_warranty_id_20260629_002",
+    "evt_erp_contract_id_20260629_003",
+    "evt_partner_spares_th_20260629_004",
+    "evt_crm_duplicate_sg_20260629_005",
+    "evt_service_cases_ph_20260629_006"
+  ],
+  "evidence_summary": {
+    "source_event_count": 6,
+    "supporting_source_families": [
+      "product_telemetry",
+      "service",
+      "erp",
+      "partner",
+      "crm"
+    ],
+    "conflicting_evidence_present": false,
+    "freshness_window_days": 1
+  },
+  "data_cloud_projection": {
+    "intent_signal_payload": {
+      "routing_version": "pulse360-proactive-signal-routing-v1",
+      "signal_score": 88,
+      "signal_label": "Coverage-led review",
+      "threshold_label": "Coverage gap, warranty urgency, and cross-source service demand crossed the routed-review threshold.",
+      "route_to": "account_owner_plus_coverage",
+      "routing_confidence": 0.82,
+      "signal_type": "maintenance_coverage_gap",
+      "priority": "high",
+      "hero_group": "grp_northstar_foods",
+      "why_now": "Cross-source evidence shows an actionable preventive-maintenance coverage gap before warranty expiry.",
+      "drafted_outreach": "Pulse360 flagged Northstar Foods Group because installed equipment, warranty expiry, missing maintenance coverage, and regional service demand now point to a preventive-maintenance motion. Lead with service continuity and confirm the Indonesia plant owner path.",
+      "recommended_next_step": "Route a service-specialist review and prepare an approved seller task for the CRM account team.",
+      "channel_readiness": "salesforce_preview",
+      "top_drivers": [
+        "Warranty expiry creates a near-term reason to engage.",
+        "No active maintenance contract is visible for the Indonesia plant account or known subsidiaries.",
+        "Thailand spare-parts demand and Philippines case growth corroborate a regional service opportunity."
+      ],
+      "generated_at": "2026-06-29T03:00:00Z"
+    },
+    "coverage_gap_flag": true,
+    "ai_narrative": "Northstar Foods Group is showing a proactive maintenance coverage gap across ASEAN operations. The signal is based on synthetic installed-base, warranty, contract, partner-spares, CRM hierarchy, and service-case evidence. This is ready for seller review, but any opportunity creation or hierarchy writeback should require approval.",
+    "ai_recommended_actions": [
+      {
+        "rank": 1,
+        "action_type": "route_specialist",
+        "target": "Northstar Foods Group service coverage review",
+        "target_record_id": "001NST000000001AAA",
+        "reasoning": "The signal is supported by six current source-change events and can be reviewed without writing to CRM.",
+        "confidence": 0.82,
+        "approval_required": false
+      },
+      {
+        "rank": 2,
+        "action_type": "create_opportunity",
+        "target": "Northstar Foods preventive maintenance proposal",
+        "target_record_id": "001NST000000001AAA",
+        "reasoning": "A commercial action is plausible, but opportunity creation is a high-impact CRM action and needs approval.",
+        "confidence": 0.72,
+        "approval_required": true
+      }
+    ],
+    "source_refs": [
+      "evt_product_installed_base_id_20260629_001",
+      "evt_service_warranty_id_20260629_002",
+      "evt_erp_contract_id_20260629_003",
+      "evt_partner_spares_th_20260629_004",
+      "evt_crm_duplicate_sg_20260629_005",
+      "evt_service_cases_ph_20260629_006"
+    ],
+    "last_synced_timestamp": "2026-06-29T03:00:00Z",
+    "run_id": "run_proactive_signal_demo_20260629",
+    "run_timestamp": "2026-06-29T03:00:00Z",
+    "model_version": "proactive-account-signal-v1"
+  },
+  "agentforce_execution_policy": {
+    "native_runtime_verified": false,
+    "fallback_surface": "custom Salesforce LWC/Apex assistant and action panels",
+    "approval_policy_enforced": true,
+    "recommended_actions": [
+      {
+        "rank": 1,
+        "action_type": "route_specialist",
+        "target_record_id": "001NST000000001AAA",
+        "approval_required": false,
+        "reason": "Routing a specialist review is low impact and does not mutate account hierarchy or commercial records."
+      },
+      {
+        "rank": 2,
+        "action_type": "create_task",
+        "target_record_id": "001NST000000001AAA",
+        "approval_required": false,
+        "reason": "A seller follow-up task is allowed when the action preserves citations and account context."
+      },
+      {
+        "rank": 3,
+        "action_type": "create_opportunity",
+        "target_record_id": "001NST000000001AAA",
+        "approval_required": true,
+        "reason": "Opportunity creation is a high-impact CRM action and must be approved before execution."
+      },
+      {
+        "rank": 4,
+        "action_type": "update_account_hierarchy",
+        "target_record_id": "001NST000000001AAA",
+        "approval_required": true,
+        "reason": "Hierarchy updates require stewardship review because one subsidiary is flagged as a duplicate candidate."
+      }
+    ]
+  },
+  "unsupported_claim_count": 0,
+  "run_id": "run_proactive_signal_demo_20260629",
+  "run_timestamp": "2026-06-29T03:00:00Z",
+  "model_version": "proactive-account-signal-v1"
+}
