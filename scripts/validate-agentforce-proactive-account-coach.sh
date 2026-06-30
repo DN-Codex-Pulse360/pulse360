@@ -16,15 +16,20 @@ search_fixed() {
 }
 
 agent_file="force-app/main/default/aiAuthoringBundles/Pulse360_Agent/Pulse360_Agent.agent"
+bundle_meta="force-app/main/default/aiAuthoringBundles/Pulse360_Agent/Pulse360_Agent.bundle-meta.xml"
 action_class="force-app/main/default/classes/Pulse360GetProactiveSignalBriefAction.cls"
 action_test="force-app/main/default/classes/Pulse360ProactiveSignalBriefTest.cls"
 contract_doc="docs/contracts/pulse360-agentforce-capability-gate-contract.md"
 permset="force-app/main/default/permissionsets/Pulse360_Account_Intelligence_User.permissionset-meta.xml"
 
-for path in "$agent_file" "$action_class" "$action_test"; do
+for path in "$agent_file" "$bundle_meta" "$action_class" "$action_test"; do
   [[ -f "$path" ]] || fail "Missing Agentforce proactive coach artifact: $path"
 done
 pass "Agentforce proactive coach source artifacts exist"
+
+search_fixed "<bundleType>AGENT</bundleType>" "$bundle_meta" \
+  || fail "Agentforce bundle metadata must declare bundleType AGENT"
+pass "Agentforce bundle metadata declares AGENT bundle type"
 
 for token in \
   "topic proactive_account_coach" \
