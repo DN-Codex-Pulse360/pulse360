@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-06-30T12:05:49.478788+00:00",
+  "workspace_host": "https://dbc-7f0ce7bb-56ca.cloud.databricks.com",
+  "warehouse_id": "7052914888c7e86c",
+  "projection": "pulse360_s4.gold_proactive_signal.datacloud_proactive_signal_projection",
+  "row_count": 1,
+  "required_columns_present": [
+    "account_name",
+    "agentforce_execution_policy",
+    "ai_narrative",
+    "ai_recommended_actions",
+    "citation_count",
+    "coverage_gap_flag",
+    "hierarchy_payload",
+    "ingestion_metadata_label",
+    "intent_signal_payload",
+    "model_version",
+    "run_id",
+    "run_timestamp",
+    "source_account_id",
+    "source_refs"
+  ],
+  "sample_row": {
+    "account_name": "Northstar Foods Group",
+    "source_account_id": "001NST000000001AAA",
+    "coverage_gap_flag": "true",
+    "citation_count": "6",
+    "ingestion_metadata_label": "Databricks Proactive Signal - Last ingested: 2026-06-29T03:00:00Z",
+    "run_id": "run_proactive_signal_demo_20260629",
+    "model_version": "proactive-account-signal-v1",
+    "intent_signal_payload": "{\"routing_version\":\"pulse360-proactive-signal-routing-v1\",\"signal_score\":88.0,\"signal_label\":\"Coverage-led review\",\"threshold_label\":\"Coverage gap, warranty urgency, and cross-source service demand crossed the routed-review threshold.\",\"route_to\":\"account_owner_plus_coverage\",\"routing_confidence\":0.82,\"signal_type\":\"maintenance_coverage_gap\",\"priority\":\"high\",\"hero_group\":\"grp_northstar_foods\",\"why_now\":\"Cross-source evidence shows an actionable preventive-maintenance coverage gap before warranty expiry.\",\"drafted_outreach\":\"Pulse360 flagged Northstar Foods Group because installed equipment, warranty expiry, missing maintenance coverage, and regional service demand now point to a preventive-maintenance motion. Lead with service continuity and confirm the Indonesia plant owner path.\",\"recommended_next_step\":\"Route a service-specialist review and prepare an approved seller task for the CRM account team.\",\"channel_readiness\":\"salesforce_preview\",\"top_drivers\":[\"Warranty expiry creates a near-term reason to engage.\",\"No active maintenance contract is visible for the Indonesia plant account or known subsidiaries.\",\"Thailand spare-parts demand and Philippines case growth corroborate a regional service opportunity.\"],\"generated_at\":\"2026-06-29T03:00:00Z\"}",
+    "ai_recommended_actions": "[{\"rank\":1,\"action_type\":\"route_specialist\",\"target\":\"Northstar Foods Group service coverage review\",\"target_record_id\":\"001NST000000001AAA\",\"reasoning\":\"The signal is supported by six current source-change events and can be reviewed without writing to CRM.\",\"confidence\":0.82,\"approval_required\":false},{\"rank\":2,\"action_type\":\"create_opportunity\",\"target\":\"Northstar Foods preventive maintenance proposal\",\"target_record_id\":\"001NST000000001AAA\",\"reasoning\":\"A commercial action is plausible, but opportunity creation is a high-impact CRM action and needs approval.\",\"confidence\":0.72,\"approval_required\":true}]",
+    "agentforce_execution_policy": "{\"native_runtime_verified\":false,\"fallback_surface\":\"custom Salesforce LWC/Apex assistant and action panels\",\"approval_policy_enforced\":true,\"recommended_actions\":[{\"rank\":1,\"action_type\":\"route_specialist\",\"target_record_id\":\"001NST000000001AAA\",\"approval_required\":false,\"reason\":\"Routing a specialist review is low impact and does not mutate account hierarchy or commercial records.\"},{\"rank\":2,\"action_type\":\"create_task\",\"target_record_id\":\"001NST000000001AAA\",\"approval_required\":false,\"reason\":\"A seller follow-up task is allowed when the action preserves citations and account context.\"},{\"rank\":3,\"action_type\":\"create_opportunity\",\"target_record_id\":\"001NST000000001AAA\",\"approval_required\":true,\"reason\":\"Opportunity creation is a high-impact CRM action and must be approved before execution.\"},{\"rank\":4,\"action_type\":\"update_account_hierarchy\",\"target_record_id\":\"001NST000000001AAA\",\"approval_required\":true,\"reason\":\"Hierarchy updates require stewardship review because one subsidiary is flagged as a duplicate candidate.\"}]}"
+  }
+}

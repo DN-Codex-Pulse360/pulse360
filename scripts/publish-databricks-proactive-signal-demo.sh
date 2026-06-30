@@ -224,8 +224,9 @@ sample_rows = data_array(sample_payload)
 if not sample_rows:
     raise SystemExit("No sample row returned from proactive projection")
 
+checked_at = datetime.now(timezone.utc)
 evidence = {
-    "checked_at": datetime.now(timezone.utc).isoformat(),
+    "checked_at": checked_at.isoformat(),
     "workspace_host": host,
     "warehouse_id": warehouse_id,
     "projection": "pulse360_s4.gold_proactive_signal.datacloud_proactive_signal_projection",
@@ -247,7 +248,7 @@ evidence = {
 
 evidence_dir = repo_root / "docs/evidence"
 evidence_dir.mkdir(parents=True, exist_ok=True)
-evidence_path = evidence_dir / "pulse360-proactive-signal-databricks-live-check-2026-06-29.json"
+evidence_path = evidence_dir / f"pulse360-proactive-signal-databricks-live-check-{checked_at.date().isoformat()}.json"
 evidence_path.write_text(json.dumps(evidence, indent=2) + "\n")
 
 print("[OK] Verified proactive projection columns and row count")
