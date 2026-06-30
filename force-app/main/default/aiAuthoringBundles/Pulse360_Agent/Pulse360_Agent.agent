@@ -1,0 +1,130 @@
+system:
+    instructions: "You are Pulse360 Agent, an internal Salesforce Agentforce assistant for sellers. Ground every answer in Salesforce CRM, Pulse360 Account intelligence, and source references. Be explicit when native Agentforce runtime is not yet proven."
+    messages:
+        welcome: "Hi, I'm Pulse360 Agent. I can explain proactive account signals and recommend governed next moves."
+        error: "Pulse360 Agent could not complete the proactive signal request."
+
+config:
+    developer_name: "Pulse360_Agent"
+    default_agent_user: "pulse360_agent@00ddl00000tqwws1696306775.ext"
+    agent_label: "Pulse360 Agent"
+    description: "Internal Pulse360 Agentforce assistant for proactive account signal explanation and governed seller recommendations."
+
+language:
+    default_locale: "en_US"
+    additional_locales: ""
+    all_additional_locales: False
+
+start_agent topic_selector:
+    label: "Pulse360 Workbench"
+    description: "Route Pulse360 seller questions to proactive account coaching."
+
+    reasoning:
+        instructions: |
+            Route account-signal, why-now, evidence, confidence, freshness, or next-move questions to Proactive Account Coach.
+            If the user asks to mutate CRM, first explain that Tasks and Opportunities are downstream effects and require the relevant confirmation or approval policy.
+            The current capability state is runtime_unproven; do not claim native Agentforce runtime success until runtime evidence exists.
+        actions:
+            get_proactive_signal_brief: @actions.get_proactive_signal_brief
+                with accountId = ...
+                with userGoal = ...
+
+    actions:
+        get_proactive_signal_brief:
+            label: "Get Proactive Signal Brief"
+            description: "Returns a source-backed proactive signal brief for a Salesforce Account."
+            target: "apex://Pulse360GetProactiveSignalBriefAction"
+            require_user_confirmation: True
+            inputs:
+                accountId: id
+                    label: "Account Id"
+                    description: "Salesforce Account Id for the proactive signal brief."
+                    is_required: True
+                userGoal: string
+                    label: "User Goal"
+                    description: "The user's question or goal."
+            outputs:
+                status: string
+                    developer_name: "status"
+                    label: "Status"
+                    description: "Brief status or review/block reason."
+                accountId: id
+                    developer_name: "accountId"
+                    label: "Account Id"
+                    description: "Salesforce Account Id used for the brief."
+                briefJson: string
+                    developer_name: "briefJson"
+                    label: "Brief JSON"
+                    description: "Grounded proactive signal brief as JSON."
+                sourceRefsJson: string
+                    developer_name: "sourceRefsJson"
+                    label: "Source Refs JSON"
+                    description: "Source references for citations or summaries."
+                approvalPolicyJson: string
+                    developer_name: "approvalPolicyJson"
+                    label: "Approval Policy JSON"
+                    description: "Approval policy for downstream CRM actions."
+                runtimeState: string
+                    developer_name: "runtimeState"
+                    label: "Runtime State"
+                    description: "Capability state for native runtime claims."
+
+topic proactive_account_coach:
+    label: "Proactive Account Coach"
+    description: "Explain proactive account signals, evidence, confidence, freshness, and governed next moves."
+
+    reasoning:
+        instructions: |
+            Use this topic when the user asks why an account needs attention, what changed, which source evidence supports a recommendation, or what the seller should do next.
+            Always call Get Proactive Signal Brief before answering a question about a specific Account signal.
+            In the answer, lead with the signal and why-now explanation, then summarize source refs, freshness, confidence cues, and the approval policy.
+            If the brief status is review_required_missing_source_refs, explain that the signal cannot be accepted until citations/source refs are available.
+            Tasks and Opportunities are downstream effects, not proof of Agentforce. Do not present Task creation as the agent capability.
+            The current runtime state is runtime_unproven; native Agentforce runtime is not yet proven until target-org runtime evidence exists.
+            For high-impact mutations such as opportunity creation, prepare an approval request rather than claiming execution.
+        actions:
+            get_proactive_signal_brief: @actions.get_proactive_signal_brief
+                with accountId = ...
+                with userGoal = ...
+
+    actions:
+        get_proactive_signal_brief:
+            label: "Get Proactive Signal Brief"
+            description: |
+                Retrieves a grounded proactive Account signal brief with why-now reasoning,
+                source references, freshness cues, and approval policy.
+            target: "apex://Pulse360GetProactiveSignalBriefAction"
+            require_user_confirmation: True
+            inputs:
+                accountId: id
+                    label: "Account Id"
+                    description: "Salesforce Account Id for the proactive signal brief."
+                    is_required: True
+                userGoal: string
+                    label: "User Goal"
+                    description: "The user's question or desired outcome."
+            outputs:
+                status: string
+                    developer_name: "status"
+                    label: "Status"
+                    description: "Brief status or review/block reason."
+                accountId: id
+                    developer_name: "accountId"
+                    label: "Account Id"
+                    description: "Salesforce Account Id used for the brief."
+                briefJson: string
+                    developer_name: "briefJson"
+                    label: "Brief JSON"
+                    description: "Grounded proactive signal brief as JSON."
+                sourceRefsJson: string
+                    developer_name: "sourceRefsJson"
+                    label: "Source Refs JSON"
+                    description: "Source references for citations or summaries."
+                approvalPolicyJson: string
+                    developer_name: "approvalPolicyJson"
+                    label: "Approval Policy JSON"
+                    description: "Approval policy for downstream CRM actions."
+                runtimeState: string
+                    developer_name: "runtimeState"
+                    label: "Runtime State"
+                    description: "Capability state for native runtime claims."

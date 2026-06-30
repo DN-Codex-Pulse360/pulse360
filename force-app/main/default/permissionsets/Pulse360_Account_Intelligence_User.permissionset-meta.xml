@@ -33,6 +33,10 @@
         <apexClass>Pulse360ExecuteSellerAction</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>Pulse360GetProactiveSignalBriefAction</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <fieldPermissions><editable>false</editable><field>Account.Active_Product_Count__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.AI_Citation_Count__c</field><readable>true</readable></fieldPermissions>
     <fieldPermissions><editable>false</editable><field>Account.AI_Model_Id__c</field><readable>true</readable></fieldPermissions>

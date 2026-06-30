@@ -304,6 +304,17 @@ This gate proves the Databricks projection, mapping contract, Salesforce preview
 evidence, and current activation boundary are aligned. It does not claim the
 Data Cloud stream has been created or repointed.
 
+To validate the real Agentforce metadata/action slice for the proactive account
+coach, run:
+
+```bash
+./scripts/validate-agentforce-proactive-account-coach.sh
+```
+
+This gate proves the repo has a native Agentforce topic/action contract for
+signal explanation and governed recommendation. It does not claim native
+Agentforce runtime success until the target org surface is proven.
+
 ## What Not To Build Yet
 
 Do not build these before the proactive signal story is validated:
