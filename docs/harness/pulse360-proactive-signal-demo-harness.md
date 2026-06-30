@@ -293,6 +293,17 @@ TARGET_ORG=pulse360-agent-target ./scripts/seed-salesforce-proactive-signal-demo
 TARGET_ORG=pulse360-agent-target ./scripts/validate-salesforce-proactive-signal-demo.sh
 ```
 
+To prepare the Data Cloud activation handoff for the live Databricks projection,
+run:
+
+```bash
+./scripts/validate-proactive-signal-data-cloud-handoff.sh
+```
+
+This gate proves the Databricks projection, mapping contract, Salesforce preview
+evidence, and current activation boundary are aligned. It does not claim the
+Data Cloud stream has been created or repointed.
+
 ## What Not To Build Yet
 
 Do not build these before the proactive signal story is validated:
