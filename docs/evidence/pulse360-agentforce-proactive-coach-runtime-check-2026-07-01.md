@@ -8,9 +8,14 @@ The Agentforce proactive account coach metadata and Apex action are deployed to
 `pulse360-agent-target`, and the action has been invoked live against the
 Northstar Account.
 
-Native Agentforce runtime is still not claimed as proven. The bundle deploy
-succeeded, but post-deploy metadata listing/retrieval was ambiguous and no
-Agentforce Builder or native chat invocation evidence has been captured yet.
+Native Agentforce Builder preview runtime is now proven for the advisory
+`get_proactive_signal_brief` action path. The active Builder artifact is
+`Pulse360 Agent`, Version 6 (Draft), project `1bYdL00000072hpUAA`, version
+`1bZdL000000Om8LUAS`.
+
+Downstream CRM mutation is still not claimed as proven. The validated runtime
+path explains and recommends next moves; task/opportunity creation remains a
+separate approval-gated capability.
 
 ## Target Org
 
@@ -137,9 +142,9 @@ Real deploy result:
 - Deploy status:
   `https://orgfarm-d50863b207-dev-ed.develop.my.salesforce.com/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D0AfdL00000cjmH7SAI%26retURL%3D%252Fchangemgmt%252FmonitorDeployment.apexp`
 
-## Remaining Runtime Boundary
+## Metadata Retrieval Boundary
 
-Post-deploy metadata checks did not yet produce a clean runtime proof:
+Post-deploy metadata checks did not produce a clean retrieve-based proof:
 
 - `sf org list metadata --metadata-type AiAuthoringBundle` surfaced older
   numbered `Pulse360_Agent_*` bundles rather than the clean `Pulse360_Agent`
@@ -147,24 +152,47 @@ Post-deploy metadata checks did not yet produce a clean runtime proof:
 - `sf project retrieve start --metadata AiAuthoringBundle:Pulse360_Agent`
   completed but returned only `package.xml`, with no retrieved bundle files.
 
-Therefore, the current honest capability state is:
+The current honest capability state is:
 
 ```text
 Agentforce metadata deployed.
 Apex action live and source-backed.
-Native Agentforce runtime invocation still unproven.
+Native Agentforce Builder preview invocation proven for advisory signal brief.
+Downstream CRM mutation still unproven and approval-gated.
+```
+
+## Native Builder Runtime Proof
+
+The Salesforce UI confirmed that the active Agentforce Builder artifact is:
+
+```text
+Pulse360 Agent
+Version 6 (Draft)
+Project: 1bYdL00000072hpUAA
+Project version: 1bZdL000000Om8LUAS
+```
+
+The Builder preview was invoked against:
+
+```text
+Account Id: 001dL00002HTb4cQAD
+Account: Northstar Foods Group
+Session: 97d2140e-ec2a-4afd-a975-2ff2f431c0a8
+```
+
+The preview first requested confirmation, then executed the native
+`get proactive signal brief` action successfully. The trace also showed
+successful `GROUNDED` output evaluation.
+
+See the detailed browser-validated evidence note:
+
+```text
+docs/evidence/pulse360-agentforce-builder-preview-2026-07-01.md
 ```
 
 ## Next Proof Step
 
-Use the Salesforce UI to confirm which Agentforce bundle is active in
-Agentforce Builder, bind or publish the `Get Proactive Signal Brief` action if
-required, and capture a native Agentforce invocation against:
-
-```text
-Northstar Foods Group
-```
-
-The success criterion is an Agentforce surface response that includes the
-Northstar proactive signal, source references, and approval policy while keeping
-high-impact CRM mutations behind confirmation.
+If the demo needs more than advisory Agentforce, the next proof is a separate
+confirmation-gated mutation action, such as creating a Salesforce Task or
+drafting an Opportunity recommendation, with explicit approval evidence in the
+Builder trace.
