@@ -23,6 +23,8 @@ task_action_class="force-app/main/default/classes/Pulse360PrepReviewTaskAction.c
 task_action_test="force-app/main/default/classes/Pulse360PrepReviewTaskActionTest.cls"
 contract_doc="docs/contracts/pulse360-agentforce-capability-gate-contract.md"
 permset="force-app/main/default/permissionsets/Pulse360_Account_Intelligence_User.permissionset-meta.xml"
+account_quick_action="force-app/main/default/quickActions/Account.Pulse360_Proactive_Brief.quickAction-meta.xml"
+account_layout="force-app/main/default/layouts/Account-Account Layout.layout-meta.xml"
 
 for path in "$agent_file" "$bundle_meta" "$action_class" "$action_test" "$task_action_class" "$task_action_test"; do
   [[ -f "$path" ]] || fail "Missing Agentforce proactive coach artifact: $path"
@@ -106,6 +108,27 @@ search_fixed "Pulse360GetProactiveSignalBriefAction" "$permset" \
 search_fixed "Pulse360PrepReviewTaskAction" "$permset" \
   || fail "Permission set must expose the governed Task Agentforce action"
 pass "Permission set exposes the proactive signal brief and governed Task actions"
+
+[[ -f "$account_quick_action" ]] || fail "Missing Account-page Agentforce quick action: $account_quick_action"
+for token in \
+  "<label>Pulse360 Proactive Brief</label>" \
+  "<type>Copilot</type>" \
+  "<name>User Utterance</name>" \
+  "Pulse360 proactive signal brief" \
+  "{!Account.Id}" \
+  "001dL00002HTb4cQAD" \
+  "ask for confirmation before creating any Task" \
+  "do not create Opportunities"; do
+  search_fixed "$token" "$account_quick_action" || fail "Account-page quick action missing token: $token"
+done
+pass "Account-page quick action passes explicit Account context and approval policy to Agentforce"
+
+[[ -f "$account_layout" ]] || fail "Missing Account layout with Account-page action placement"
+search_fixed "<actionName>Account.Pulse360_Proactive_Brief</actionName>" "$account_layout" \
+  || fail "Account layout must include the Pulse360 Agentforce quick action in the record action list"
+search_fixed "<quickActionName>Account.Pulse360_Proactive_Brief</quickActionName>" "$account_layout" \
+  || fail "Account layout must include the Pulse360 Agentforce quick action in the quick action list"
+pass "Account layout exposes the Pulse360 Agentforce quick action on Account records"
 
 if search_fixed "Task created" "$agent_file" "$action_class" "$action_test"; then
   fail "Agentforce proactive coach must not use Task creation as the primary proof"

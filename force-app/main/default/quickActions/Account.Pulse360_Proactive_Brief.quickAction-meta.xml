@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Pulse360 Proactive Brief</label>
+    <optionsCreateFeedItem>false</optionsCreateFeedItem>
+    <quickActionParameters>
+        <name>User Utterance</name>
+        <type>Input</type>
+        <value>Pulse360 proactive signal brief for Account {!Account.Id}. Use Account Id 001dL00002HTb4cQAD as the Northstar demo control only if no runtime record context is available. Explain why now, cite source evidence, include confidence and freshness, ask for confirmation before creating any Task, and do not create Opportunities or hierarchy updates.</value>
+    </quickActionParameters>
+    <type>Copilot</type>
+</QuickAction>

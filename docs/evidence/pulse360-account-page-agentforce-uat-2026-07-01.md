@@ -49,6 +49,37 @@ This proves the Account page has an Agentforce entry point, but the active
 header panel is not the Pulse360 Agent and is not receiving record-aware
 context from the Account page in this configuration.
 
+## Account Agent Quick Action UAT
+
+An Account object Agent Quick Action was created and deployed:
+
+- Quick action: `Account.Pulse360_Proactive_Brief`
+- Label: `Pulse360 Proactive Brief`
+- Metadata type: `QuickAction`
+- Quick action type in metadata: `Copilot`
+- User utterance parameter:
+  `Pulse360 proactive signal brief for Account {!Account.Id}. Use Account Id 001dL00002HTb4cQAD as the Northstar demo control only if no runtime record context is available. Explain why now, cite source evidence, include confidence and freshness, ask for confirmation before creating any Task, and do not create Opportunities or hierarchy updates.`
+
+The Account layout was updated to expose this quick action on Account records:
+
+- Layout: `Account-Account Layout`
+- Platform action entry: `Account.Pulse360_Proactive_Brief`
+- Quick action list entry: `Account.Pulse360_Proactive_Brief`
+
+Live browser UAT on the Northstar Account page confirmed:
+
+- The Account action overflow menu includes `Pulse360 Proactive Brief`.
+- Clicking `Pulse360 Proactive Brief` opens the native Agentforce side panel.
+- The user message `Pulse360 Proactive Brief` is sent into the panel.
+- The panel title is still `Slack Customer Insights`, not `Pulse360 Agent`.
+- The response attempted Slack Canvas behavior and returned:
+  `It looks like there was an issue with creating a Slack canvas because the operation isn't supported on free Slack teams.`
+
+This proves the Account-page Agent Quick Action is live and dispatches into
+Agentforce. It also proves the current org routing is still bound to the active
+employee agent, `Slack Customer Insights`, rather than the Pulse360 service
+agent/runtime.
+
 ## Setup Evidence
 
 Salesforce Setup > Agentforce Agents showed:
@@ -86,17 +117,25 @@ Proven:
 - Governed Task action deploy and Apex runtime were proven.
 - The governed Task is visible on the Northstar Account activity timeline.
 - The live Account page has an Agentforce panel entry point.
+- The Northstar Account page exposes the `Pulse360 Proactive Brief` Agent Quick
+  Action.
+- The Account-page action opens the native Agentforce side panel and sends the
+  quick-action prompt into that surface.
 
 Not yet proven:
 
-- Pulse360 Agent is the agent opened from the Account page header.
-- The Account page Agentforce panel passes implicit `recordId` context.
+- Pulse360 Agent is the agent opened from the Account page header or Account
+  quick action.
+- The Account page Agentforce panel passes implicit `recordId` context to a
+  Pulse360-specific runtime.
 - The governed Task action is invoked from the Account page Agentforce panel.
+- The Account quick action can complete a Pulse360 brief response while the
+  active employee agent remains `Slack Customer Insights`.
 
 ## Recommended Next Build Path
 
-The next strongest path is to build an Account-page Agent Quick Action for
-Pulse360.
+The next strongest path is to bind the Account-page quick action to a
+Pulse360-capable employee-agent surface.
 
 Rationale:
 
@@ -105,18 +144,20 @@ Rationale:
   panel.
 - The current global header panel is an employee agent surface, while the
   Pulse360 agent is currently a service agent.
-- A quick action can explicitly include Account name and Account Id in the
-  utterance, avoiding reliance on implicit page context.
+- The quick action now explicitly includes Account Id in the utterance, avoiding
+  reliance on implicit page context.
+- The remaining routing issue is that the active employee agent interprets the
+  shortcut through the Slack Customer Insights capability set.
 
 Target behavior:
 
 1. Seller opens `Northstar Foods Group`.
 2. Seller clicks `Pulse360 Proactive Brief` from the Account action surface.
-3. Agentforce panel opens with a Pulse360-specific prompt that includes the
-   Account Id.
+3. Agentforce panel opens with a Pulse360-capable employee agent.
 4. The agent retrieves the source-backed proactive brief.
 5. The agent asks for confirmation before any CRM mutation.
 6. On confirmation, the governed Task action creates or links the review Task.
 
-This would make the demo honestly Account-page native without claiming that the
-current header panel already runs Pulse360.
+This would make the demo honestly Account-page native and Agentforce-native
+without claiming that the current Slack Customer Insights panel already runs
+Pulse360.
