@@ -192,7 +192,20 @@ docs/evidence/pulse360-agentforce-builder-preview-2026-07-01.md
 
 ## Next Proof Step
 
-If the demo needs more than advisory Agentforce, the next proof is a separate
-confirmation-gated mutation action, such as creating a Salesforce Task or
-drafting an Opportunity recommendation, with explicit approval evidence in the
-Builder trace.
+The separate confirmation-gated Salesforce Task action has now been deployed
+and invoked directly in the target org.
+
+See:
+
+```text
+docs/evidence/pulse360-agentforce-governed-task-action-2026-07-01.md
+```
+
+The remaining proof step is a native Agentforce Builder preview trace for the
+Task action itself. Until that trace is captured, the honest state is:
+
+```text
+Advisory Agentforce signal brief proven in Builder.
+Governed Task action deployed and live via Apex.
+Native Builder trace for Task mutation pending.
+```

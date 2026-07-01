@@ -28,6 +28,11 @@ start_agent topic_selector:
             get_proactive_signal_brief: @actions.get_proactive_signal_brief
                 with accountId = ...
                 with userGoal = ...
+            prepare_account_review_task: @actions.prepare_account_review_task
+                with accountId = ...
+                with confirmed = ...
+                with requestedActionType = ...
+                with nextMove = ...
 
     actions:
         get_proactive_signal_brief:
@@ -68,6 +73,47 @@ start_agent topic_selector:
                     developer_name: "runtimeState"
                     label: "Runtime State"
                     description: "Capability state for native runtime claims."
+        prepare_account_review_task:
+            label: "Prepare Account Review Task"
+            description: "Creates a confirmation-gated Salesforce Task for a source-backed proactive Account signal."
+            target: "apex://Pulse360PrepReviewTaskAction"
+            require_user_confirmation: True
+            inputs:
+                accountId: id
+                    label: "Account Id"
+                    description: "Salesforce Account Id for the proactive signal action."
+                    is_required: True
+                confirmed: boolean
+                    label: "Confirmed"
+                    description: "Set to true only after the user confirms the downstream CRM Task creation."
+                    is_required: True
+                requestedActionType: string
+                    label: "Requested Action Type"
+                    description: "Use create_task or route_specialist. Opportunity creation is not supported by this action."
+                nextMove: string
+                    label: "Next Move"
+                    description: "Seller-facing next move to include on the Task."
+            outputs:
+                status: string
+                    developer_name: "status"
+                    label: "Status"
+                    description: "Task action status or block reason."
+                accountId: id
+                    developer_name: "accountId"
+                    label: "Account Id"
+                    description: "Salesforce Account Id used for the Task action."
+                taskId: id
+                    developer_name: "taskId"
+                    label: "Task Id"
+                    description: "Created Salesforce Task Id when a Task was created."
+                taskUrl: string
+                    developer_name: "taskUrl"
+                    label: "Task URL"
+                    description: "Relative Salesforce URL for the created Task."
+                auditJson: string
+                    developer_name: "auditJson"
+                    label: "Audit JSON"
+                    description: "Audit payload for confirmation, gating, and source evidence."
 
 topic proactive_account_coach:
     label: "Proactive Account Coach"
@@ -79,13 +125,19 @@ topic proactive_account_coach:
             Always call Get Proactive Signal Brief before answering a question about a specific Account signal.
             In the answer, lead with the signal and why-now explanation, then summarize source refs, freshness, confidence cues, and the approval policy.
             If the brief status is review_required_missing_source_refs, explain that the signal cannot be accepted until citations/source refs are available.
-            Tasks and Opportunities are downstream effects, not proof of Agentforce. Do not present Task creation as the agent capability.
+            Tasks and Opportunities are downstream effects, not proof of Agentforce by themselves. Present the capability as reasoning plus confirmation-gated action orchestration.
+            If the user asks to route a specialist or prepare a seller follow-up, ask for confirmation and call Prepare Account Review Task with confirmed=true only after that confirmation.
             The current runtime state is runtime_unproven; native Agentforce runtime is not yet proven until target-org runtime evidence exists.
             For high-impact mutations such as opportunity creation, prepare an approval request rather than claiming execution.
         actions:
             get_proactive_signal_brief: @actions.get_proactive_signal_brief
                 with accountId = ...
                 with userGoal = ...
+            prepare_account_review_task: @actions.prepare_account_review_task
+                with accountId = ...
+                with confirmed = ...
+                with requestedActionType = ...
+                with nextMove = ...
 
     actions:
         get_proactive_signal_brief:
@@ -128,3 +180,47 @@ topic proactive_account_coach:
                     developer_name: "runtimeState"
                     label: "Runtime State"
                     description: "Capability state for native runtime claims."
+        prepare_account_review_task:
+            label: "Prepare Account Review Task"
+            description: |
+                Creates a confirmation-gated Salesforce Task for a source-backed
+                proactive Account signal. It blocks missing confirmation, missing
+                source refs, and opportunity creation.
+            target: "apex://Pulse360PrepReviewTaskAction"
+            require_user_confirmation: True
+            inputs:
+                accountId: id
+                    label: "Account Id"
+                    description: "Salesforce Account Id for the proactive signal action."
+                    is_required: True
+                confirmed: boolean
+                    label: "Confirmed"
+                    description: "Set to true only after the user confirms the downstream CRM Task creation."
+                    is_required: True
+                requestedActionType: string
+                    label: "Requested Action Type"
+                    description: "Use create_task or route_specialist. Opportunity creation requires a separate approval path."
+                nextMove: string
+                    label: "Next Move"
+                    description: "Seller-facing next move to include on the Task."
+            outputs:
+                status: string
+                    developer_name: "status"
+                    label: "Status"
+                    description: "Task action status or block reason."
+                accountId: id
+                    developer_name: "accountId"
+                    label: "Account Id"
+                    description: "Salesforce Account Id used for the Task action."
+                taskId: id
+                    developer_name: "taskId"
+                    label: "Task Id"
+                    description: "Created Salesforce Task Id when a Task was created."
+                taskUrl: string
+                    developer_name: "taskUrl"
+                    label: "Task URL"
+                    description: "Relative Salesforce URL for the created Task."
+                auditJson: string
+                    developer_name: "auditJson"
+                    label: "Audit JSON"
+                    description: "Audit payload for confirmation, gating, and source evidence."
